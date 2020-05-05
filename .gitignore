@@ -1,0 +1,26 @@
+# vscode settings
+.vscode/
+
+# pyCharm settings
+.idea/
+
+# python artifacts
+**/*.py[abc]
+**/__pycache__/
+
+# pytest artifacts
+**/.pytest_cache
+
+# sphinx artifacts
+docs/build
+
+# development crud
+**/sandbox.py
+
+# development crud
+**/*.old
+**/docker-compose.local.yml
+
+# sonarqube
+.scannerwork/
+.sonar/

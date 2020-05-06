@@ -38,7 +38,9 @@ class MetadataSingleton:
     @classmethod
     def instance(cls):
         if cls.metadata is None:
-            raise RuntimeError("No MetaData reference was found stored in the .")
+            raise RuntimeError(
+                "No MetaData reference was found stored in the MetaData singleton."
+            )
         return cls.metadata
 
     @classmethod

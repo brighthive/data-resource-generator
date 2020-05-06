@@ -41,15 +41,10 @@ class SqlalchemyMetadata:
         return len(metadata.sorted_tables)
 
 
-@pytest.fixture(scope="function")
-def empty_database():
+@pytest.fixture(autouse=True, scope="session")
+def auto_run_empty_database():
     db = Database()
     db.destory_db()
-
-
-@pytest.fixture(autouse=True)
-def auto_run_empty_database(empty_database):
-    pass
 
 
 @pytest.fixture(scope="function")

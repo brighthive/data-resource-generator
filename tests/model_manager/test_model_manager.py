@@ -1,5 +1,8 @@
 import pytest
-from data_resource.model_manager.model_manager import convert_table_schema_to_database
+from data_resource.model_manager.model_manager import (
+    create_all_tables_from_schemas,
+    get_table_names_and_descriptors,
+)
 
 
 VALID_DATA_DICTIONARY = {
@@ -99,17 +102,20 @@ VALID_DATA_DICTIONARY = {
 
 @pytest.mark.requiresdb
 def test_valid_descriptor_creates_databased(sqlalchemy_metadata):
-    table_schema = VALID_DATA_DICTIONARY["data"]["dataDictionary"][0]["tableSchema"]
-    table_name = "test"
+    table_descriptors = VALID_DATA_DICTIONARY["data"]["dataDictionary"]
 
-    convert_table_schema_to_database("test", table_schema)
+    create_all_tables_from_schemas(table_descriptors)
 
     # assert database.table_count("test") == 1
-    assert sqlalchemy_metadata.table_count() == 1
+    assert sqlalchemy_metadata.table_count() == 2
 
 
-# @pytest.mark.requiresdb
-# def test_loads_all_tables(empty_database, sqlalchemy_metadata):
-#     load_all_tables()
+@pytest.mark.unit
+def test_get_table_names_and_descriptors():
+    table_descriptors = VALID_DATA_DICTIONARY["data"]["dataDictionary"]
 
-#     assert sqlalchemy_metadata.table_count() == 2
+    table_names, descriptors = get_table_names_and_descriptors(table_descriptors)
+
+    assert len(table_names) == 2
+    assert table_names == ["People", "GameConsole"]
+    assert len(descriptors) == 2

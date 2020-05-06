@@ -88,7 +88,7 @@ VALID_DATA_DICTIONARY = {
         "relationships": {
             # "oneToOne": [["People", "haveA", "Passport"],
             "oneToMany": [["People", "playGameConsole", "GameConsole"]],
-            "manyToMany": [["People", "friendsWith", "People"]],
+            "manyToMany": [["People", "People"], ["People", "Teams"]],
         },
         "databaseSchema": "url-to-something",
         "databaseType": "https://datatrust.org/databaseType/rdbms",

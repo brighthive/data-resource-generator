@@ -1,15 +1,20 @@
-# Data Resource API
+# Data Resource
 
 ![Maintenance](https://img.shields.io/maintenance/yes/2020)
-![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/brighthive/data-resource-api)
-![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/brighthive/data-resource-api/v1.1.1)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/brighthive/data-resource-api)
 
-![GitHub Pipenv locked Python version](https://img.shields.io/github/pipenv/locked/python-version/brighthive/data-resource-api)
-![CircleCI](https://img.shields.io/circleci/build/github/brighthive/data-resource-api)
-![GitHub](https://img.shields.io/github/license/brighthive/data-resource-api)
+<!-- ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/brighthive/data-resource) -->
+<!-- ![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/brighthive/data-resource-api/v1.1.1) -->
 
-<!-- ![Coveralls github](https://img.shields.io/coveralls/github/brighthive/data-resource-api) -->
+<!-- ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/brighthive/data-resource) -->
+
+<!-- ![GitHub Pipenv locked Python version](https://img.shields.io/github/pipenv/locked/python-version/brighthive/data-resource) -->
+
+<!-- ![CircleCI](https://img.shields.io/circleci/build/github/brighthive/data-resource) -->
+
+<!-- ![GitHub](https://img.shields.io/github/license/brighthive/data-resource) -->
+
+<!-- ![Coveralls github](https://img.shields.io/coveralls/github/brighthive/data-resource) -->
+
 ![Twitter Follow](https://img.shields.io/twitter/follow/brighthiveio?style=social)
 
 An elegant, opinionated framework for deploying BrightHive Data Resources (declarative database and API) with zero coding.
@@ -33,104 +38,56 @@ Simply provide the application a declarative database and API specification and 
 - Declarative Database, including many to many
 - Automatic REST API
 - Enable/disable HTTP routes
-- Automatic database migrations
-- Hot reloading of database and API on migrations
 
-## How to use Data Resource API
+## How to use Data Resource
 
-Spinning up a fresh, out-of-the-box Data Resource API requires minimal setup. Follow these steps:
+...
 
-1. Download install [docker-cli](https://docs.docker.com/install/) and [docker-compose](https://docs.docker.com/compose/install/) based on your machine and preferences (e.g., you may choose to run `docker-compose` in a virtualenv).**
-
-1. Clone or download the project to your local machine
-
-```bash
-git clone git@github.com:brighthive/data-resource-api.git
-```
-
-1. Build the Docker image with specified tag
-
-```bash
-# run this command in the root of the data-resource-api repo
-docker build -t brighthive/data-resource-api:1.0.0-alpha .
-```
-
-1. Launch Docker containers
-
-```bash
-# run this command in the root of the data-resource-api repo
-docker-compose up
-```
-
-Alternatively, you can run the data resource api in the background:
-
-```bash
-docker-compose up -d
-```
-
-Visit `http://0.0.0.0:8000/programs` to test the API URL (though expect an "Access Denied" message).
-
-*Note!* The default `docker-compose.yml` launches three containers: `postgres`, `data-model-manager`, and `data-resource-api`. Expect the postgres container to raise an error, at first, something like: `ERROR:  relation "checksums" does not exist at character 171`. This occurs temporarily, as Docker spins up the `data-model-manager` (i.e., the service that creates and runs migrations). Once the model manager has done its business, the `data-resource-manager` can ease-fully listen for incoming schema files. A successful launch should continuously log the following happy messages:
-
-```text
-data-resource-api_1   | 2019-06-21 21:31:21,392 - data-resource-manager - INFO - Data Resource Manager Running...
-data-resource-api_1   | 2019-06-21 21:31:21,393 - data-resource-manager - INFO - Checking data resources...
-data-resource-api_1   | 2019-06-21 21:31:21,413 - data-resource-manager - INFO - Completed check of data resources
-data-resource-api_1   | 2019-06-21 21:31:21,414 - data-resource-manager - INFO - Data Resource Manager Sleeping for 60 seconds...
-```
-
-## How to develop Data Resource API
+## How to develop Data Resource
 
 > We welcome code contributions, suggestions, and reports! Please report bugs and make suggestions using Github issues. The BrightHive team will triage and prioritize your issue as soon as possible.
 
 1. Install pipenv.
 1. Install docker and docker-compose.
 1. Clone the repo.
-1. Run `pipenv install --dev`
+1. Install production and development packages
+
+    ```bash
+    pipenv install --dev
+    ```
+
 1. Install pre-commit hooks,
 
-```bash
-pipenv run pre-commit install
-```
-
-### Troubleshooting
-
-If you have trouble starting the application with `docker-compose up` the problem may lie in your postgres container.
-
-Try running `docker rm postgres-container-id` to remove any prevoiusly saved data in the postgres container. This will allow the application to rebuild the database from scratch and should start successfully.
-
-Or try running `docker system prune`.
+    ```bash
+    pipenv run pre-commit install
+    ```
 
 ## Testing
 
-How do I run tests? (And what libraries did we use to write said tests?)
+Some tests require that a database (Postgres) is running. We use docker to handle this for us. We have included a docker-compose file that allows you to easily run Postgres.
 
-A few tests within the test suite currently require a docker image to be spun up in order to pass the tests. In order for the tests to pass you simply need to have docker running.
+For developers to run the test suite,
 
-For developers to run a test use the following,
+1. First install the required packages
 
-1. First install the requirements
-
-```bash
-pipenv install --dev
-```
+    ```bash
+    pipenv install --dev
+    ```
 
 1. Stand up the database
 
-```bash
-docker-compose -f test-database-docker-compose.yml up -d
-```
-<!-- docker run --name data_resource_test_database -e POSTGRES_PASSWORD=test_password -e POSTGRES_USER=test_user -e POSTGRES_DATABASE=data_resource_dev -d postgres -->
+    ```bash
+    docker-compose -f test-database-docker-compose.yml up -d
+    ```
+    <!-- docker run --name data_resource_test_database -e POSTGRES_PASSWORD=test_password -e POSTGRES_USER=test_user -e POSTGRES_DATABASE=data_resource_dev -d postgres -->
 
 1. Run the tests with the following command,
 
-```bash
-pipenv run pytest
-```
+    ```bash
+    pipenv run pytest
+    ```
 
 ## Team
-
-Names and titles of core contributors (including people who did not push code to Github). Use bullets, for example:
 
 - Logan Ripplinger (Software Engineer)
 - Gregory Mundy (VP of Engineering)

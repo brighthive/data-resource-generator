@@ -1,1 +1,1 @@
-from data_resource.db.base import Session, engine, metadata
+from data_resource.db.base import Session, engine

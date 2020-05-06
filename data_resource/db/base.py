@@ -29,7 +29,7 @@ engine = create_engine(SQLALCHEMY_DATABASE_URI)
 Session = sessionmaker(bind=engine)
 
 
-class MetadataSingleton:  # in some versions of Python, may need to be "class State():" or "class State(object):"
+class MetadataSingleton:
     __slots__ = (
         []
     )  # prevents additional attributes from being added to instances and same-named attributes from shadowing the class's attributes
@@ -37,6 +37,8 @@ class MetadataSingleton:  # in some versions of Python, may need to be "class St
 
     @classmethod
     def instance(cls):
+        if cls.metadata is None:
+            raise RuntimeError("No MetaData reference was found stored in the .")
         return cls.metadata
 
     @classmethod
@@ -44,5 +46,6 @@ class MetadataSingleton:  # in some versions of Python, may need to be "class St
         cls.metadata = metadata
 
     @classmethod
-    def clear(cls):
+    def _clear(cls):
+        """This method is for use in unit tests."""
         cls.metadata = None

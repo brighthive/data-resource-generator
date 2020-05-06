@@ -18,34 +18,74 @@ VALID_DATA_DICTIONARY = {
     "data": {
         "dataDictionary": [
             {
-                "@id": "https://mydatatrust.brighthive.io/dr1/people",
+                "@id": "https://mydatatrust.brighthive.io/dr1/People",
                 "@type": "table",
-                "name": "people",
+                "name": "People",
                 "tableSchema": {
                     "fields": [
                         {
-                            "name": "asdf",
-                            "title": "A nicer human readable label or title for the field",
-                            "type": "boolean",
-                            "description": "A data dict description for the field",
+                            "name": "person_id",
+                            "title": "Person ID",
+                            "type": "integer",
+                            "description": "A unique identifer for person.",
                             "constraints": {},
                         },
                         {
-                            "name": "marked_present",
-                            "title": "A nicer human readable label or title for the field",
-                            "type": "boolean",
-                            "description": "A data dict description for the field",
+                            "name": "name",
+                            "title": "Person's Name",
+                            "type": "string",
+                            "description": "The name that a Person goes by. This is left intentionally generic.",
                             "constraints": {},
                         },
                     ],
+                    "primaryKey": "person_id",
                     "missingValues": [],
                 },
-            }
+            },
+            {
+                "@id": "https://mydatatrust.brighthive.io/dr1/GameConsole",
+                "@type": "table",
+                "name": "GameConsole",
+                "tableSchema": {
+                    "fields": [
+                        {
+                            "name": "game_console_id",
+                            "title": "Game Console ID",
+                            "type": "integer",
+                            "description": "Unique identifer for a Game Console.",
+                            "constraints": {},
+                        },
+                        {
+                            "name": "name",
+                            "title": "Game Console Name",
+                            "type": "string",
+                            "description": "The name of the Game Console.",
+                            "constraints": {},
+                        },
+                        {
+                            "name": "producer_company",
+                            "title": "Game Console Company",
+                            "type": "string",
+                            "description": "The name of the Company that created the Game Console.",
+                            "constraints": {},
+                        },
+                        {
+                            "name": "controller_ports_count",
+                            "title": "Number of Controller Ports",
+                            "type": "integer",
+                            "description": "The maximum number of concurrent controllers supported.",
+                            "constraints": {},
+                        },
+                    ],
+                    "primaryKey": "game_console_id",
+                    "missingValues": [],
+                },
+            },
         ],
         "relationships": {
-            "oneToOne": [["person", "hasA", "passport"], ["person", "hasA", "mother"]],
-            "oneToMany": [["person", "caresFor", "pet"]],
-            "manyToMany": [["person", "worksAt", "job"]],
+            # "oneToOne": [["People", "haveA", "Passport"],
+            "oneToMany": [["People", "playGameConsole", "GameConsole"]],
+            "manyToMany": [["People", "friendsWith", "People"]],
         },
         "databaseSchema": "url-to-something",
         "databaseType": "https://datatrust.org/databaseType/rdbms",

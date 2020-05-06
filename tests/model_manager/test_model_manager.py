@@ -9,9 +9,9 @@ VALID_DATA_DICTIONARY = {
     "@id": "https://mydatatrust.brighthive.io/dr1",
     "@type": "dataResource",
     "name": "2020 Census Data",
-    "description": "talk about the data",
+    "description": "Description of data resource",
     "owner": "org",
-    "pointOfContact": "person",
+    "pointOfContact": "Tim the Pointman",  # probably a person node
     "published": True,
     "dateCreated": "date",
     "dateUpdated": "date",
@@ -95,7 +95,7 @@ VALID_DATA_DICTIONARY = {
     },
     "api": {
         "apiType": "https://datatrust.org/apiType/rest",
-        "apiSpec": "url-to-swagger",
+        "apiSpec": "url-to-swagger-or-json-swagger",
     },
 }
 

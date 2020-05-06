@@ -1,7 +1,7 @@
 import pytest
-from data_resource.db import engine, Session
-from sqlalchemy.exc import OperationalError
+from data_resource.db import engine, Session, MetadataSingleton
 from sqlalchemy import MetaData
+from sqlalchemy.exc import OperationalError
 from sqlalchemy.sql import text
 
 
@@ -36,8 +36,7 @@ class Database:
 
 class SqlalchemyMetadata:
     def table_count(self):
-        metadata = MetaData()
-        metadata.reflect(bind=engine)
+        metadata = MetadataSingleton.instance()
         return len(metadata.sorted_tables)
 
 

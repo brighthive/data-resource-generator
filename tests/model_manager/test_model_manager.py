@@ -98,7 +98,7 @@ VALID_DATA_DICTIONARY = {
 
 
 @pytest.mark.requiresdb
-def test_valid_descriptor_creates_databased(database, sqlalchemy_metadata):
+def test_valid_descriptor_creates_databased(sqlalchemy_metadata):
     table_schema = VALID_DATA_DICTIONARY["data"]["dataDictionary"][0]["tableSchema"]
     table_name = "test"
 
@@ -106,3 +106,10 @@ def test_valid_descriptor_creates_databased(database, sqlalchemy_metadata):
 
     # assert database.table_count("test") == 1
     assert sqlalchemy_metadata.table_count() == 1
+
+
+# @pytest.mark.requiresdb
+# def test_loads_all_tables(empty_database, sqlalchemy_metadata):
+#     load_all_tables()
+
+#     assert sqlalchemy_metadata.table_count() == 2

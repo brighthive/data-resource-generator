@@ -27,6 +27,3 @@ engine = create_engine(SQLALCHEMY_DATABASE_URI)
 #     engine.execute(CreateSchema("managed"))
 
 Session = sessionmaker(bind=engine)
-
-metadata = MetaData()
-metadata.reflect(bind=engine)

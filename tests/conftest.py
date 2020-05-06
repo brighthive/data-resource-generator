@@ -1,6 +1,7 @@
 import pytest
-from data_resource.db import engine, Session, metadata
-import sqlalchemy
+from data_resource.db import engine, Session
+from sqlalchemy.exc import OperationalError
+from sqlalchemy import MetaData
 from sqlalchemy.sql import text
 
 
@@ -10,7 +11,7 @@ class Database:
             session = Session()
             session.query("1").all()
             return True
-        except sqlalchemy.exc.OperationalError:
+        except OperationalError:
             raise
 
     # def table_count(self, table_name):
@@ -35,13 +36,20 @@ class Database:
 
 class SqlalchemyMetadata:
     def table_count(self):
+        metadata = MetaData()
+        metadata.reflect(bind=engine)
         return len(metadata.sorted_tables)
 
 
-@pytest.fixture(autouse=True)
-def auto_run_empty_database():
+@pytest.fixture(scope="function")
+def empty_database():
     db = Database()
     db.destory_db()
+
+
+@pytest.fixture(autouse=True)
+def auto_run_empty_database(empty_database):
+    pass
 
 
 @pytest.fixture(scope="function")

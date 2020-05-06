@@ -30,7 +30,7 @@ def get_table_names_and_descriptors(table_schemas: list) -> (list, list):
     return table_names, descriptors
 
 
-def construct_many_to_many(metadata: "MetaData", relationship: list) -> None:
+def construct_many_to_many_assoc(metadata: "MetaData", relationship: list) -> None:
     """Given a single many to many, creates it."""
 
     # create many to many association table

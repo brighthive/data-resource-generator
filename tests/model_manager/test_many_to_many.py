@@ -1,11 +1,11 @@
 import pytest
 from sqlalchemy import MetaData, Table, Column, Integer, String
-from data_resource.model_manager.model_manager import construct_many_to_many
+from data_resource.model_manager.model_manager import construct_many_to_many_assoc
 
 
 # https://github.com/brighthive/etl-goodwill/blob/master/tests/conftest.py#L103
 @pytest.mark.unit
-def test_create_one_many_to_many():
+def test_create_one_many_to_many_assoc():
     many_to_many_relationships = ["People", "Team"]
     METADATA = MetaData()  # People, Teams as sqlalchemy METADATA
     People = Table(
@@ -21,7 +21,7 @@ def test_create_one_many_to_many():
         Column("name", String(50)),
     )
 
-    construct_many_to_many(METADATA, many_to_many_relationships)
+    construct_many_to_many_assoc(METADATA, many_to_many_relationships)
 
     # lol = METADATA.tables['Person']
     # print(dir(lol))

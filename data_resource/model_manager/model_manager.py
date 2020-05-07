@@ -13,12 +13,15 @@ def main(table_schemas: list) -> None:
     create_all_tables_from_schemas(table_schemas)
 
     metadata = MetadataSingleton.instance()
-    # Many to many
-    # Create assoc table
-    construct_many_to_many_assoc(metadata)
 
-    # Create foreign keys
-    add_foreign_keys_to_tables
+    # Many to many
+    relationships = [["People", "Team"]]
+    for relationship in relationships:
+        # Create assoc table
+        assoc_table_name = construct_many_to_many_assoc(metadata, relationship)
+
+        # Create foreign keys
+        add_foreign_keys_to_tables(metadata, relationship, assoc_table_name)
 
     # Create automapping relationships
 
@@ -68,31 +71,31 @@ def construct_many_to_many_assoc(metadata: "MetaData", relationship: list) -> st
     return str(association)
 
 
-def add_foreign_keys_to_tables(METADATA, many_to_many_relationships, assoc_table_name):
+def add_foreign_keys_to_tables(METADATA, mn_relationship, assoc_table_name):
     # Get tables
-    many_to_many_relationships.sort()
-    table = METADATA.tables[many_to_many_relationships[0]]
-    other_table = METADATA.tables[many_to_many_relationships[1]]
+    mn_relationship.sort()
+    table = METADATA.tables[mn_relationship[0]]
+    other_table = METADATA.tables[mn_relationship[1]]
 
     # Extend / add foreign key
     Table(
-        f"{many_to_many_relationships[0]}",
+        f"{mn_relationship[0]}",
         METADATA,
         Column(
-            f"mn_reference_{many_to_many_relationships[1].lower()}",
+            f"mn_reference_{mn_relationship[1].lower()}",
             Integer,
-            ForeignKey(f"{assoc_table_name}.{many_to_many_relationships[1].lower()}"),
+            ForeignKey(f"{assoc_table_name}.{mn_relationship[1].lower()}"),
         ),
         extend_existing=True,
     )
 
     Table(
-        f"{many_to_many_relationships[1]}",
+        f"{mn_relationship[1]}",
         METADATA,
         Column(
-            f"mn_reference_{many_to_many_relationships[0].lower()}",
+            f"mn_reference_{mn_relationship[0].lower()}",
             Integer,
-            ForeignKey(f"{assoc_table_name}.{many_to_many_relationships[0].lower()}"),
+            ForeignKey(f"{assoc_table_name}.{mn_relationship[0].lower()}"),
         ),
         extend_existing=True,
     )

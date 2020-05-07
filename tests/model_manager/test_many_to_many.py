@@ -9,6 +9,12 @@ from sqlalchemy.orm import relationship
 
 
 # https://github.com/brighthive/etl-goodwill/blob/master/tests/conftest.py#L103
+# @pytest.mark.unit
+# def test_main_creates_all_required_orm():
+#     many_to_many_relationships = ["People", "Team"]
+#     METADATA = MetaData()
+
+
 @pytest.mark.unit
 def test_create_one_many_to_many_assoc():
     many_to_many_relationships = ["People", "Team"]

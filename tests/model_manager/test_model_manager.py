@@ -4,7 +4,7 @@ from data_resource.model_manager.model_manager import (
     get_table_names_and_descriptors,
     main,
 )
-from data_resource.db.base import MetadataSingleton
+from data_resource.db.base import MetadataSingleton, AutobaseSingleton
 
 
 VALID_DATA_DICTIONARY = {
@@ -127,27 +127,24 @@ VALID_DATA_DICTIONARY = {
 }
 
 
-# TODO: Need to destroy db on this fn
-@pytest.mark.unit
+@pytest.mark.unit  # Does this requiredb tho?
 def test_main_creates_all_required_orm(empty_database):
     table_descriptors = VALID_DATA_DICTIONARY["data"]["dataDictionary"]
     MetadataSingleton._clear()
+    AutobaseSingleton._clear()
 
-    # act
     main(table_descriptors)
 
     metadata = MetadataSingleton.instance()
-    # base = AutobaseSingleton.instance()
-
+    base = AutobaseSingleton.instance()
     assert "People" in metadata.tables
     assert "Team" in metadata.tables
     assert "GameConsole" in metadata.tables
     assert "assoc_people_team" in metadata.tables
 
-    # automap:
-    # assert people.gameconsole exists
-    # assert
-    # assert gameconsole.people exists
+    # Assert that the auto mapped python classes exist!
+    assert base.classes.People
+    assert base.classes.Team
 
 
 # def test_main_can_add_data_with_orm

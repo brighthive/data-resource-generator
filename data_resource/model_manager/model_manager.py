@@ -1,13 +1,11 @@
 from tableschema_sql import Storage
 from tableschema.exceptions import ValidationError
 from sqlalchemy import Table, Integer, ForeignKey, Column
-from data_resource.db import engine, MetadataSingleton
+from data_resource.db import engine, MetadataSingleton, AutobaseSingleton
 from sqlalchemy.orm import relationship, mapper
+from sqlalchemy.ext.automap import automap_base
 
-# from sqlalchemy.ext.declarative import declarative_base
 
-
-# Need end to end?
 def main(table_schemas: list) -> None:
     # Create base items
     create_all_tables_from_schemas(table_schemas)
@@ -24,6 +22,7 @@ def main(table_schemas: list) -> None:
         add_foreign_keys_to_tables(metadata, relationship, assoc_table_name)
 
     # Create automapping relationships
+    automap_metadata_for_many_to_many(metadata)
 
 
 def create_all_tables_from_schemas(table_schemas: list) -> "Metadata":
@@ -65,8 +64,18 @@ def construct_many_to_many_assoc(metadata: "MetaData", relationship: list) -> st
     association = Table(
         f"assoc_{relationship[0].lower()}_{relationship[1].lower()}",
         metadata,
-        Column("left", Integer, ForeignKey(f"{relationship[0]}.id"), primary_key=True),
-        Column("right", Integer, ForeignKey(f"{relationship[1]}.id"), primary_key=True),
+        Column(
+            f"{relationship[0].lower()}",
+            Integer,
+            ForeignKey(f"{relationship[0]}.id"),
+            primary_key=True,
+        ),
+        Column(
+            f"{relationship[1].lower()}",
+            Integer,
+            ForeignKey(f"{relationship[1]}.id"),
+            primary_key=True,
+        ),
     )
 
     return str(association)
@@ -100,3 +109,12 @@ def add_foreign_keys_to_tables(METADATA, mn_relationship, assoc_table_name):
         ),
         extend_existing=True,
     )
+
+
+def automap_metadata_for_many_to_many(metadata):
+    base = automap_base(metadata=metadata)
+
+    # calling prepare() just sets up mapped classes and relationships.
+    base.prepare()
+
+    AutobaseSingleton.set_autobase(base)

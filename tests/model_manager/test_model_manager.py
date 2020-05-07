@@ -74,37 +74,23 @@ VALID_DATA_DICTIONARY = {
                 },
             },
             {
-                "@id": "https://mydatatrust.brighthive.io/dr1/GameConsole",
+                "@id": "https://mydatatrust.brighthive.io/dr1/Order",
                 "@type": "table",
-                "name": "GameConsole",
+                "name": "Order",
                 "tableSchema": {
                     "fields": [
                         {
                             "name": "id",
-                            "title": "Game Console ID",
+                            "title": "Order ID",
                             "type": "integer",
-                            "description": "Unique identifer for a Game Console.",
+                            "description": "Unique identifer for an Order.",
                             "constraints": {},
                         },
                         {
-                            "name": "name",
-                            "title": "Game Console Name",
+                            "name": "items",
+                            "title": "Items in Order",
                             "type": "string",
-                            "description": "The name of the Game Console.",
-                            "constraints": {},
-                        },
-                        {
-                            "name": "producer_company",
-                            "title": "Game Console Company",
-                            "type": "string",
-                            "description": "The name of the Company that created the Game Console.",
-                            "constraints": {},
-                        },
-                        {
-                            "name": "controller_ports_count",
-                            "title": "Number of Controller Ports",
-                            "type": "integer",
-                            "description": "The maximum number of concurrent controllers supported.",
+                            "description": "Textual list of items in order.",
                             "constraints": {},
                         },
                     ],
@@ -115,7 +101,7 @@ VALID_DATA_DICTIONARY = {
         ],
         "relationships": {
             # "oneToOne": [["People", "haveA", "Passport"],
-            "oneToMany": [["People", "GameConsole"]],
+            "oneToMany": [["People", "Order"]],
             "manyToMany": [["People", "Team"]],
         },
         "databaseSchema": "url-to-something",
@@ -140,7 +126,7 @@ def test_main_creates_all_required_orm(empty_database):
     base = AutobaseSingleton.instance()
     assert "People" in metadata.tables
     assert "Team" in metadata.tables
-    assert "GameConsole" in metadata.tables
+    assert "Order" in metadata.tables
     assert "assoc_people_team" in metadata.tables
 
     # Assert that the auto mapped python classes exist!
@@ -171,7 +157,7 @@ def test_get_table_names_and_descriptors():
     table_names, descriptors = get_table_names_and_descriptors(table_descriptors)
 
     assert len(table_names) == 3
-    assert table_names == ["People", "Team", "GameConsole"]
+    assert table_names == ["People", "Team", "Order"]
     assert len(descriptors) == 3
 
 
@@ -183,6 +169,6 @@ def test_get_relationships_from_data_dict():
 
     assert result == {
         # "oneToOne": [["People", "haveA", "Passport"],
-        "oneToMany": [["People", "GameConsole"]],
+        "oneToMany": [["People", "Order"]],
         "manyToMany": [["People", "Team"]],
     }

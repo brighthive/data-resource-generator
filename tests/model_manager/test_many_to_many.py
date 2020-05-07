@@ -11,7 +11,6 @@ from data_resource.db import AutobaseSingleton
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 
 
-# https://github.com/brighthive/etl-goodwill/blob/master/tests/conftest.py#L103
 @pytest.mark.unit
 def test_create_one_many_to_many_assoc():
     many_to_many_relationships = ["People", "Team"]
@@ -53,55 +52,55 @@ def test_create_one_many_to_many_assoc():
 @pytest.mark.unit
 def test_add_foreign_keys_to_tables():
     many_to_many_relationships = ["People", "Team"]
-    METADATA = MetaData()  # People, Teams as sqlalchemy METADATA
+    metadata = MetaData()
     People = Table(
         "People",
-        METADATA,
+        metadata,
         Column("id", Integer, primary_key=True),
         Column("name", String(50)),
     )
     Team = Table(
         "Team",
-        METADATA,
+        metadata,
         Column("id", Integer, primary_key=True),
         Column("name", String(50)),
     )
     assoc_table_name = "assoc_people_team"
 
     result = add_foreign_keys_to_tables(
-        METADATA, many_to_many_relationships, assoc_table_name
+        metadata, many_to_many_relationships, assoc_table_name
     )
 
-    assert "mn_reference_team" in METADATA.tables["People"].columns
-    assert "mn_reference_people" in METADATA.tables["Team"].columns
+    assert "mn_reference_team" in metadata.tables["People"].columns
+    assert "mn_reference_people" in metadata.tables["Team"].columns
 
     assert "ForeignKey('assoc_people_team.team')" == str(
-        list(METADATA.tables["People"].columns["mn_reference_team"].foreign_keys)[0]
+        list(metadata.tables["People"].columns["mn_reference_team"].foreign_keys)[0]
     )
     assert "ForeignKey('assoc_people_team.people')" == str(
-        list(METADATA.tables["Team"].columns["mn_reference_people"].foreign_keys)[0]
+        list(metadata.tables["Team"].columns["mn_reference_people"].foreign_keys)[0]
     )
 
 
 @pytest.mark.unit
 def test_automap_metadata_for_many_to_many():
-    METADATA = MetaData()  # People, Teams as sqlalchemy METADATA
+    metadata = MetaData()
     association = Table(
         f"assoc_people_team",
-        METADATA,
+        metadata,
         Column("people", Integer, ForeignKey("People.id"), primary_key=True),
         Column("team", Integer, ForeignKey("Team.id"), primary_key=True),
     )
     People = Table(
         "People",
-        METADATA,
+        metadata,
         Column("id", Integer, primary_key=True),
         Column("name", String(50)),
         Column(f"mn_reference_team", Integer, ForeignKey(f"assoc_people_team.team")),
     )
     Team = Table(
         "Team",
-        METADATA,
+        metadata,
         Column("id", Integer, primary_key=True),
         Column("name", String(50)),
         Column(
@@ -110,7 +109,7 @@ def test_automap_metadata_for_many_to_many():
     )
     AutobaseSingleton._clear()
 
-    automap_metadata_for_many_to_many(METADATA)
+    automap_metadata_for_many_to_many(metadata)
 
     base = AutobaseSingleton.instance()
 
@@ -123,89 +122,3 @@ def test_automap_metadata_for_many_to_many():
     assert isinstance(getattr(team_orm, "id"), InstrumentedAttribute)
     assert isinstance(getattr(team_orm, "name"), InstrumentedAttribute)
     assert isinstance(getattr(team_orm, "mn_reference_people"), InstrumentedAttribute)
-
-
-#     # assert new_metadata has association table
-#     # assert new_metadata -> Peoples has peoples reference
-
-
-# @pytest.mark.unit
-# def test_aaaaaaa_add_assoc_ref_to_table():
-#     METADATA = declarative_base(MetaData())
-#     association = Table(
-#         f"assoc_people_team",
-#         METADATA.metadata,
-#         Column("left", Integer, ForeignKey("People.id"), primary_key=True),
-#         Column("right", Integer, ForeignKey("Team.id"), primary_key=True),
-#     )
-#     class People(METADATA):
-#         __tablename__ = "People"
-#         id = Column(Integer, primary_key=True)
-#         name = Column(String(50))
-#         teams = relationship(
-#             "Team",
-#             secondary=association,
-#             backref="peoples"
-#         )
-
-#     class Team(METADATA):
-#         __tablename__ = "Team"
-#         id = Column(Integer, primary_key=True)
-#         name = Column(String(50))
-
-#     # print(METADATA.metadata.tables)
-#     print([print(x) for x in People.__mapper__.relationships])
-#     print(type(People))
-#     print(dir(People))
-#     print(type(METADATA.metadata.tables['People']))
-#     assert 1 == 0
-
-
-# @pytest.mark.unit
-# def test_add_assoc_ref_to_table():
-#     many_to_many_relationships = ["People", "Team"]
-#     METADATA = declarative_base(MetaData()).metadata
-#     People = Table(
-#         "People",
-#         METADATA,
-#         Column("id", Integer, primary_key=True),
-#         Column("name", String(50)),
-#     )
-#     Team = Table(
-#         "Team",
-#         METADATA,
-#         Column("id", Integer, primary_key=True),
-#         Column("name", String(50)),
-#     )
-#     association = Table(
-#         f"assoc_people_team",
-#         METADATA,
-#         Column("left", Integer, ForeignKey("People.id"), primary_key=True),
-#         Column("right", Integer, ForeignKey("Team.id"), primary_key=True),
-#     )
-
-#     add_assoc_ref_to_table(METADATA, many_to_many_relationships, association)
-
-#     # lol = METADATA.tables['Person']
-#     # print(dir(lol))
-#     # import pdb; pdb.set_trace()
-
-#     # assert new_metadata -> People has teams reference
-#     # (Pdb) lol.columns
-#     # <sqlalchemy.sql.base.ImmutableColumnCollection object at 0x104871f30>
-#     # (Pdb) print(lol.columns)
-#     # ['Person.person_id', 'Person.name']
-#     assert "People.mn_reference_team" in METADATA.tables["People"].columns
-
-#     # assert new_metadata -> Teams has peoples reference
-#     # assert 'Person.mn_reference_team' in METADATA.tables['Team'].columns
-
-#     # assert new_metadata -> People has teams reference
-#     # (Pdb) lol.columns
-#     # <sqlalchemy.sql.base.ImmutableColumnCollection object at 0x104871f30>
-#     # (Pdb) print(lol.columns)
-#     # ['Person.person_id', 'Person.name']
-#     # assert 'Person.mn_reference_team' in METADATA.tables['Person'].columns
-
-#     # assert new_metadata -> Teams has peoples reference
-#     # assert 'Person.mn_reference_team' in METADATA.tables['Team'].columns

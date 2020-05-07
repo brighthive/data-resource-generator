@@ -35,9 +35,24 @@ From the technical perspective, a BrightHive Data Resource is an entity comprise
 
 Simply provide the application a declarative database and API specification and it will automatically stand up a RESTful database and API!
 
-- Declarative Database, including many to many
+- Declarative Database using frictionless table schema
+- Generates SQLAlchemy ORM (including many to many)
+
+<!--
+### Supported -- tested
+- Generate database from table schema
+- Many to many
+
+### Assumed supported -- untested
+- Many to one ?
+- one to one ?
+
+### Not supported yet
+- many to many self-referential
+
+### Future
 - Automatic REST API
-- Enable/disable HTTP routes
+- Enable/disable HTTP routes -->
 
 ## How to use Data Resource
 

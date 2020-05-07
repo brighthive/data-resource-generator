@@ -3,6 +3,7 @@ from data_resource.model_manager.model_manager import (
     create_all_tables_from_schemas,
     get_table_names_and_descriptors,
     main,
+    get_relationships_from_data_dict,
 )
 from data_resource.db.base import MetadataSingleton, AutobaseSingleton
 
@@ -129,7 +130,7 @@ VALID_DATA_DICTIONARY = {
 
 @pytest.mark.unit  # Does this requiredb tho?
 def test_main_creates_all_required_orm(empty_database):
-    table_descriptors = VALID_DATA_DICTIONARY["data"]["dataDictionary"]
+    table_descriptors = VALID_DATA_DICTIONARY["data"]
     MetadataSingleton._clear()
     AutobaseSingleton._clear()
 
@@ -155,7 +156,7 @@ def test_main_creates_all_required_orm(empty_database):
 
 @pytest.mark.requiresdb
 def test_valid_descriptor_creates_databased(empty_database, sqlalchemy_metadata):
-    table_descriptors = VALID_DATA_DICTIONARY["data"]["dataDictionary"]
+    table_descriptors = VALID_DATA_DICTIONARY["data"]
 
     create_all_tables_from_schemas(table_descriptors)
 
@@ -165,10 +166,23 @@ def test_valid_descriptor_creates_databased(empty_database, sqlalchemy_metadata)
 
 @pytest.mark.unit
 def test_get_table_names_and_descriptors():
-    table_descriptors = VALID_DATA_DICTIONARY["data"]["dataDictionary"]
+    table_descriptors = VALID_DATA_DICTIONARY["data"]
 
     table_names, descriptors = get_table_names_and_descriptors(table_descriptors)
 
     assert len(table_names) == 3
     assert table_names == ["People", "Team", "GameConsole"]
     assert len(descriptors) == 3
+
+
+@pytest.mark.unit
+def test_get_relationships_from_data_dict():
+    table_descriptors = VALID_DATA_DICTIONARY["data"]
+
+    result = get_relationships_from_data_dict(table_descriptors)
+
+    assert result == {
+        # "oneToOne": [["People", "haveA", "Passport"],
+        # "oneToMany": [["People", "playGameConsole", "GameConsole"]],
+        "manyToMany": [["People", "Team"]]
+    }

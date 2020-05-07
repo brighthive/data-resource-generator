@@ -45,12 +45,14 @@ def create_all_tables_from_schemas(table_schemas: list) -> "Metadata":
         raise
 
 
-def get_table_names_and_descriptors(table_schemas: list) -> (list, list):
+def get_table_names_and_descriptors(data_dict: list) -> (list, list):
+    data_dict = data_dict["dataDictionary"]
+
     table_names = []
     descriptors = []
 
-    table_names = [schema["name"] for schema in table_schemas]
-    descriptors = [schema["tableSchema"] for schema in table_schemas]
+    table_names = [schema["name"] for schema in data_dict]
+    descriptors = [schema["tableSchema"] for schema in data_dict]
 
     return table_names, descriptors
 
@@ -118,3 +120,9 @@ def automap_metadata_for_many_to_many(metadata):
     base.prepare()
 
     AutobaseSingleton.set_autobase(base)
+
+
+def get_relationships_from_data_dict(data_dict: dict) -> list:
+    relationships = data_dict["relationships"]
+
+    return relationships

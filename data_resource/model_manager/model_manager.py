@@ -4,17 +4,19 @@ from sqlalchemy import Table, Integer, ForeignKey, Column
 from data_resource.db import engine, MetadataSingleton, AutobaseSingleton
 from sqlalchemy.orm import relationship, mapper
 from sqlalchemy.ext.automap import automap_base
+import itertools
 
 
-def main(table_schemas: list) -> None:
+def main(data_catalog: list) -> None:
     # Create base items
-    create_all_tables_from_schemas(table_schemas)
+    create_all_tables_from_schemas(data_catalog)
 
     metadata = MetadataSingleton.instance()
 
+    relationships = get_relationships_from_data_dict(data_catalog)
+    # Many to one
     # Many to many
-    relationships = [["People", "Team"]]
-    for relationship in relationships:
+    for relationship in relationships["manyToMany"]:
         # Create assoc table
         assoc_table_name = construct_many_to_many_assoc(metadata, relationship)
 

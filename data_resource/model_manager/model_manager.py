@@ -7,6 +7,22 @@ from sqlalchemy.orm import relationship, mapper
 # from sqlalchemy.ext.declarative import declarative_base
 
 
+# Need end to end?
+def main(table_schemas: list) -> None:
+    # Create base items
+    create_all_tables_from_schemas(table_schemas)
+
+    metadata = MetadataSingleton.instance()
+    # Many to many
+    # Create assoc table
+    construct_many_to_many_assoc(metadata)
+
+    # Create foreign keys
+    add_foreign_keys_to_tables
+
+    # Create automapping relationships
+
+
 def create_all_tables_from_schemas(table_schemas: list) -> "Metadata":
     table_names, descriptors = get_table_names_and_descriptors(table_schemas)
 
@@ -36,7 +52,7 @@ def get_table_names_and_descriptors(table_schemas: list) -> (list, list):
     return table_names, descriptors
 
 
-def construct_many_to_many_assoc(metadata: "MetaData", relationship: list) -> None:
+def construct_many_to_many_assoc(metadata: "MetaData", relationship: list) -> str:
     """Given a single many to many, creates it."""
 
     # create many to many association table
@@ -49,18 +65,7 @@ def construct_many_to_many_assoc(metadata: "MetaData", relationship: list) -> No
         Column("right", Integer, ForeignKey(f"{relationship[1]}.id"), primary_key=True),
     )
 
-    # assign reference item to both tables
-    # tbl1 = get_table(relationship[0])
-    # tbl2 = get_table(relationship[1])
-
-    # add_mn_reference_column(tbl1, association)
-    # add_mn_reference_column(tbl2, association)
-
-    return association
-
-
-# def add_assoc_ref_to_table(METADATA, many_to_many_relationships, association_table):
-#     # get table
+    return str(association)
 
 
 def add_foreign_keys_to_tables(METADATA, many_to_many_relationships, assoc_table_name):

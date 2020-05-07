@@ -28,11 +28,11 @@ def test_create_one_many_to_many_assoc():
 
     result = construct_many_to_many_assoc(METADATA, many_to_many_relationships)
 
+    assert result == "assoc_people_team"
     assert "assoc_people_team" in METADATA.tables
 
     # assert that the fields are correct
-
-    assert isinstance(result, Table)
+    # assert isinstance(result, Table)
 
 
 @pytest.mark.unit

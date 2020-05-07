@@ -61,6 +61,25 @@ def construct_many_to_many_assoc(metadata: "MetaData", relationship: list) -> No
 
 # def add_assoc_ref_to_table(METADATA, many_to_many_relationships, association_table):
 #     # get table
-#     many_to_many_relationships.sort()
-#     table = METADATA.tables[many_to_many_relationships[0]]
-#     other_table = METADATA.tables[many_to_many_relationships[1]]
+
+
+def add_foreign_keys_to_tables(METADATA, many_to_many_relationships):
+    # Get tables
+    many_to_many_relationships.sort()
+    table = METADATA.tables[many_to_many_relationships[0]]
+    other_table = METADATA.tables[many_to_many_relationships[1]]
+
+    # Extend / add foreign key
+    Table(
+        "People",
+        METADATA,
+        Column("mn_reference_team", Integer, ForeignKey("Team.id")),
+        extend_existing=True,
+    )
+
+    Table(
+        "Team",
+        METADATA,
+        Column("mn_reference_people", Integer, ForeignKey("People.id")),
+        extend_existing=True,
+    )

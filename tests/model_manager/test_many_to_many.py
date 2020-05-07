@@ -1,6 +1,9 @@
 import pytest
 from sqlalchemy import MetaData, Table, Column, Integer, String, ForeignKey
-from data_resource.model_manager.model_manager import construct_many_to_many_assoc
+from data_resource.model_manager.model_manager import (
+    construct_many_to_many_assoc,
+    add_foreign_keys_to_tables,
+)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -34,6 +37,29 @@ def test_create_one_many_to_many_assoc():
     # assert that the fields are correct
 
     assert isinstance(result, Table)
+
+
+@pytest.mark.unit
+def test_add_foreign_keys_to_tables():
+    many_to_many_relationships = ["People", "Team"]
+    METADATA = MetaData()  # People, Teams as sqlalchemy METADATA
+    People = Table(
+        "People",
+        METADATA,
+        Column("id", Integer, primary_key=True),
+        Column("name", String(50)),
+    )
+    Team = Table(
+        "Team",
+        METADATA,
+        Column("id", Integer, primary_key=True),
+        Column("name", String(50)),
+    )
+
+    result = add_foreign_keys_to_tables(METADATA, many_to_many_relationships)
+
+    assert "mn_reference_team" in METADATA.tables["People"].columns
+    assert "mn_reference_people" in METADATA.tables["Team"].columns
 
 
 # @pytest.mark.unit

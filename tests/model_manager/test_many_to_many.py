@@ -21,7 +21,7 @@ def test_create_one_many_to_many_assoc():
         Column("name", String(50)),
     )
 
-    construct_many_to_many_assoc(METADATA, many_to_many_relationships)
+    result = construct_many_to_many_assoc(METADATA, many_to_many_relationships)
 
     # lol = METADATA.tables['Person']
     # print(dir(lol))
@@ -30,15 +30,9 @@ def test_create_one_many_to_many_assoc():
     # assert new_metadata has association table
     assert "assoc_people_team" in METADATA.tables
 
-    # assert new_metadata -> People has teams reference
-    # (Pdb) lol.columns
-    # <sqlalchemy.sql.base.ImmutableColumnCollection object at 0x104871f30>
-    # (Pdb) print(lol.columns)
-    # ['Person.person_id', 'Person.name']
-    # assert 'Person.mn_reference_team' in METADATA.tables['Person'].columns
+    # assert that the fields are correct
 
-    # assert new_metadata -> Teams has peoples reference
-    # assert 'Person.mn_reference_team' in METADATA.tables['Team'].columns
+    assert isinstance(result, Table)
 
 
 # @pytest.mark.unit
@@ -51,3 +45,47 @@ def test_create_one_many_to_many_assoc():
 
 #     # assert new_metadata has association table
 #     # assert new_metadata -> Peoples has peoples reference
+
+
+@pytest.mark.unit
+def test_add_assoc_ref_to_table():
+    many_to_many_relationships = ["People", "Team"]
+    METADATA = MetaData()
+    People = Table(
+        "People",
+        METADATA,
+        Column("person_id", Integer, primary_key=True),
+        Column("name", String(50)),
+    )
+    association = Table(
+        f"assoc_people_team",
+        METADATA,
+        Column("left", Integer, ForeignKey("node.id"), primary_key=True),
+        Column("right", Integer, ForeignKey("node.id"), primary_key=True),
+    )
+
+    add_assoc_ref_to_table(METADATA, many_to_many_relationships, association)
+
+    # lol = METADATA.tables['Person']
+    # print(dir(lol))
+    # import pdb; pdb.set_trace()
+
+    # assert new_metadata -> People has teams reference
+    # (Pdb) lol.columns
+    # <sqlalchemy.sql.base.ImmutableColumnCollection object at 0x104871f30>
+    # (Pdb) print(lol.columns)
+    # ['Person.person_id', 'Person.name']
+    assert "People.mn_reference_team" in METADATA.tables["Person"].columns
+
+    # assert new_metadata -> Teams has peoples reference
+    # assert 'Person.mn_reference_team' in METADATA.tables['Team'].columns
+
+    # assert new_metadata -> People has teams reference
+    # (Pdb) lol.columns
+    # <sqlalchemy.sql.base.ImmutableColumnCollection object at 0x104871f30>
+    # (Pdb) print(lol.columns)
+    # ['Person.person_id', 'Person.name']
+    # assert 'Person.mn_reference_team' in METADATA.tables['Person'].columns
+
+    # assert new_metadata -> Teams has peoples reference
+    # assert 'Person.mn_reference_team' in METADATA.tables['Team'].columns

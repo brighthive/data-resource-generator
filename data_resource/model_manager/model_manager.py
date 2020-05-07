@@ -49,3 +49,5 @@ def construct_many_to_many_assoc(metadata: "MetaData", relationship: list) -> No
 
     # add_mn_reference_column(tbl1, association)
     # add_mn_reference_column(tbl2, association)
+
+    return association

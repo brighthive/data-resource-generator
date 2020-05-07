@@ -2,7 +2,9 @@ import pytest
 from data_resource.model_manager.model_manager import (
     create_all_tables_from_schemas,
     get_table_names_and_descriptors,
+    main,
 )
+from data_resource.db.base import MetadataSingleton
 
 
 VALID_DATA_DICTIONARY = {
@@ -27,7 +29,7 @@ VALID_DATA_DICTIONARY = {
                 "tableSchema": {
                     "fields": [
                         {
-                            "name": "person_id",
+                            "name": "id",
                             "title": "Person ID",
                             "type": "integer",
                             "description": "A unique identifer for person.",
@@ -41,7 +43,32 @@ VALID_DATA_DICTIONARY = {
                             "constraints": {},
                         },
                     ],
-                    "primaryKey": "person_id",
+                    "primaryKey": "id",
+                    "missingValues": [],
+                },
+            },
+            {
+                "@id": "https://mydatatrust.brighthive.io/dr1/Team",
+                "@type": "table",
+                "name": "Team",
+                "tableSchema": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "title": "Team ID",
+                            "type": "integer",
+                            "description": "A unique identifer for team.",
+                            "constraints": {},
+                        },
+                        {
+                            "name": "name",
+                            "title": "Team Name",
+                            "type": "string",
+                            "description": "The name that a Team goes by.",
+                            "constraints": {},
+                        },
+                    ],
+                    "primaryKey": "id",
                     "missingValues": [],
                 },
             },
@@ -52,7 +79,7 @@ VALID_DATA_DICTIONARY = {
                 "tableSchema": {
                     "fields": [
                         {
-                            "name": "game_console_id",
+                            "name": "id",
                             "title": "Game Console ID",
                             "type": "integer",
                             "description": "Unique identifer for a Game Console.",
@@ -80,15 +107,15 @@ VALID_DATA_DICTIONARY = {
                             "constraints": {},
                         },
                     ],
-                    "primaryKey": "game_console_id",
+                    "primaryKey": "id",
                     "missingValues": [],
                 },
             },
         ],
         "relationships": {
             # "oneToOne": [["People", "haveA", "Passport"],
-            "oneToMany": [["People", "playGameConsole", "GameConsole"]],
-            "manyToMany": [["People", "People"], ["People", "Teams"]],
+            # "oneToMany": [["People", "playGameConsole", "GameConsole"]],
+            "manyToMany": [["People", "Team"]]
         },
         "databaseSchema": "url-to-something",
         "databaseType": "https://datatrust.org/databaseType/rdbms",
@@ -100,14 +127,42 @@ VALID_DATA_DICTIONARY = {
 }
 
 
+# TODO: Need to destroy db on this fn
+@pytest.mark.unit
+def test_main_creates_all_required_orm(empty_database):
+    table_descriptors = VALID_DATA_DICTIONARY["data"]["dataDictionary"]
+    MetadataSingleton._clear()
+
+    # act
+    main(table_descriptors)
+
+    # assert
+    metadata = MetadataSingleton.instance()
+
+    # assert tables exist
+    # assert people table
+    # assert gameconsole table
+    # assert assoc_gameconsole_people table
+
+    # automap:
+    # assert people.gameconsole exists
+    # assert gameconsole.people exists
+
+
+# def test_main_can_add_data_with_orm
+# create orm
+# add items to db via classes
+# assert db has it
+
+
 @pytest.mark.requiresdb
-def test_valid_descriptor_creates_databased(sqlalchemy_metadata):
+def test_valid_descriptor_creates_databased(empty_database, sqlalchemy_metadata):
     table_descriptors = VALID_DATA_DICTIONARY["data"]["dataDictionary"]
 
     create_all_tables_from_schemas(table_descriptors)
 
     # assert database.table_count("test") == 1
-    assert sqlalchemy_metadata.table_count() == 2
+    assert sqlalchemy_metadata.table_count() == 3
 
 
 @pytest.mark.unit
@@ -116,6 +171,6 @@ def test_get_table_names_and_descriptors():
 
     table_names, descriptors = get_table_names_and_descriptors(table_descriptors)
 
-    assert len(table_names) == 2
-    assert table_names == ["People", "GameConsole"]
-    assert len(descriptors) == 2
+    assert len(table_names) == 3
+    assert table_names == ["People", "Team", "GameConsole"]
+    assert len(descriptors) == 3

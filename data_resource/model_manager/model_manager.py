@@ -36,6 +36,7 @@ def create_all_tables_from_schemas(table_schemas: list) -> "Metadata":
         metadata = storage._Storage__metadata
         # Base = declarative_base(metadata)
 
+        # TODO: get table names from data dict
         storage.create(table_names, descriptors)
 
         MetadataSingleton.set_metadata(metadata)  # Sqlalchemy metadata

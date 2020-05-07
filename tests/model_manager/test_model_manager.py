@@ -136,16 +136,17 @@ def test_main_creates_all_required_orm(empty_database):
     # act
     main(table_descriptors)
 
-    # assert
     metadata = MetadataSingleton.instance()
+    # base = AutobaseSingleton.instance()
 
-    # assert tables exist
-    # assert people table
-    # assert gameconsole table
-    # assert assoc_gameconsole_people table
+    assert "People" in metadata.tables
+    assert "Team" in metadata.tables
+    assert "GameConsole" in metadata.tables
+    assert "assoc_people_team" in metadata.tables
 
     # automap:
     # assert people.gameconsole exists
+    # assert
     # assert gameconsole.people exists
 
 

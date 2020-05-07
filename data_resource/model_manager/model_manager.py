@@ -63,7 +63,7 @@ def construct_many_to_many_assoc(metadata: "MetaData", relationship: list) -> No
 #     # get table
 
 
-def add_foreign_keys_to_tables(METADATA, many_to_many_relationships):
+def add_foreign_keys_to_tables(METADATA, many_to_many_relationships, assoc_table_name):
     # Get tables
     many_to_many_relationships.sort()
     table = METADATA.tables[many_to_many_relationships[0]]
@@ -76,7 +76,7 @@ def add_foreign_keys_to_tables(METADATA, many_to_many_relationships):
         Column(
             f"mn_reference_{many_to_many_relationships[1].lower()}",
             Integer,
-            ForeignKey(f"{many_to_many_relationships[1]}.id"),
+            ForeignKey(f"{assoc_table_name}.{many_to_many_relationships[1].lower()}"),
         ),
         extend_existing=True,
     )
@@ -87,7 +87,7 @@ def add_foreign_keys_to_tables(METADATA, many_to_many_relationships):
         Column(
             f"mn_reference_{many_to_many_relationships[0].lower()}",
             Integer,
-            ForeignKey(f"{many_to_many_relationships[0]}.id"),
+            ForeignKey(f"{assoc_table_name}.{many_to_many_relationships[0].lower()}"),
         ),
         extend_existing=True,
     )

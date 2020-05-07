@@ -51,20 +51,48 @@ def test_add_foreign_keys_to_tables():
         Column("id", Integer, primary_key=True),
         Column("name", String(50)),
     )
+    assoc_table_name = "assoc_people_team"
 
-    result = add_foreign_keys_to_tables(METADATA, many_to_many_relationships)
+    result = add_foreign_keys_to_tables(
+        METADATA, many_to_many_relationships, assoc_table_name
+    )
 
     assert "mn_reference_team" in METADATA.tables["People"].columns
     assert "mn_reference_people" in METADATA.tables["Team"].columns
 
+    assert "ForeignKey('assoc_people_team.team')" == str(
+        list(METADATA.tables["People"].columns["mn_reference_team"].foreign_keys)[0]
+    )
+    assert "ForeignKey('assoc_people_team.people')" == str(
+        list(METADATA.tables["Team"].columns["mn_reference_people"].foreign_keys)[0]
+    )
 
-# @pytest.mark.unit
-# def test_create_many_to_many():
-#     relationships = VALID_DATA_DICTIONARY["data"]["relationships"] # only People, People
-#     metadata_dict = {}
-#     new_metadata = MetaData({}) # People, People as sqlalchemy metadata
 
-#     construct_many_to_many(new_metadata, relationships)
+@pytest.mark.unit
+def test_create_many_to_many_attr_on_class():
+    many_to_many_relationships = ["People", "Team"]
+    METADATA = MetaData()  # People, Teams as sqlalchemy METADATA
+    association = Table(
+        f"assoc_people_team",
+        METADATA,
+        Column("left", Integer, ForeignKey("People.id"), primary_key=True),
+        Column("right", Integer, ForeignKey("Team.id"), primary_key=True),
+    )
+    People = Table(
+        "People",
+        METADATA,
+        Column("id", Integer, primary_key=True),
+        Column("name", String(50)),
+        Column(f"mn_reference_team", Integer, ForeignKey(f"Team.id")),
+    )
+    Team = Table(
+        "Team",
+        METADATA,
+        Column("id", Integer, primary_key=True),
+        Column("name", String(50)),
+        Column(f"mn_reference_people", Integer, ForeignKey(f"People.id")),
+    )
+
 
 #     # assert new_metadata has association table
 #     # assert new_metadata -> Peoples has peoples reference

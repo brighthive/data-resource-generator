@@ -71,15 +71,23 @@ def add_foreign_keys_to_tables(METADATA, many_to_many_relationships):
 
     # Extend / add foreign key
     Table(
-        "People",
+        f"{many_to_many_relationships[0]}",
         METADATA,
-        Column("mn_reference_team", Integer, ForeignKey("Team.id")),
+        Column(
+            f"mn_reference_{many_to_many_relationships[1].lower()}",
+            Integer,
+            ForeignKey(f"{many_to_many_relationships[1]}.id"),
+        ),
         extend_existing=True,
     )
 
     Table(
-        "Team",
+        f"{many_to_many_relationships[1]}",
         METADATA,
-        Column("mn_reference_people", Integer, ForeignKey("People.id")),
+        Column(
+            f"mn_reference_{many_to_many_relationships[0].lower()}",
+            Integer,
+            ForeignKey(f"{many_to_many_relationships[0]}.id"),
+        ),
         extend_existing=True,
     )

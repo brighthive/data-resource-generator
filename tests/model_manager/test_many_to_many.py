@@ -8,10 +8,6 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
 
-# lol = METADATA.tables['Person']
-# print(dir(lol))
-# import pdb; pdb.set_trace()
-
 # https://github.com/brighthive/etl-goodwill/blob/master/tests/conftest.py#L103
 @pytest.mark.unit
 def test_create_one_many_to_many_assoc():

@@ -2,6 +2,9 @@ from tableschema_sql import Storage
 from tableschema.exceptions import ValidationError
 from sqlalchemy import Table, Integer, ForeignKey, Column
 from data_resource.db import engine, MetadataSingleton
+from sqlalchemy.orm import relationship, mapper
+
+# from sqlalchemy.ext.declarative import declarative_base
 
 
 def create_all_tables_from_schemas(table_schemas: list) -> "Metadata":
@@ -9,9 +12,12 @@ def create_all_tables_from_schemas(table_schemas: list) -> "Metadata":
 
     try:
         storage = Storage(engine=engine)
-        storage.create(table_names, descriptors)
 
+        # Hijack the metadata / create_all()
         metadata = storage._Storage__metadata
+        # Base = declarative_base(metadata)
+
+        storage.create(table_names, descriptors)
 
         MetadataSingleton.set_metadata(metadata)  # Sqlalchemy metadata
 
@@ -39,8 +45,8 @@ def construct_many_to_many_assoc(metadata: "MetaData", relationship: list) -> No
     association = Table(
         f"assoc_{relationship[0].lower()}_{relationship[1].lower()}",
         metadata,
-        Column("left", Integer, ForeignKey("node.id"), primary_key=True),
-        Column("right", Integer, ForeignKey("node.id"), primary_key=True),
+        Column("left", Integer, ForeignKey(f"{relationship[0]}.id"), primary_key=True),
+        Column("right", Integer, ForeignKey(f"{relationship[1]}.id"), primary_key=True),
     )
 
     # assign reference item to both tables
@@ -51,3 +57,10 @@ def construct_many_to_many_assoc(metadata: "MetaData", relationship: list) -> No
     # add_mn_reference_column(tbl2, association)
 
     return association
+
+
+# def add_assoc_ref_to_table(METADATA, many_to_many_relationships, association_table):
+#     # get table
+#     many_to_many_relationships.sort()
+#     table = METADATA.tables[many_to_many_relationships[0]]
+#     other_table = METADATA.tables[many_to_many_relationships[1]]

@@ -115,8 +115,8 @@ VALID_DATA_DICTIONARY = {
         ],
         "relationships": {
             # "oneToOne": [["People", "haveA", "Passport"],
-            # "oneToMany": [["People", "playGameConsole", "GameConsole"]],
-            "manyToMany": [["People", "Team"]]
+            "oneToMany": [["People", "GameConsole"]],
+            "manyToMany": [["People", "Team"]],
         },
         "databaseSchema": "url-to-something",
         "databaseType": "https://datatrust.org/databaseType/rdbms",
@@ -183,6 +183,6 @@ def test_get_relationships_from_data_dict():
 
     assert result == {
         # "oneToOne": [["People", "haveA", "Passport"],
-        # "oneToMany": [["People", "playGameConsole", "GameConsole"]],
-        "manyToMany": [["People", "Team"]]
+        "oneToMany": [["People", "GameConsole"]],
+        "manyToMany": [["People", "Team"]],
     }

@@ -149,7 +149,6 @@ def test_main_creates_all_required_orm(empty_database):
 
 
 # end to end test
-@pytest.mark.xfail
 @pytest.mark.requiresdb
 def test_main_can_add_data_with_orm(empty_database):
     # Arrange

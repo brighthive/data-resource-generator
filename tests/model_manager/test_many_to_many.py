@@ -2,7 +2,7 @@ import pytest
 from sqlalchemy import MetaData, Table, Column, Integer, String, ForeignKey
 from data_resource.model_manager.model_manager import (
     construct_many_to_many_assoc,
-    add_foreign_keys_to_tables,
+    # add_foreign_keys_to_tables,
     automap_metadata,
 )
 from sqlalchemy.ext.declarative import declarative_base
@@ -50,62 +50,25 @@ def test_create_mn_association_table():
 
 
 @pytest.mark.unit
-def test_add_foreign_keys_to_mn_tables():
-    many_to_many_relationships = ["People", "Team"]
-    metadata = MetaData()
-    People = Table(
-        "People",
-        metadata,
-        Column("id", Integer, primary_key=True),
-        Column("name", String(50)),
-    )
-    Team = Table(
-        "Team",
-        metadata,
-        Column("id", Integer, primary_key=True),
-        Column("name", String(50)),
-    )
-    assoc_table_name = "assoc_people_team"
-
-    result = add_foreign_keys_to_tables(
-        metadata, many_to_many_relationships, assoc_table_name
-    )
-
-    assert "mn_reference_team" in metadata.tables["People"].columns
-    assert "mn_reference_people" in metadata.tables["Team"].columns
-
-    assert "ForeignKey('assoc_people_team.team')" == str(
-        list(metadata.tables["People"].columns["mn_reference_team"].foreign_keys)[0]
-    )
-    assert "ForeignKey('assoc_people_team.people')" == str(
-        list(metadata.tables["Team"].columns["mn_reference_people"].foreign_keys)[0]
-    )
-
-
-@pytest.mark.unit
 def test_automap_metadata_for_mn():
     metadata = MetaData()
     association = Table(
         f"assoc_people_team",
         metadata,
-        Column("people", Integer, ForeignKey("People.id"), primary_key=True),
-        Column("team", Integer, ForeignKey("Team.id"), primary_key=True),
+        Column("People", Integer, ForeignKey("People.id"), primary_key=True),
+        Column("Team", Integer, ForeignKey("Team.id"), primary_key=True),
     )
     People = Table(
         "People",
         metadata,
         Column("id", Integer, primary_key=True),
         Column("name", String(50)),
-        Column(f"mn_reference_team", Integer, ForeignKey(f"assoc_people_team.team")),
     )
     Team = Table(
         "Team",
         metadata,
         Column("id", Integer, primary_key=True),
         Column("name", String(50)),
-        Column(
-            f"mn_reference_people", Integer, ForeignKey(f"assoc_people_team.people")
-        ),
     )
     AutobaseSingleton._clear()
 
@@ -116,12 +79,10 @@ def test_automap_metadata_for_mn():
     people_orm = getattr(base.classes, "People")
     assert isinstance(getattr(people_orm, "id"), InstrumentedAttribute)
     assert isinstance(getattr(people_orm, "name"), InstrumentedAttribute)
-    assert isinstance(getattr(people_orm, "mn_reference_team"), InstrumentedAttribute)
 
     team_orm = getattr(base.classes, "Team")
     assert isinstance(getattr(team_orm, "id"), InstrumentedAttribute)
     assert isinstance(getattr(team_orm, "name"), InstrumentedAttribute)
-    assert isinstance(getattr(team_orm, "mn_reference_people"), InstrumentedAttribute)
 
     person1 = people_orm()
     team1 = team_orm()

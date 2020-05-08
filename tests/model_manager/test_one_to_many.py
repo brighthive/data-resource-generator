@@ -2,7 +2,6 @@ import pytest
 from sqlalchemy import MetaData, Table, Column, Integer, String, ForeignKey
 from data_resource.model_manager.model_manager import (
     construct_many_to_many_assoc,
-    add_foreign_keys_to_tables,
     add_foreign_keys_to_one_to_many_parent,
     automap_metadata,
 )

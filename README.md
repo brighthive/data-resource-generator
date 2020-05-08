@@ -42,9 +42,9 @@ Simply provide the application a declarative database and API specification and 
 ### Supported -- tested
 - Generate database from table schema
 - Many to many
+- Many to one
 
 ### Assumed supported -- untested
-- Many to one ?
 - one to one ?
 
 ### Not supported yet

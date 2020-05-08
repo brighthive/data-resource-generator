@@ -1,4 +1,4 @@
-from data_resource.db.base import MetadataSingleton
+from data_resource.db.base import MetadataSingleton, AutobaseSingleton
 import pytest
 
 
@@ -17,3 +17,20 @@ def test_errors_when_no_metadata():
 
     with pytest.raises(RuntimeError):
         MetadataSingleton.instance()
+
+
+@pytest.mark.unit
+def test_singleton_stores_autobase():
+    AutobaseSingleton._clear()
+
+    AutobaseSingleton.set_autobase("hi")
+
+    assert AutobaseSingleton.instance() != None
+
+
+@pytest.mark.unit
+def test_errors_when_no_autobase():
+    AutobaseSingleton._clear()
+
+    with pytest.raises(RuntimeError):
+        AutobaseSingleton.instance()

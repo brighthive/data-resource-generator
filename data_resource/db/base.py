@@ -51,3 +51,27 @@ class MetadataSingleton:
     def _clear(cls):
         """This method is for use in unit tests."""
         cls.metadata = None
+
+
+class AutobaseSingleton:
+    __slots__ = (
+        []
+    )  # prevents additional attributes from being added to instances and same-named attributes from shadowing the class's attributes
+    base = None
+
+    @classmethod
+    def instance(cls):
+        if cls.base is None:
+            raise RuntimeError(
+                "No base reference was found stored in the base singleton."
+            )
+        return cls.base
+
+    @classmethod
+    def set_autobase(cls, base):
+        cls.base = base
+
+    @classmethod
+    def _clear(cls):
+        """This method is for use in unit tests."""
+        cls.base = None

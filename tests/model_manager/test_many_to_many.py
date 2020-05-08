@@ -4,6 +4,7 @@ from data_resource.model_manager.model_manager import (
     construct_many_to_many_assoc,
     add_foreign_keys_to_tables,
     automap_metadata_for_many_to_many,
+    add_foreign_keys_to_many_to_one_parent,
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -12,7 +13,7 @@ from sqlalchemy.orm.attributes import InstrumentedAttribute
 
 
 @pytest.mark.unit
-def test_create_one_many_to_many_assoc():
+def test_create_mn_association_table():
     many_to_many_relationships = ["People", "Team"]
     metadata = MetaData()
     People = Table(
@@ -50,7 +51,7 @@ def test_create_one_many_to_many_assoc():
 
 
 @pytest.mark.unit
-def test_add_foreign_keys_to_tables():
+def test_add_foreign_keys_to_mn_tables():
     many_to_many_relationships = ["People", "Team"]
     metadata = MetaData()
     People = Table(
@@ -83,7 +84,7 @@ def test_add_foreign_keys_to_tables():
 
 
 @pytest.mark.unit
-def test_automap_metadata_for_many_to_many():
+def test_automap_metadata_for_mn():
     metadata = MetaData()
     association = Table(
         f"assoc_people_team",

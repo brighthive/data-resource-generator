@@ -7,6 +7,7 @@ from sqlalchemy.ext.automap import automap_base
 import itertools
 
 
+# main
 def main(data_catalog: list) -> None:
     # Create base items
     create_all_tables_from_schemas(data_catalog)
@@ -15,6 +16,9 @@ def main(data_catalog: list) -> None:
 
     relationships = get_relationships_from_data_dict(data_catalog)
     # Many to one
+    for relationship in relationships["oneToMany"]:
+        pass
+
     # Many to many
     for relationship in relationships["manyToMany"]:
         # Create assoc table
@@ -27,6 +31,7 @@ def main(data_catalog: list) -> None:
     automap_metadata_for_many_to_many(metadata)
 
 
+# base
 def create_all_tables_from_schemas(table_schemas: list) -> "Metadata":
     table_names, descriptors = get_table_names_and_descriptors(table_schemas)
 
@@ -47,6 +52,7 @@ def create_all_tables_from_schemas(table_schemas: list) -> "Metadata":
         raise
 
 
+# util
 def get_table_names_and_descriptors(data_dict: list) -> (list, list):
     data_dict = data_dict["dataDictionary"]
 
@@ -59,6 +65,7 @@ def get_table_names_and_descriptors(data_dict: list) -> (list, list):
     return table_names, descriptors
 
 
+# mn
 def construct_many_to_many_assoc(metadata: "MetaData", relationship: list) -> str:
     """Given a single many to many, creates it."""
 
@@ -85,6 +92,7 @@ def construct_many_to_many_assoc(metadata: "MetaData", relationship: list) -> st
     return str(association)
 
 
+# mn
 def add_foreign_keys_to_tables(METADATA, mn_relationship, assoc_table_name):
     # Get tables
     mn_relationship.sort()
@@ -124,7 +132,28 @@ def automap_metadata_for_many_to_many(metadata):
     AutobaseSingleton.set_autobase(base)
 
 
+# util
 def get_relationships_from_data_dict(data_dict: dict) -> list:
     relationships = data_dict["relationships"]
 
     return relationships
+
+
+# Many to one
+def add_foreign_keys_to_many_to_one_parent(metadata, many_to_one_relationships):
+    # Get tables
+    parent_table = metadata.tables[many_to_one_relationships[0]]
+
+    # Extend / add foreign key
+    Table(
+        f"{many_to_one_relationships[0]}",
+        metadata,
+        Column(
+            f"m1_reference_{many_to_one_relationships[1].lower()}",
+            Integer,
+            ForeignKey(
+                f"{many_to_one_relationships[1]}.id"
+            ),  # lookup their primary key? TODO?
+        ),
+        extend_existing=True,
+    )

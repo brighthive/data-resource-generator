@@ -132,6 +132,7 @@ def test_main_creates_all_required_orm(empty_database):
     # Assert that the auto mapped python classes exist!
     assert base.classes.People
     assert base.classes.Team
+    assert base.classes.Order
 
 
 # def test_main_can_add_data_with_orm

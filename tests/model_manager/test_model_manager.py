@@ -2,7 +2,11 @@ import pytest
 from data_resource.model_manager.model_manager import (
     create_all_tables_from_schemas,
     get_table_names_and_descriptors,
+    main,
+    get_relationships_from_data_dict,
 )
+from data_resource.db.base import MetadataSingleton, AutobaseSingleton, Session
+from sqlalchemy.orm.attributes import InstrumentedAttribute
 
 
 VALID_DATA_DICTIONARY = {
@@ -27,7 +31,7 @@ VALID_DATA_DICTIONARY = {
                 "tableSchema": {
                     "fields": [
                         {
-                            "name": "person_id",
+                            "name": "id",
                             "title": "Person ID",
                             "type": "integer",
                             "description": "A unique identifer for person.",
@@ -41,54 +45,65 @@ VALID_DATA_DICTIONARY = {
                             "constraints": {},
                         },
                     ],
-                    "primaryKey": "person_id",
+                    "primaryKey": "id",
                     "missingValues": [],
                 },
             },
             {
-                "@id": "https://mydatatrust.brighthive.io/dr1/GameConsole",
+                "@id": "https://mydatatrust.brighthive.io/dr1/Team",
                 "@type": "table",
-                "name": "GameConsole",
+                "name": "Team",
                 "tableSchema": {
                     "fields": [
                         {
-                            "name": "game_console_id",
-                            "title": "Game Console ID",
+                            "name": "id",
+                            "title": "Team ID",
                             "type": "integer",
-                            "description": "Unique identifer for a Game Console.",
+                            "description": "A unique identifer for team.",
                             "constraints": {},
                         },
                         {
                             "name": "name",
-                            "title": "Game Console Name",
+                            "title": "Team Name",
                             "type": "string",
-                            "description": "The name of the Game Console.",
-                            "constraints": {},
-                        },
-                        {
-                            "name": "producer_company",
-                            "title": "Game Console Company",
-                            "type": "string",
-                            "description": "The name of the Company that created the Game Console.",
-                            "constraints": {},
-                        },
-                        {
-                            "name": "controller_ports_count",
-                            "title": "Number of Controller Ports",
-                            "type": "integer",
-                            "description": "The maximum number of concurrent controllers supported.",
+                            "description": "The name that a Team goes by.",
                             "constraints": {},
                         },
                     ],
-                    "primaryKey": "game_console_id",
+                    "primaryKey": "id",
+                    "missingValues": [],
+                },
+            },
+            {
+                "@id": "https://mydatatrust.brighthive.io/dr1/Order",
+                "@type": "table",
+                "name": "Order",
+                "tableSchema": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "title": "Order ID",
+                            "type": "integer",
+                            "description": "Unique identifer for an Order.",
+                            "constraints": {},
+                        },
+                        {
+                            "name": "items",
+                            "title": "Items in Order",
+                            "type": "string",
+                            "description": "Textual list of items in order.",
+                            "constraints": {},
+                        },
+                    ],
+                    "primaryKey": "id",
                     "missingValues": [],
                 },
             },
         ],
         "relationships": {
             # "oneToOne": [["People", "haveA", "Passport"],
-            "oneToMany": [["People", "playGameConsole", "GameConsole"]],
-            "manyToMany": [["People", "friendsWith", "People"]],
+            "oneToMany": [["People", "Order"]],
+            "manyToMany": [["People", "Team"]],
         },
         "databaseSchema": "url-to-something",
         "databaseType": "https://datatrust.org/databaseType/rdbms",
@@ -100,22 +115,102 @@ VALID_DATA_DICTIONARY = {
 }
 
 
+@pytest.mark.unit  # Does this requiredb tho?
+def test_main_creates_all_required_orm(empty_database):
+    table_descriptors = VALID_DATA_DICTIONARY["data"]
+    MetadataSingleton._clear()
+    AutobaseSingleton._clear()
+
+    main(table_descriptors)
+
+    metadata = MetadataSingleton.instance()
+    base = AutobaseSingleton.instance()
+    assert "People" in metadata.tables
+    assert "Team" in metadata.tables
+    assert "Order" in metadata.tables
+    assert "assoc_people_team" in metadata.tables
+
+    # Assert that the auto mapped python classes exist
+    assert base.classes.People
+    people_orm = getattr(base.classes, "People")
+
+    # Assert that the relational fields exist on the orm instance
+    person1 = people_orm()
+    assert person1.order_collection is not None
+    assert person1.team_collection is not None
+
+    assert base.classes.Team
+    team_orm = getattr(base.classes, "Team")
+
+    team1 = team_orm()
+    assert team1.people_collection is not None
+
+    assert base.classes.Order
+
+
+# end to end test
 @pytest.mark.requiresdb
-def test_valid_descriptor_creates_databased(sqlalchemy_metadata):
-    table_descriptors = VALID_DATA_DICTIONARY["data"]["dataDictionary"]
+def test_main_can_add_data_with_orm(empty_database):
+    # Arrange
+    # create orm
+    table_descriptors = VALID_DATA_DICTIONARY["data"]
+    MetadataSingleton._clear()
+    AutobaseSingleton._clear()
+
+    main(table_descriptors)
+
+    base = AutobaseSingleton.instance()
+    session = Session()
+
+    # Act
+    # add items to db via classes
+    people_orm = getattr(base.classes, "People")
+    order_orm = getattr(base.classes, "Order")
+    team_orm = getattr(base.classes, "Team")
+
+    person1 = people_orm(name="testperson")
+    order1 = order_orm(items="testitems")
+    team1 = team_orm(name="testteam")
+
+    person1.order_collection.append(order1)
+    person1.team_collection.append(team1)
+
+    session.add(order1)
+    session.add(team1)
+    session.add(person1)
+
+    session.commit()
+
+
+@pytest.mark.requiresdb
+def test_valid_descriptor_creates_databased(empty_database, sqlalchemy_metadata):
+    table_descriptors = VALID_DATA_DICTIONARY["data"]
 
     create_all_tables_from_schemas(table_descriptors)
 
     # assert database.table_count("test") == 1
-    assert sqlalchemy_metadata.table_count() == 2
+    assert sqlalchemy_metadata.table_count() == 3
 
 
 @pytest.mark.unit
 def test_get_table_names_and_descriptors():
-    table_descriptors = VALID_DATA_DICTIONARY["data"]["dataDictionary"]
+    table_descriptors = VALID_DATA_DICTIONARY["data"]
 
     table_names, descriptors = get_table_names_and_descriptors(table_descriptors)
 
-    assert len(table_names) == 2
-    assert table_names == ["People", "GameConsole"]
-    assert len(descriptors) == 2
+    assert len(table_names) == 3
+    assert table_names == ["People", "Team", "Order"]
+    assert len(descriptors) == 3
+
+
+@pytest.mark.unit
+def test_get_relationships_from_data_dict():
+    table_descriptors = VALID_DATA_DICTIONARY["data"]
+
+    result = get_relationships_from_data_dict(table_descriptors)
+
+    assert result == {
+        # "oneToOne": [["People", "haveA", "Passport"],
+        "oneToMany": [["People", "Order"]],
+        "manyToMany": [["People", "Team"]],
+    }

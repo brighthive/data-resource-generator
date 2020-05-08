@@ -16,8 +16,8 @@ def main(data_catalog: list) -> None:
 
     relationships = get_relationships_from_data_dict(data_catalog)
     # Many to one
-    for relationship in relationships["oneToMany"]:
-        pass
+    for relationship in relationships["manyToOne"]:
+        add_foreign_keys_to_many_to_one_parent(metadata, relationship)
 
     # Many to many
     for relationship in relationships["manyToMany"]:
@@ -28,7 +28,7 @@ def main(data_catalog: list) -> None:
         add_foreign_keys_to_tables(metadata, relationship, assoc_table_name)
 
     # Create automapping relationships
-    automap_metadata_for_many_to_many(metadata)
+    automap_metadata(metadata)
 
 
 # base
@@ -123,7 +123,7 @@ def add_foreign_keys_to_tables(METADATA, mn_relationship, assoc_table_name):
     )
 
 
-def automap_metadata_for_many_to_many(metadata):
+def automap_metadata(metadata):
     base = automap_base(metadata=metadata)
 
     # calling prepare() just sets up mapped classes and relationships.

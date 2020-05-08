@@ -3,7 +3,7 @@ from sqlalchemy import MetaData, Table, Column, Integer, String, ForeignKey
 from data_resource.model_manager.model_manager import (
     construct_many_to_many_assoc,
     add_foreign_keys_to_tables,
-    automap_metadata_for_many_to_many,
+    automap_metadata,
     add_foreign_keys_to_many_to_one_parent,
 )
 from sqlalchemy.ext.declarative import declarative_base
@@ -110,7 +110,7 @@ def test_automap_metadata_for_mn():
     )
     AutobaseSingleton._clear()
 
-    automap_metadata_for_many_to_many(metadata)
+    automap_metadata(metadata)
 
     base = AutobaseSingleton.instance()
 

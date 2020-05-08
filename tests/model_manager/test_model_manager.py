@@ -6,6 +6,7 @@ from data_resource.model_manager.model_manager import (
     get_relationships_from_data_dict,
 )
 from data_resource.db.base import MetadataSingleton, AutobaseSingleton
+from sqlalchemy.orm.attributes import InstrumentedAttribute
 
 
 VALID_DATA_DICTIONARY = {
@@ -101,7 +102,7 @@ VALID_DATA_DICTIONARY = {
         ],
         "relationships": {
             # "oneToOne": [["People", "haveA", "Passport"],
-            "oneToMany": [["People", "Order"]],
+            "manyToOne": [["People", "Order"]],
             "manyToMany": [["People", "Team"]],
         },
         "databaseSchema": "url-to-something",
@@ -131,7 +132,14 @@ def test_main_creates_all_required_orm(empty_database):
 
     # Assert that the auto mapped python classes exist!
     assert base.classes.People
+    people_orm = getattr(base.classes, "People")
+    assert isinstance(getattr(people_orm, "m1_reference_order"), InstrumentedAttribute)
+    assert isinstance(getattr(people_orm, "mn_reference_team"), InstrumentedAttribute)
+
     assert base.classes.Team
+    team_orm = getattr(base.classes, "Team")
+    assert isinstance(getattr(team_orm, "mn_reference_people"), InstrumentedAttribute)
+
     assert base.classes.Order
 
 
@@ -170,6 +178,6 @@ def test_get_relationships_from_data_dict():
 
     assert result == {
         # "oneToOne": [["People", "haveA", "Passport"],
-        "oneToMany": [["People", "Order"]],
+        "manyToOne": [["People", "Order"]],
         "manyToMany": [["People", "Team"]],
     }

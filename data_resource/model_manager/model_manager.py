@@ -17,16 +17,14 @@ def main(data_catalog: list) -> None:
     metadata = MetadataSingleton.instance()
 
     relationships = get_relationships_from_data_dict(data_catalog)
-    # Many to one
+
     for relationship in relationships["oneToMany"]:
         add_foreign_keys_to_one_to_many_parent(metadata, relationship)
 
-    # Many to many
     for relationship in relationships["manyToMany"]:
-        # Create assoc table
         assoc_table_name = construct_many_to_many_assoc(metadata, relationship)
 
-    # Create automapping relationships
+    # Create ORM relationships
     automap_metadata(metadata)
 
 
@@ -43,7 +41,7 @@ def create_all_tables_from_schemas(table_schemas: list) -> "Metadata":
 
         storage.create(table_names, descriptors)
 
-        MetadataSingleton.set_metadata(metadata)  # Sqlalchemy metadata
+        MetadataSingleton.set_metadata(metadata)
 
     except ValidationError as e:
         print(e.errors)
@@ -96,7 +94,6 @@ def construct_many_to_many_assoc(metadata: "MetaData", relationship: list) -> st
     """Given a single many to many relationship, creates the required
     association table."""
 
-    # create many to many association table
     relationship.sort()
 
     association = Table(
@@ -119,48 +116,13 @@ def construct_many_to_many_assoc(metadata: "MetaData", relationship: list) -> st
     return str(association)
 
 
-# mn
-# def add_foreign_keys_to_tables(METADATA, mn_relationship, assoc_table_name):
-#     """Given a single many to many relationship, extends the existing tables
-#     with the correct foreign key information."""
-#     # Get tables
-#     mn_relationship.sort()
-#     table = METADATA.tables[mn_relationship[0]]
-#     other_table = METADATA.tables[mn_relationship[1]]
-
-#     # Extend / add foreign key
-#     Table(
-#         f"{mn_relationship[0]}",
-#         METADATA,
-#         Column(
-#             f"mn_reference_{mn_relationship[1].lower()}",
-#             Integer,
-#             ForeignKey(f"{assoc_table_name}.{mn_relationship[1].lower()}"),
-#         ),
-#         extend_existing=True,
-#     )
-
-#     Table(
-#         f"{mn_relationship[1]}",
-#         METADATA,
-#         Column(
-#             f"mn_reference_{mn_relationship[0].lower()}",
-#             Integer,
-#             ForeignKey(f"{assoc_table_name}.{mn_relationship[0].lower()}"),
-#         ),
-#         extend_existing=True,
-#     )
-
-
 # one to many
 def add_foreign_keys_to_one_to_many_parent(metadata, one_to_many_relationships):
     """Given a single one to many relationship, extends the existing child
     table with the correct foreign key information."""
-    # Get tables
     parent_table = one_to_many_relationships[0]
     child_table = one_to_many_relationships[1]
 
-    # Extend / add foreign key
     Table(
         f"{child_table}",
         metadata,

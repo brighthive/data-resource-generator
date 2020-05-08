@@ -4,7 +4,6 @@ from data_resource.model_manager.model_manager import (
     construct_many_to_many_assoc,
     add_foreign_keys_to_tables,
     automap_metadata,
-    add_foreign_keys_to_many_to_one_parent,
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship

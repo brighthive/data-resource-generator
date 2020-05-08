@@ -18,8 +18,8 @@ def main(data_catalog: list) -> None:
 
     relationships = get_relationships_from_data_dict(data_catalog)
     # Many to one
-    for relationship in relationships["manyToOne"]:
-        add_foreign_keys_to_many_to_one_parent(metadata, relationship)
+    for relationship in relationships["oneToMany"]:
+        add_foreign_keys_to_one_to_many_parent(metadata, relationship)
 
     # Many to many
     for relationship in relationships["manyToMany"]:
@@ -153,23 +153,22 @@ def add_foreign_keys_to_tables(METADATA, mn_relationship, assoc_table_name):
     )
 
 
-# many to one
-def add_foreign_keys_to_many_to_one_parent(metadata, many_to_one_relationships):
-    """Given a single many to one relationship, extends the existing parent
+# one to many
+def add_foreign_keys_to_one_to_many_parent(metadata, one_to_many_relationships):
+    """Given a single one to many relationship, extends the existing child
     table with the correct foreign key information."""
     # Get tables
-    parent_table = metadata.tables[many_to_one_relationships[0]]
+    parent_table = one_to_many_relationships[0]
+    child_table = one_to_many_relationships[1]
 
     # Extend / add foreign key
     Table(
-        f"{many_to_one_relationships[0]}",
+        f"{child_table}",
         metadata,
         Column(
-            f"m1_reference_{many_to_one_relationships[1].lower()}",
+            f"om_reference_{parent_table.lower()}",
             Integer,
-            ForeignKey(
-                f"{many_to_one_relationships[1]}.id"
-            ),  # lookup their primary key? TODO?
+            ForeignKey(f"{parent_table}.id"),  # lookup their primary key? TODO?
         ),
         extend_existing=True,
     )

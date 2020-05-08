@@ -155,7 +155,7 @@ def add_foreign_keys_to_tables(METADATA, mn_relationship, assoc_table_name):
 
 # one to many
 def add_foreign_keys_to_one_to_many_parent(metadata, one_to_many_relationships):
-    """Given a single many to one relationship, extends the existing parent
+    """Given a single one to many relationship, extends the existing child
     table with the correct foreign key information."""
     # Get tables
     parent_table = one_to_many_relationships[0]

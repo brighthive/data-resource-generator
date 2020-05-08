@@ -5,7 +5,7 @@ from data_resource.model_manager.model_manager import (
     main,
     get_relationships_from_data_dict,
 )
-from data_resource.db.base import MetadataSingleton, AutobaseSingleton
+from data_resource.db.base import MetadataSingleton, AutobaseSingleton, Session
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 
 
@@ -102,7 +102,7 @@ VALID_DATA_DICTIONARY = {
         ],
         "relationships": {
             # "oneToOne": [["People", "haveA", "Passport"],
-            "manyToOne": [["People", "Order"]],
+            "manyToOne": [["Order", "People"]],  # change to oneToMany
             "manyToMany": [["People", "Team"]],
         },
         "databaseSchema": "url-to-something",
@@ -143,10 +143,42 @@ def test_main_creates_all_required_orm(empty_database):
     assert base.classes.Order
 
 
-# def test_main_can_add_data_with_orm
-# create orm
-# add items to db via classes
-# assert db has it
+# end to end test
+@pytest.mark.requiresdb
+def test_main_can_add_data_with_orm(empty_database):
+    # Arrange
+    # create orm
+    table_descriptors = VALID_DATA_DICTIONARY["data"]
+    MetadataSingleton._clear()
+    AutobaseSingleton._clear()
+
+    main(table_descriptors)
+
+    base = AutobaseSingleton.instance()
+    session = Session()
+
+    # Act
+    # add items to db via classes
+    people_orm = getattr(base.classes, "People")
+    order_orm = getattr(base.classes, "Order")
+    team_orm = getattr(base.classes, "Team")
+
+    person1 = people_orm(name="testperson")
+    order1 = order_orm(items="testitems")
+    team1 = team_orm(name="testteam")
+    person1.order_collection.append(order1)
+    person1.team_collection.append(team1)
+
+    session.add(order1)
+    session.add(team1)
+    session.add(person1)
+    session.commit()
+
+    # team1 = team_orm(name="testteam")
+
+    # session.add(team1)
+
+    # assert db has it
 
 
 @pytest.mark.requiresdb

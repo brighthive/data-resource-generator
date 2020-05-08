@@ -102,7 +102,7 @@ VALID_DATA_DICTIONARY = {
         ],
         "relationships": {
             # "oneToOne": [["People", "haveA", "Passport"],
-            "manyToOne": [["People", "Order"]],
+            "oneToMany": [["People", "Order"]],
             "manyToMany": [["People", "Team"]],
         },
         "databaseSchema": "url-to-something",
@@ -130,15 +130,20 @@ def test_main_creates_all_required_orm(empty_database):
     assert "Order" in metadata.tables
     assert "assoc_people_team" in metadata.tables
 
-    # Assert that the auto mapped python classes exist!
+    # Assert that the auto mapped python classes exist
     assert base.classes.People
     people_orm = getattr(base.classes, "People")
-    assert isinstance(getattr(people_orm, "m1_reference_order"), InstrumentedAttribute)
-    assert isinstance(getattr(people_orm, "mn_reference_team"), InstrumentedAttribute)
+
+    # Assert that the relational fields exist on the orm instance
+    person1 = people_orm()
+    assert person1.order_collection is not None
+    assert person1.team_collection is not None
 
     assert base.classes.Team
     team_orm = getattr(base.classes, "Team")
-    assert isinstance(getattr(team_orm, "mn_reference_people"), InstrumentedAttribute)
+
+    team1 = team_orm()
+    assert team1.people_collection is not None
 
     assert base.classes.Order
 
@@ -178,6 +183,6 @@ def test_get_relationships_from_data_dict():
 
     assert result == {
         # "oneToOne": [["People", "haveA", "Passport"],
-        "manyToOne": [["People", "Order"]],
+        "oneToMany": [["People", "Order"]],
         "manyToMany": [["People", "Team"]],
     }

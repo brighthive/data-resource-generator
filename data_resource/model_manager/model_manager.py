@@ -9,6 +9,8 @@ import itertools
 
 # main
 def main(data_catalog: list) -> None:
+    """Given the data portion of a data catalog, Produce all the SQLAlchemy
+    ORM."""
     # Create base items
     create_all_tables_from_schemas(data_catalog)
 
@@ -33,6 +35,8 @@ def main(data_catalog: list) -> None:
 
 # base
 def create_all_tables_from_schemas(table_schemas: list) -> "Metadata":
+    """Generates the tables from frictionless table schema (without
+    relations)."""
     table_names, descriptors = get_table_names_and_descriptors(table_schemas)
 
     try:
@@ -52,8 +56,23 @@ def create_all_tables_from_schemas(table_schemas: list) -> "Metadata":
         raise
 
 
+# base
+def automap_metadata(metadata):
+    """Given a complete set of tables with foreign keys setup correctly, this
+    will produce python classes that contain methods that handle the magic of
+    relationships."""
+    base = automap_base(metadata=metadata)
+
+    # calling prepare() just sets up mapped classes and relationships.
+    base.prepare()
+
+    AutobaseSingleton.set_autobase(base)
+
+
 # util
 def get_table_names_and_descriptors(data_dict: list) -> (list, list):
+    """Given a data catalog, this simply gets the table names and frictionless
+    table schemas."""
     data_dict = data_dict["dataDictionary"]
 
     table_names = []
@@ -65,9 +84,18 @@ def get_table_names_and_descriptors(data_dict: list) -> (list, list):
     return table_names, descriptors
 
 
+# util
+def get_relationships_from_data_dict(data_dict: dict) -> list:
+    """Given a data catalog, this simply gets the SQL relationships."""
+    relationships = data_dict["relationships"]
+
+    return relationships
+
+
 # mn
 def construct_many_to_many_assoc(metadata: "MetaData", relationship: list) -> str:
-    """Given a single many to many, creates it."""
+    """Given a single many to many relationship, creates the required
+    association table."""
 
     # create many to many association table
     relationship.sort()
@@ -94,6 +122,8 @@ def construct_many_to_many_assoc(metadata: "MetaData", relationship: list) -> st
 
 # mn
 def add_foreign_keys_to_tables(METADATA, mn_relationship, assoc_table_name):
+    """Given a single many to many relationship, extends the existing tables
+    with the correct foreign key information."""
     # Get tables
     mn_relationship.sort()
     table = METADATA.tables[mn_relationship[0]]
@@ -123,24 +153,10 @@ def add_foreign_keys_to_tables(METADATA, mn_relationship, assoc_table_name):
     )
 
 
-def automap_metadata(metadata):
-    base = automap_base(metadata=metadata)
-
-    # calling prepare() just sets up mapped classes and relationships.
-    base.prepare()
-
-    AutobaseSingleton.set_autobase(base)
-
-
-# util
-def get_relationships_from_data_dict(data_dict: dict) -> list:
-    relationships = data_dict["relationships"]
-
-    return relationships
-
-
-# Many to one
+# many to one
 def add_foreign_keys_to_many_to_one_parent(metadata, many_to_one_relationships):
+    """Given a single many to one relationship, extends the existing parent
+    table with the correct foreign key information."""
     # Get tables
     parent_table = metadata.tables[many_to_one_relationships[0]]
 

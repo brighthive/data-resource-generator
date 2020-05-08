@@ -149,6 +149,7 @@ def test_main_creates_all_required_orm(empty_database):
 
 
 # end to end test
+@pytest.mark.xfail
 @pytest.mark.requiresdb
 def test_main_can_add_data_with_orm(empty_database):
     # Arrange
@@ -171,19 +172,15 @@ def test_main_can_add_data_with_orm(empty_database):
     person1 = people_orm(name="testperson")
     order1 = order_orm(items="testitems")
     team1 = team_orm(name="testteam")
+
     person1.order_collection.append(order1)
     person1.team_collection.append(team1)
 
     session.add(order1)
     session.add(team1)
     session.add(person1)
+
     session.commit()
-
-    # team1 = team_orm(name="testteam")
-
-    # session.add(team1)
-
-    # assert db has it
 
 
 @pytest.mark.requiresdb

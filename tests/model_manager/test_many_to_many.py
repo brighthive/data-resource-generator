@@ -122,3 +122,13 @@ def test_automap_metadata_for_mn():
     assert isinstance(getattr(team_orm, "id"), InstrumentedAttribute)
     assert isinstance(getattr(team_orm, "name"), InstrumentedAttribute)
     assert isinstance(getattr(team_orm, "mn_reference_people"), InstrumentedAttribute)
+
+    person1 = people_orm()
+    team1 = team_orm()
+    person1.team_collection.append(team1)
+    assert len(person1.team_collection) == 1
+    assert len(team1.people_collection) == 1
+
+    team1.people_collection.append(person1)
+    assert len(person1.team_collection) == 2
+    assert len(team1.people_collection) == 2

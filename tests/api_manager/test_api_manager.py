@@ -7,7 +7,7 @@ def test_end_to_end(VALID_DATA_DICTIONARY, e2e_app):
     api = e2e_app
 
     # GET
-    response = api.get("/frameworks", json={})
+    response = api.get("/peoples", json={})
     assert response.status_code == 200
 
     body = json.loads(response.data)

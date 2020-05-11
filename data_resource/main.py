@@ -4,8 +4,6 @@ from connexion import NoContent
 
 
 def resolver_stub(fn_name):
-    print(fn_name)
-
     def get_stub():
         return {}, 200
 

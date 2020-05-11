@@ -13,6 +13,7 @@ tableschema-sql = "*"
 psycopg2-binary = "*"
 sqlalchemy = "*"
 flask-sqlalchemy = "*"
+connexion = {extras = ["swagger-ui"],version = "*"}
 
 [requires]
 python_version = "3.7"

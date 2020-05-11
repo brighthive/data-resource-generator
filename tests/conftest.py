@@ -3,8 +3,8 @@ from data_resource.db import engine, Session, MetadataSingleton
 from sqlalchemy import MetaData
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.sql import text
+from data_resource.main import run
 
-# from app.app import run
 
 DATA_DICTIONARY = {
     "@id": "https://mydatatrust.brighthive.io/dr1",
@@ -107,7 +107,148 @@ DATA_DICTIONARY = {
     },
     "api": {
         "apiType": "https://datatrust.org/apiType/rest",
-        "apiSpec": "url-to-swagger-or-json-swagger",
+        "apiSpec": {
+            "openapi": "3.0.0",
+            "servers": [{"url": "http://localhost:8081/"}],
+            "info": {"title": "Pet Shop Example API", "version": "0.1"},
+            "paths": {
+                "/pets": {
+                    "get": {
+                        "tags": ["Pets"],
+                        "operationId": "get_pets",
+                        "summary": "Get all pets",
+                        "parameters": [
+                            {
+                                "name": "animal_type",
+                                "in": "query",
+                                "schema": {
+                                    "type": "string",
+                                    "pattern": "^[a-zA-Z0-9]*$",
+                                },
+                            },
+                            {
+                                "name": "limit",
+                                "in": "query",
+                                "schema": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "default": 100,
+                                },
+                            },
+                        ],
+                        "responses": {
+                            "200": {
+                                "description": "Return pets",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Pet"
+                                            },
+                                        }
+                                    }
+                                },
+                            }
+                        },
+                    }
+                },
+                "/pets/{pet_id}": {
+                    "get": {
+                        "tags": ["Pets"],
+                        "operationId": "get_pet",
+                        "summary": "Get a single pet",
+                        "parameters": [{"$ref": "#/components/parameters/pet_id"}],
+                        "responses": {
+                            "200": {
+                                "description": "Return pet",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {"$ref": "#/components/schemas/Pet"}
+                                    }
+                                },
+                            },
+                            "404": {"description": "Pet does not exist"},
+                        },
+                    },
+                    "put": {
+                        "tags": ["Pets"],
+                        "operationId": "put_pet",
+                        "summary": "Create or update a pet",
+                        "parameters": [{"$ref": "#/components/parameters/pet_id"}],
+                        "responses": {
+                            "200": {"description": "Pet updated"},
+                            "201": {"description": "New pet created"},
+                        },
+                        "requestBody": {
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "x-body-name": "pet",
+                                        "$ref": "#/components/schemas/Pet",
+                                    }
+                                }
+                            }
+                        },
+                    },
+                    "delete": {
+                        "tags": ["Pets"],
+                        "operationId": "delete_pet",
+                        "summary": "Remove a pet",
+                        "parameters": [{"$ref": "#/components/parameters/pet_id"}],
+                        "responses": {
+                            "204": {"description": "Pet was deleted"},
+                            "404": {"description": "Pet does not exist"},
+                        },
+                    },
+                },
+            },
+            "components": {
+                "parameters": {
+                    "pet_id": {
+                        "name": "pet_id",
+                        "description": "Pet's Unique identifier",
+                        "in": "path",
+                        "required": True,
+                        "schema": {"type": "string", "pattern": "^[a-zA-Z0-9-]+$"},
+                    }
+                },
+                "schemas": {
+                    "Pet": {
+                        "type": "object",
+                        "required": ["name", "animal_type"],
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "description": "Unique identifier",
+                                "example": "123",
+                                "readOnly": True,
+                            },
+                            "name": {
+                                "type": "string",
+                                "description": "Pet's name",
+                                "example": "Susie",
+                                "minLength": 1,
+                                "maxLength": 100,
+                            },
+                            "animal_type": {
+                                "type": "string",
+                                "description": "Kind of animal",
+                                "example": "cat",
+                                "minLength": 1,
+                            },
+                            "created": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Creation time",
+                                "example": "2015-07-07T15:49:51.230+02:00",
+                                "readOnly": True,
+                            },
+                        },
+                    }
+                },
+            },
+        },
     },
 }
 
@@ -173,3 +314,12 @@ def sqlalchemy_metadata():
 @pytest.fixture(scope="session")
 def api():
     return run(actually_run=False).test_client()
+
+
+@pytest.fixture(scope="session")
+def e2e_app():
+    api_dict = DATA_DICTIONARY["api"]["apiSpec"]
+
+    app = run(api_dict, actually_run=False)
+
+    return app.test_client()

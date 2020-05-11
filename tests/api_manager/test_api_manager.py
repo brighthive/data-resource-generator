@@ -14,7 +14,6 @@ def test_all_routes_exist(VALID_DATA_DICTIONARY, e2e_app):
     assert api.delete("/peoples/1", json={}).status_code != 404
 
 
-@pytest.mark.xfail
 @pytest.mark.unit
 def test_end_to_end(VALID_DATA_DICTIONARY, e2e_app):
     api = e2e_app

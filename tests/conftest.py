@@ -3,7 +3,7 @@ from data_resource.db import engine, Session, MetadataSingleton
 from sqlalchemy import MetaData
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.sql import text
-from data_resource.main import run
+from data_resource.api_manager.api_manager import run
 from convert_descriptor_to_swagger import convert_descriptor_to_swagger
 import json
 

@@ -1,0 +1,1 @@
+from data_resource.api_manager.resolver import resolver_stub

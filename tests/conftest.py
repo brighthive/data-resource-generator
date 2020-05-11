@@ -4,6 +4,118 @@ from sqlalchemy import MetaData
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.sql import text
 
+# from app.app import run
+
+DATA_DICTIONARY = {
+    "@id": "https://mydatatrust.brighthive.io/dr1",
+    "@type": "dataResource",
+    "name": "2020 Census Data",
+    "description": "Description of data resource",
+    "owner": "org",
+    "pointOfContact": "Tim the Pointman",  # probably a person node
+    "published": True,
+    "dateCreated": "date",
+    "dateUpdated": "date",
+    "privacyRegulations": ["https://datatrust.org/privacyregulations/HIPAA"],
+    "category": "https://datatrust.org/catagory/external",
+    "url": "https://mydatatrust.brighthive.io/dr1",
+    "data": {
+        "dataDictionary": [
+            {
+                "@id": "https://mydatatrust.brighthive.io/dr1/People",
+                "@type": "table",
+                "name": "People",
+                "tableSchema": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "title": "Person ID",
+                            "type": "integer",
+                            "description": "A unique identifer for person.",
+                            "constraints": {},
+                        },
+                        {
+                            "name": "name",
+                            "title": "Person's Name",
+                            "type": "string",
+                            "description": "The name that a Person goes by. This is left intentionally generic.",
+                            "constraints": {},
+                        },
+                    ],
+                    "primaryKey": "id",
+                    "missingValues": [],
+                },
+            },
+            {
+                "@id": "https://mydatatrust.brighthive.io/dr1/Team",
+                "@type": "table",
+                "name": "Team",
+                "tableSchema": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "title": "Team ID",
+                            "type": "integer",
+                            "description": "A unique identifer for team.",
+                            "constraints": {},
+                        },
+                        {
+                            "name": "name",
+                            "title": "Team Name",
+                            "type": "string",
+                            "description": "The name that a Team goes by.",
+                            "constraints": {},
+                        },
+                    ],
+                    "primaryKey": "id",
+                    "missingValues": [],
+                },
+            },
+            {
+                "@id": "https://mydatatrust.brighthive.io/dr1/Order",
+                "@type": "table",
+                "name": "Order",
+                "tableSchema": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "title": "Order ID",
+                            "type": "integer",
+                            "description": "Unique identifer for an Order.",
+                            "constraints": {},
+                        },
+                        {
+                            "name": "items",
+                            "title": "Items in Order",
+                            "type": "string",
+                            "description": "Textual list of items in order.",
+                            "constraints": {},
+                        },
+                    ],
+                    "primaryKey": "id",
+                    "missingValues": [],
+                },
+            },
+        ],
+        "relationships": {
+            # "oneToOne": [["People", "haveA", "Passport"],
+            "oneToMany": [["People", "Order"]],
+            "manyToMany": [["People", "Team"]],
+        },
+        "databaseSchema": "url-to-something",
+        "databaseType": "https://datatrust.org/databaseType/rdbms",
+    },
+    "api": {
+        "apiType": "https://datatrust.org/apiType/rest",
+        "apiSpec": "url-to-swagger-or-json-swagger",
+    },
+}
+
+
+@pytest.fixture
+def VALID_DATA_DICTIONARY():
+    return DATA_DICTIONARY
+
 
 class Database:
     def ping(self):
@@ -56,3 +168,8 @@ def database():
 def sqlalchemy_metadata():
     sql_metadata = SqlalchemyMetadata()
     yield sql_metadata
+
+
+@pytest.fixture(scope="session")
+def api():
+    return run(actually_run=False).test_client()

@@ -6,6 +6,8 @@ from sqlalchemy.sql import text
 from data_resource.api_manager.api_manager import run
 from convert_descriptor_to_swagger import convert_descriptor_to_swagger
 import json
+from data_resource import start
+from data_resource.db.base import MetadataSingleton, AutobaseSingleton
 
 data_dict = [
     {
@@ -449,12 +451,16 @@ def sqlalchemy_metadata():
 def api():
     api_dict = DATA_DICTIONARY["api"]["apiSpec"]
 
-    app = run(api_dict, actually_run=False)
+    app = run(api_dict=api_dict, actually_run=False)
 
-    return app.test_client()
+    return app.app.test_client()
 
 
 @pytest.fixture(scope="session")
 def e2e():
+    db = Database()
+    db.destory_db()
+    MetadataSingleton._clear()
+    AutobaseSingleton._clear()
     app = start(DATA_DICTIONARY, actually_run=False)
     return app.test_client()

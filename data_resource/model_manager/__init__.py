@@ -1,0 +1,1 @@
+from data_resource.model_manager.model_manager import main

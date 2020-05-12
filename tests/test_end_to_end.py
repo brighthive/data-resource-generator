@@ -1,8 +1,7 @@
 import pytest
 
 
-@pytest.mark.requiredb  # Does this requiredb tho?
-@pytest.mark.xfail
+@pytest.mark.requiresdb
 def test_end_to_end(e2e):
     api = e2e
 

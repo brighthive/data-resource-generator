@@ -447,13 +447,14 @@ def sqlalchemy_metadata():
 
 @pytest.fixture(scope="session")
 def api():
-    return run(actually_run=False).test_client()
-
-
-@pytest.fixture(scope="session")
-def e2e_app():
     api_dict = DATA_DICTIONARY["api"]["apiSpec"]
 
     app = run(api_dict, actually_run=False)
 
+    return app.test_client()
+
+
+@pytest.fixture(scope="session")
+def e2e():
+    app = start(DATA_DICTIONARY, actually_run=False)
     return app.test_client()

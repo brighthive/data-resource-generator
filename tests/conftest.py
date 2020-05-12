@@ -1,5 +1,5 @@
 import pytest
-from data_resource.db import engine, Session, MetadataSingleton
+from data_resource.db import engine, Session
 from sqlalchemy import MetaData
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.sql import text
@@ -7,7 +7,7 @@ from data_resource.api_manager.api_manager import run
 from convert_descriptor_to_swagger import convert_descriptor_to_swagger
 import json
 from data_resource import start
-from data_resource.db.base import MetadataSingleton, AutobaseSingleton
+
 
 data_dict = [
     {
@@ -417,15 +417,20 @@ class Database:
     #         print(_r)
 
     def destory_db(self):
+
         session = Session()
-        session.execute("drop schema public cascade")
-        session.execute("create schema public")
-        session.commit()
+        try:
+            session.execute("drop schema public cascade")
+            session.execute("create schema public")
+            session.commit()
+        except:
+            session.rollback()
+        finally:
+            session.close()
 
 
 class SqlalchemyMetadata:
     def table_count(self):
-        metadata = MetadataSingleton.instance()
         return len(metadata.sorted_tables)
 
 
@@ -441,12 +446,6 @@ def database():
     yield db
 
 
-@pytest.fixture(scope="module")
-def sqlalchemy_metadata():
-    sql_metadata = SqlalchemyMetadata()
-    yield sql_metadata
-
-
 @pytest.fixture(scope="session")
 def api():
     api_dict = DATA_DICTIONARY["api"]["apiSpec"]
@@ -456,11 +455,7 @@ def api():
     return app.app.test_client()
 
 
-@pytest.fixture(scope="session")
-def e2e():
-    db = Database()
-    db.destory_db()
-    MetadataSingleton._clear()
-    AutobaseSingleton._clear()
+@pytest.fixture(scope="function")
+def e2e(empty_database):
     app = start(DATA_DICTIONARY, actually_run=False)
     return app.test_client()

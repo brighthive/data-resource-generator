@@ -1,5 +1,5 @@
 import connexion
-from data_resource.db.base import AutobaseSingleton, Session
+from data_resource.db.base import Session
 
 
 # def get_peoples_fn(orm_cls):
@@ -10,7 +10,7 @@ def get_people():
     limit = 100
     print(connexion.request.json)
 
-    orm = AutobaseSingleton.instance().classes
+    # orm = AutobaseSingleton.instance().classes
 
     session = Session()
 
@@ -22,7 +22,7 @@ def get_people():
 def put_people(people_id, people):
     print(connexion.request.json)
 
-    orm = AutobaseSingleton.instance().metadata
+    # orm = AutobaseSingleton.instance().classes
 
     session = Session()
 

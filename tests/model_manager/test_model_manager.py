@@ -2,23 +2,23 @@ import pytest
 from data_resource.model_manager.model_manager import (
     create_all_tables_from_schemas,
     get_table_names_and_descriptors,
-    main,
+    model_manager_run,
     get_relationships_from_data_dict,
 )
-from data_resource.db.base import MetadataSingleton, AutobaseSingleton, Session
+from data_resource.db.base import Session
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 
 
 @pytest.mark.unit  # Does this requiredb tho?
-def test_main_creates_all_required_orm(VALID_DATA_DICTIONARY, empty_database):
+def test_model_manager_run_creates_all_required_orm(
+    VALID_DATA_DICTIONARY, empty_database
+):
     table_descriptors = VALID_DATA_DICTIONARY["data"]
-    MetadataSingleton._clear()
-    AutobaseSingleton._clear()
 
-    main(table_descriptors)
+    base = model_manager_run(table_descriptors)
 
-    metadata = MetadataSingleton.instance()
-    base = AutobaseSingleton.instance()
+    metadata = base.metadata
+
     assert "People" in metadata.tables
     assert "Team" in metadata.tables
     assert "Order" in metadata.tables
@@ -44,16 +44,13 @@ def test_main_creates_all_required_orm(VALID_DATA_DICTIONARY, empty_database):
 
 # end to end test
 @pytest.mark.requiresdb
-def test_main_can_add_data_with_orm(VALID_DATA_DICTIONARY, empty_database):
+def test_model_manager_run_can_add_data_with_orm(VALID_DATA_DICTIONARY, empty_database):
     # Arrange
     # create orm
     table_descriptors = VALID_DATA_DICTIONARY["data"]
-    MetadataSingleton._clear()
-    AutobaseSingleton._clear()
 
-    main(table_descriptors)
+    base = model_manager_run(table_descriptors)
 
-    base = AutobaseSingleton.instance()
     session = Session()
 
     # Act
@@ -77,15 +74,12 @@ def test_main_can_add_data_with_orm(VALID_DATA_DICTIONARY, empty_database):
 
 
 @pytest.mark.requiresdb
-def test_valid_descriptor_creates_databased(
-    VALID_DATA_DICTIONARY, empty_database, sqlalchemy_metadata
-):
+def test_valid_descriptor_creates_databased(VALID_DATA_DICTIONARY, empty_database):
     table_descriptors = VALID_DATA_DICTIONARY["data"]
 
-    create_all_tables_from_schemas(table_descriptors)
+    metadata = create_all_tables_from_schemas(table_descriptors)
 
-    # assert database.table_count("test") == 1
-    assert sqlalchemy_metadata.table_count() == 3
+    assert len(metadata.tables) == 3
 
 
 @pytest.mark.unit

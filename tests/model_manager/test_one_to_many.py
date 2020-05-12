@@ -7,7 +7,7 @@ from data_resource.model_manager.model_manager import (
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-from data_resource.db import AutobaseSingleton, Session
+from data_resource.db import Session
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy.orm.collections import InstrumentedList
 
@@ -53,11 +53,8 @@ def test_automap_metadata_for_m1():
         Column("name", String(50)),
         Column(f"om_reference_people", Integer, ForeignKey(f"People.id")),
     )
-    AutobaseSingleton._clear()
 
-    automap_metadata(metadata)
-
-    base = AutobaseSingleton.instance()
+    base = automap_metadata(metadata)
 
     people_orm = getattr(base.classes, "People")
     assert isinstance(getattr(people_orm, "id"), InstrumentedAttribute)

@@ -151,7 +151,7 @@ api_dict = {
                 "required": False,
                 "style": "form",
                 "explode": True,
-                "schema": {"type": "integer"},
+                "schema": {"type": "integer", "default": 0},
             },
             "limitParam": {
                 "name": "limit",
@@ -160,7 +160,7 @@ api_dict = {
                 "required": False,
                 "style": "form",
                 "explode": True,
-                "schema": {"type": "integer"},
+                "schema": {"type": "integer", "minimum": 0, "default": 100},
             },
         },
         "schemas": {

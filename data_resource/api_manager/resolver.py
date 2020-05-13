@@ -1,4 +1,8 @@
-from data_resource.api_manager.rest_functions import get_people, put_people
+from data_resource.api_manager.rest_functions import (
+    put_resource_closure,
+    get_resources_closure,
+    get_resource_id_closure,
+)
 
 
 def resolver_stub(fn_name):
@@ -9,33 +13,25 @@ def resolver_stub(fn_name):
 
     return get_stub
 
+    # TODO add a route that triggers main ? is that a separate flask app?
+
 
 def generate_fn_dict(base):
 
     fn_dict = {}
 
-    all_resources = [str(c.__name__) for c in base.classes]
-    # ['People', 'Team', 'Order']
+    all_resources = [c for c in base.classes]
 
-    for resource in all_resources:
-        resource = resource.lower()
-        fn_dict[f"get_{resource}"] = lambda: get_people()
-        fn_dict[f"get_{resource}_id"] = lambda x: x
-        fn_dict[f"post_{resource}"] = lambda *args: put_people(*args)
-        fn_dict[f"put_{resource}_id"] = lambda x: x
-        fn_dict[f"delete_{resource}_id"] = lambda x: x
-        fn_dict[f"patch_{resource}_id"] = lambda x: x
+    for index, orm_class in enumerate(all_resources):
 
-    # fn_dict = {
-    #     "get_people": lambda: get_people(),
-    #     "get_people_id": lambda x: x,
-    #     "post_people": lambda *args: put_people(*args),
-    #     "put_people_id": lambda x: x,
-    #     "delete_people_id": lambda x: x,
-    #     "patch_people_id": lambda x: x,
-    # }
+        resource = orm_class.__name__.lower()
 
-    print(fn_dict)
+        fn_dict[f"get_{resource}"] = get_resources_closure(orm_class)
+        fn_dict[f"get_{resource}_id"] = get_resource_id_closure(orm_class)
+        fn_dict[f"post_{resource}"] = put_resource_closure(orm_class)
+        fn_dict[f"put_{resource}_id"] = put_resource_closure(orm_class)
+        fn_dict[f"delete_{resource}_id"] = lambda: None
+        fn_dict[f"patch_{resource}_id"] = lambda: None
 
     return fn_dict
 

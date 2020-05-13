@@ -23,3 +23,17 @@ def test_end_to_end(e2e, empty_database):
 
     body = json.loads(response.data)
     assert len(body) == 1
+
+    assert body[0]["id"] == 1
+    assert body[0]["name"] == "testname"
+
+    # CHECK THAT POST WORKED
+    response = api.get("/peoples/1", json={})
+    assert response.status_code == 200
+
+    body = json.loads(response.data)
+
+    assert len(body) == 2
+
+    assert body["id"] == 1
+    assert body["name"] == "testname"

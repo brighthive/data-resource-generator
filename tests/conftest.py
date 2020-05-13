@@ -444,15 +444,6 @@ def database():
     yield db
 
 
-@pytest.fixture(scope="session")
-def api():
-    api_dict = DATA_DICTIONARY["api"]["apiSpec"]
-
-    app = run(api_dict=api_dict, actually_run=False)
-
-    return app.app.test_client()
-
-
 @pytest.fixture(scope="function")
 def e2e(empty_database):
     app = start(DATA_DICTIONARY, actually_run=False)

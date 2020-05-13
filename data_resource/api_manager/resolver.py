@@ -13,7 +13,7 @@ def resolver_stub(fn_name):
 fn_dict = {
     "get_people": lambda: get_people(),
     "get_people_id": lambda x: x,
-    "post_people": lambda x, y: put_people(x, y),
+    "post_people": lambda *args: put_people(*args),
     "put_people_id": lambda x: x,
     "delete_people_id": lambda x: x,
     "patch_people_id": lambda x: x,

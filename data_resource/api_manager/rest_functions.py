@@ -1,28 +1,36 @@
 import connexion
+from connexion import NoContent
 from data_resource.db.base import Session
-
+import flask
 
 # def get_peoples_fn(orm_cls):
 #     orm = orm_cls
+
+
+def dump(item):
+    return {k: v for k, v in vars(item).items() if not k.startswith("_")}
 
 
 def get_people():
     limit = 100
     print(connexion.request.json)
 
-    # orm = AutobaseSingleton.instance().classes
+    orm = flask.current_app.config["base"].classes
 
     session = Session()
 
     q = session.query(orm.People)
 
-    return [p.dump() for p in q][:limit]
+    return [dump(p) for p in q][:limit]
 
 
-def put_people(people_id, people):
+def put_people(*args):
     print(connexion.request.json)
 
-    # orm = AutobaseSingleton.instance().classes
+    people_id = connexion.request.json.get("id", None)
+    people = connexion.request.json
+
+    orm = flask.current_app.config["base"].classes
 
     session = Session()
 
@@ -30,10 +38,12 @@ def put_people(people_id, people):
 
     people["id"] = people_id
     if p is not None:
-        logging.info("Updating pet %s..", people_id)
+        print("Updating pet %s..", people_id)
+        # logging.info("Updating pet %s..", people_id)
         p.update(**people)
     else:
-        logging.info("Creating pet %s..", people_id)
+        print("Creating pet %s..", people_id)
+        # logging.info("Creating pet %s..", people_id)
         # people['created'] = datetime.datetime.utcnow()
         session.add(orm.People(**people))
     session.commit()

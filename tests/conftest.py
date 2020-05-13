@@ -1,5 +1,5 @@
 import pytest
-from data_resource.db import engine, Session
+from data_resource.db import engine
 from sqlalchemy import MetaData
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.sql import text
@@ -7,6 +7,7 @@ from data_resource.api_manager.api_manager import run
 from convert_descriptor_to_swagger import convert_descriptor_to_swagger
 import json
 from data_resource import start
+from data_resource.db import db_session
 
 
 data_dict = [
@@ -397,8 +398,7 @@ def VALID_DATA_DICTIONARY():
 class Database:
     def ping(self):
         try:
-            session = Session()
-            session.query("1").all()
+            db_session.query("1").all()
             return True
         except OperationalError:
             raise
@@ -417,16 +417,14 @@ class Database:
     #         print(_r)
 
     def destory_db(self):
-
-        session = Session()
         try:
-            session.execute("drop schema public cascade")
-            session.execute("create schema public")
-            session.commit()
+            db_session.execute("drop schema public cascade")
+            db_session.execute("create schema public")
+            db_session.commit()
         except:
-            session.rollback()
+            db_session.rollback()
         finally:
-            session.close()
+            db_session.close()
 
 
 class SqlalchemyMetadata:

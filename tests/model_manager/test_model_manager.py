@@ -5,7 +5,7 @@ from data_resource.model_manager.model_manager import (
     model_manager_run,
     get_relationships_from_data_dict,
 )
-from data_resource.db.base import Session
+from data_resource.db.base import db_session
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 
 
@@ -51,8 +51,6 @@ def test_model_manager_run_can_add_data_with_orm(VALID_DATA_DICTIONARY, empty_da
 
     base = model_manager_run(table_descriptors)
 
-    session = Session()
-
     # Act
     # add items to db via classes
     people_orm = getattr(base.classes, "People")
@@ -66,11 +64,11 @@ def test_model_manager_run_can_add_data_with_orm(VALID_DATA_DICTIONARY, empty_da
     person1.order_collection.append(order1)
     person1.team_collection.append(team1)
 
-    session.add(order1)
-    session.add(team1)
-    session.add(person1)
+    db_session.add(order1)
+    db_session.add(team1)
+    db_session.add(person1)
 
-    session.commit()
+    db_session.commit()
 
 
 @pytest.mark.requiresdb

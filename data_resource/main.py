@@ -1,6 +1,6 @@
 from data_resource.api_manager.api_manager import run
 from data_resource.model_manager import model_manager_run
-from data_resource.db.base import engine, Session
+from data_resource.db import db_session
 
 
 def start(data_catalog, actually_run=False):
@@ -17,7 +17,7 @@ def start(data_catalog, actually_run=False):
 
     @application.teardown_appcontext
     def shutdown_session(exception=None):
-        pass
+        db_session.remove()
 
     if actually_run:
         app.run(port=8081, use_reloader=False, threaded=False)

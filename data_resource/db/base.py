@@ -2,8 +2,7 @@
 
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-
+from sqlalchemy.orm import scoped_session, sessionmaker
 
 # Works with docker-compose -- hostname and hostport
 
@@ -26,4 +25,8 @@ engine = create_engine(SQLALCHEMY_DATABASE_URI)
 # if not engine.dialect.has_schema(engine, "managed"):
 #     engine.execute(CreateSchema("managed"))
 
-Session = sessionmaker(bind=engine)
+# Session = sessionmaker(bind=engine)
+
+db_session = scoped_session(
+    sessionmaker(autocommit=False, autoflush=False, bind=engine)
+)

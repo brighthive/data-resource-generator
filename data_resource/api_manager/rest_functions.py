@@ -1,6 +1,6 @@
 import connexion
 from connexion import NoContent
-from data_resource.db.base import Session
+from data_resource.db.base import db_session
 import flask
 
 # def get_peoples_fn(orm_cls):
@@ -17,9 +17,7 @@ def get_people():
 
     orm = flask.current_app.config["base"].classes
 
-    session = Session()
-
-    q = session.query(orm.People)
+    q = db_session.query(orm.People)
 
     return [dump(p) for p in q][:limit]
 
@@ -32,9 +30,7 @@ def put_people(*args):
 
     orm = flask.current_app.config["base"].classes
 
-    session = Session()
-
-    p = session.query(orm.People).filter(orm.People.id == people_id).one_or_none()
+    p = db_session.query(orm.People).filter(orm.People.id == people_id).one_or_none()
 
     people["id"] = people_id
     if p is not None:
@@ -45,8 +41,8 @@ def put_people(*args):
         print("Creating pet %s..", people_id)
         # logging.info("Creating pet %s..", people_id)
         # people['created'] = datetime.datetime.utcnow()
-        session.add(orm.People(**people))
-    session.commit()
+        db_session.add(orm.People(**people))
+    db_session.commit()
     return NoContent, (200 if p is not None else 201)
 
 

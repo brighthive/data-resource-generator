@@ -67,12 +67,17 @@ def put_resource_closure(resource_orm):
     return put_resource
 
 
-# def delete_pet(pet_id):
-#     pet = db_session.query(orm.Pet).filter(orm.Pet.id == pet_id).one_or_none()
-#     if pet is not None:
-#         logging.info('Deleting pet %s..', pet_id)
-#         db_session.query(orm.Pet).filter(orm.Pet.id == pet_id).delete()
-#         db_session.commit()
-#         return NoContent, 204
-#     else:
-#         return NoContent, 404
+def delete_resource_id_closure(resource_orm):
+    def delete_resource_id(id):
+        resource = (
+            db_session.query(resource_orm).filter(resource_orm.id == id).one_or_none()
+        )
+        if resource is not None:
+            # logging.info('Deleting resource %s..', id)
+            db_session.query(resource_orm).filter(resource_orm.id == id).delete()
+            db_session.commit()
+            return NoContent, 204
+        else:
+            return NoContent, 404
+
+    return delete_resource_id

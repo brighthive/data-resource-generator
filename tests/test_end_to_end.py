@@ -27,7 +27,7 @@ def test_end_to_end(e2e, empty_database):
     assert body[0]["id"] == 1
     assert body[0]["name"] == "testname"
 
-    # CHECK THAT POST WORKED
+    # GET 1
     response = api.get("/peoples/1", json={})
     assert response.status_code == 200
 
@@ -37,3 +37,11 @@ def test_end_to_end(e2e, empty_database):
 
     assert body["id"] == 1
     assert body["name"] == "testname"
+
+    # DELETE 1
+    response = api.delete("/peoples/1", json={})
+    assert response.status_code == 204
+
+    # GET 1
+    response = api.get("/peoples/1", json={})
+    assert response.status_code == 404

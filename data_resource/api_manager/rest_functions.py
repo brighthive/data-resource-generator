@@ -8,16 +8,6 @@ def dump(item):
     return {k: v for k, v in vars(item).items() if not k.startswith("_")}
 
 
-# class OrmResource:
-#     def __init__(self, orm, fn, orm_name):
-#         self.orm = orm
-#         self.fn = fn
-#         self.orm_name = orm_name
-#
-#     def __call__(self):
-#         self.fn(self)
-
-
 def get_resources_closure(resource_orm):
     def get_resources(limit, offset):
         q = db_session.query(resource_orm)

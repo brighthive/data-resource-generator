@@ -18,13 +18,11 @@ def resolver_stub(fn_name):
 
 
 def generate_fn_dict(base):
-
     fn_dict = {}
 
     all_resources = [c for c in base.classes]
 
     for index, orm_class in enumerate(all_resources):
-
         resource = orm_class.__name__.lower()
 
         fn_dict[f"get_{resource}"] = get_resources_closure(orm_class)

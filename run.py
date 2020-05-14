@@ -1,13 +1,4 @@
-import pytest
-from data_resource.db import engine
-from sqlalchemy import MetaData
-from sqlalchemy.exc import OperationalError
-from sqlalchemy.sql import text
-from convert_descriptor_to_swagger import convert_descriptor_to_swagger
-import json
 from data_resource import start
-from data_resource.db import db_session
-
 
 data_dict = [
     {
@@ -388,44 +379,5 @@ DATA_DICTIONARY = {
     "api": {"apiType": "https://datatrust.org/apiType/rest", "apiSpec": api_dict},
 }
 
-
-@pytest.fixture
-def VALID_DATA_DICTIONARY():
-    return DATA_DICTIONARY
-
-
-class Database:
-    def ping(self):
-        try:
-            db_session.query("1").all()
-            return True
-        except OperationalError:
-            raise
-
-    def destory_db(self):
-        try:
-            db_session.execute("drop schema public cascade")
-            db_session.execute("create schema public")
-            db_session.commit()
-        except:
-            db_session.rollback()
-        finally:
-            db_session.close()
-
-
-@pytest.fixture(scope="function")
-def empty_database():
-    db = Database()
-    db.destory_db()
-
-
-@pytest.fixture(scope="function")
-def database():
-    db = Database()
-    yield db
-
-
-@pytest.fixture(scope="function")
-def e2e(empty_database):
-    app = start(DATA_DICTIONARY, actually_run=False)
-    return app.test_client()
+if __name__ == "__main__":
+    start(DATA_DICTIONARY, actually_run=True)

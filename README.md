@@ -56,7 +56,11 @@ Simply provide the application a declarative database and API specification and 
 
 ## How to use Data Resource
 
-...
+To run the application,
+
+```bash
+pipenv run python run.py
+```
 
 ## How to develop Data Resource
 

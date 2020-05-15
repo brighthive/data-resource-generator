@@ -16,6 +16,7 @@ sqlalchemy = "*"
 flask-sqlalchemy = "*"
 connexion = {extras = ["swagger-ui"],version = "*"}
 flask-restful = "*"
+tableschema = "*"
 
 [requires]
 python_version = "3.7"

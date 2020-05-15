@@ -7,6 +7,7 @@ from convert_descriptor_to_swagger import convert_descriptor_to_swagger
 import json
 from data_resource import start
 from data_resource.db import db_session
+from data_resource.generator.app import start_data_resource_generator
 
 
 data_dict = [
@@ -404,6 +405,8 @@ class Database:
 
     def destory_db(self):
         try:
+            db_session.execute("drop schema admin cascade")
+            db_session.execute("create schema admin")
             db_session.execute("drop schema public cascade")
             db_session.execute("create schema public")
             db_session.commit()
@@ -426,6 +429,17 @@ def database():
 
 
 @pytest.fixture(scope="function")
-def e2e(empty_database):
+def admin_e2e(empty_database):  # TODO unused
     app = start(DATA_DICTIONARY, actually_run=False)
     return app.test_client()
+
+
+@pytest.fixture(scope="function")
+def generated_e2e(empty_database):
+    # start the app
+    connexion_app = start(actually_run=False)
+
+    # skip generation process -- inject the data dict
+    start_data_resource_generator(DATA_DICTIONARY, connexion_app)
+
+    return connexion_app.app.test_client()

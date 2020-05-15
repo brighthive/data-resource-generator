@@ -3,8 +3,8 @@ import json
 
 
 @pytest.mark.requiresdb
-def test_end_to_end(e2e, empty_database):
-    api = e2e
+def test_end_to_end(generated_e2e, empty_database):
+    api = generated_e2e
 
     # GET
     response = api.get("/peoples", json={})

@@ -31,4 +31,4 @@ def start(actually_run=True):
     if actually_run:
         app.run(port=8081, use_reloader=False, threaded=False)
     else:
-        return application
+        return app

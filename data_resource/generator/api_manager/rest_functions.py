@@ -9,7 +9,10 @@ def dump(item):
 
 
 def get_resources_closure(resource_orm):
-    def get_resources(limit, offset):
+    def get_resources(**kwargs):
+        limit = kwargs.get("limit", 100)
+        offset = kwargs.get("offset", 0)
+
         q = db_session.query(resource_orm)
 
         return [dump(p) for p in q][:limit]

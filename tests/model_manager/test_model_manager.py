@@ -1,8 +1,8 @@
 import pytest
-from data_resource.model_manager.model_manager import (
+from data_resource.generator.model_manager.model_manager import (
     create_all_tables_from_schemas,
     get_table_names_and_descriptors,
-    model_manager_run,
+    create_models,
     get_relationships_from_data_dict,
 )
 from data_resource.db.base import db_session
@@ -10,12 +10,10 @@ from sqlalchemy.orm.attributes import InstrumentedAttribute
 
 
 @pytest.mark.unit  # Does this requiredb tho?
-def test_model_manager_run_creates_all_required_orm(
-    VALID_DATA_DICTIONARY, empty_database
-):
+def test_create_models_creates_all_required_orm(VALID_DATA_DICTIONARY, empty_database):
     table_descriptors = VALID_DATA_DICTIONARY["data"]
 
-    base = model_manager_run(table_descriptors)
+    base = create_models(table_descriptors)
 
     metadata = base.metadata
 
@@ -44,12 +42,12 @@ def test_model_manager_run_creates_all_required_orm(
 
 # end to end test
 @pytest.mark.requiresdb
-def test_model_manager_run_can_add_data_with_orm(VALID_DATA_DICTIONARY, empty_database):
+def test_create_models_can_add_data_with_orm(VALID_DATA_DICTIONARY, empty_database):
     # Arrange
     # create orm
     table_descriptors = VALID_DATA_DICTIONARY["data"]
 
-    base = model_manager_run(table_descriptors)
+    base = create_models(table_descriptors)
 
     # Act
     # add items to db via classes

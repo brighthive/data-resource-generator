@@ -1,1 +1,1 @@
-from data_resource.app import start
+from data_resource.admin.app import start

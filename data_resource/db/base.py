@@ -21,28 +21,13 @@ SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{}:{}@{}:{}/{}".format(
 
 engine = create_engine(SQLALCHEMY_DATABASE_URI)
 
-# from sqlalchemy.schema import CreateSchema
-# if not engine.dialect.has_schema(engine, "managed"):
-#     engine.execute(CreateSchema("managed"))
+from sqlalchemy.schema import CreateSchema
 
-# Session = sessionmaker(bind=engine)
+if not engine.dialect.has_schema(engine, "admin"):
+    engine.execute(CreateSchema("admin"))
 
 db_session = scoped_session(
     sessionmaker(autocommit=False, autoflush=False, bind=engine)
 )
 
 admin_base = declarative_base(metadata=MetaData(bind=engine, schema="admin"))
-
-
-# Prevent an error with new database
-# from sqlalchemy import event
-# from sqlalchemy.schema import CreateSchema
-
-# def create_schema_admin(*args, **kwarg):
-#     try:
-#         CreateSchema("admin")
-#     except:
-#         pass
-
-
-# event.listen(admin_base.metadata, 'before_create', create_schema_admin)

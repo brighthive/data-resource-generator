@@ -1,15 +1,21 @@
 import connexion
-from data_resource.admin.routes import tableschema_bp, tableschema_id_bp, swagger_bp
+from data_resource.admin.routes import (
+    tableschema_bp,
+    tableschema_id_bp,
+    swagger_bp,
+    generator_bp,
+)
 from data_resource.db import db_session, admin_base, engine
 
 
-def start(actually_run=False):
+def start(actually_run=True):
     app = connexion.FlaskApp(__name__)
 
     # register admin
     app.app.register_blueprint(tableschema_bp)
     app.app.register_blueprint(tableschema_id_bp)
     app.app.register_blueprint(swagger_bp)
+    app.app.register_blueprint(generator_bp)
 
     app.app.config["connexion_app"] = app
     application = app.app
@@ -23,6 +29,6 @@ def start(actually_run=False):
         db_session.remove()
 
     if actually_run:
-        app.run(debug=True, port=8081, use_reloader=False, threaded=False)
+        app.run(port=8081, use_reloader=False, threaded=False)
     else:
         return application

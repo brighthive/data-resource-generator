@@ -8,7 +8,7 @@ import itertools
 
 
 # main
-def model_manager_run(data_catalog: list) -> None:
+def create_models(data_catalog: list) -> None:
     """Given the data portion of a data catalog, Produce all the SQLAlchemy
     ORM."""
     # Create base items

@@ -1,4 +1,4 @@
-from data_resource.api_manager.rest_functions import (
+from data_resource.generator.api_manager.rest_functions import (
     put_resource_closure,
     get_resources_closure,
     get_resource_id_closure,
@@ -7,14 +7,12 @@ from data_resource.api_manager.rest_functions import (
 
 
 def resolver_stub(fn_name):
-    """dynamic function resolver."""
+    """dynamic function resolver."""  # TODO can probably be deleted, not used for tests anymore?
 
     def get_stub():
         return {}, 200
 
     return get_stub
-
-    # TODO add a route that triggers main ? is that a separate flask app?
 
 
 def generate_fn_dict(base):

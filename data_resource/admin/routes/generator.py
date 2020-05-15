@@ -1,34 +1,27 @@
 from flask_restful import Api, Resource
-from flask import Blueprint, current_app
+from flask import Blueprint, current_app, request
 from data_resource.db import db_session
 import connexion
 import data_resource.admin.models as orm
 import logging
 from convert_descriptor_to_swagger import convert_descriptor_to_swagger
+from data_resource.generator.app import start_data_resource_generator
 
 
-def generate_all_swagger(descriptors):
-    swagger = convert_descriptor_to_swagger(descriptors)
-    return swagger
-
-
-swagger_bp = Blueprint("swagger_bp", __name__)
-api = Api(swagger_bp)
+generator_bp = Blueprint("generator_bp", __name__)
+api = Api(generator_bp)
 
 logging.basicConfig(level=logging.INFO)
 
 
-class Swagger(Resource):
-    def get(self):
-        q = db_session.query(orm.TableSchema)
-        all_tableschema = [p.tableschema for p in q]
+class Generator(Resource):
+    def post(self):
+        data_catalog = request.json["data_catalog"]
 
-        if all_tableschema:
-            swagger = generate_all_swagger(all_tableschema)
-        else:
-            swagger = ""
+        app = current_app.config["connexion_app"]
+        start_data_resource_generator(data_catalog, app)
 
-        return {"swagger": swagger}, 200
+        return "", 200
 
 
-api.add_resource(Swagger, "/swagger")
+api.add_resource(Generator, "/generator")

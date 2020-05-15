@@ -1,0 +1,2 @@
+from data_resource.generator.api_manager.resolver import resolver_stub
+from data_resource.generator.api_manager.api_manager import api_manager_run

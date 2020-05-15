@@ -58,15 +58,17 @@ class TableSchemaID(Resource):
         if p is not None:
             logging.info("Updating pet %s..", _id)
             p.update(**pet)
+            entry = p
         else:
             logging.info("Creating pet %s..", _id)
             # pet['created'] = datetime.datetime.utcnow()
-            db_session.add(orm.TableSchema(**pet))
+            entry = orm.TableSchema(**pet)
+            db_session.add(entry)
         db_session.commit()
 
         return (
-            {"tableschema": p.tableschema, "swagger": p.swagger},
-            (200 if p is not None else 201),
+            {"tableschema": entry.tableschema, "swagger": entry.swagger},
+            (200 if entry is not None else 201),
         )
 
     def delete(self, _id):

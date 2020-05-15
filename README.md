@@ -56,7 +56,13 @@ Simply provide the application a declarative database and API specification and 
 
 ## How to use Data Resource
 
-To run the application,
+1. Restart the database to clear the data.
+
+```bash
+docker-compose -f test-database-docker-compose.yml down && docker-compose -f test-database-docker-compose.yml up -d
+```
+
+1. To run the application,
 
 ```bash
 pipenv run python run.py

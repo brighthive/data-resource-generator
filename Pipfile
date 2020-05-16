@@ -8,6 +8,7 @@ pytest = "*"
 pre-commit = "*"
 expects = "*"
 convert-descriptor-to-swagger = {editable = true,path = "./../descriptor-to-swagger"}
+pytest-mock = "*"
 
 [packages]
 tableschema-sql = "*"

@@ -429,9 +429,9 @@ def database():
 
 
 @pytest.fixture(scope="function")
-def admin_e2e(empty_database):  # TODO unused
-    app = start(DATA_DICTIONARY, actually_run=False)
-    return app.test_client()
+def admin_e2e(empty_database):
+    connexion_app = start(actually_run=False)
+    return connexion_app.app.test_client()
 
 
 @pytest.fixture(scope="function")

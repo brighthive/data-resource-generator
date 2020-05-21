@@ -1,13 +1,11 @@
 import pytest
 from sqlalchemy import MetaData, Table, Column, Integer, String, ForeignKey
-from data_resource.model_manager.model_manager import (
+from data_resource.generator.model_manager.model_manager import (
     construct_many_to_many_assoc,
-    # add_foreign_keys_to_tables,
     automap_metadata,
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-from data_resource.db import AutobaseSingleton
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 
 
@@ -70,11 +68,8 @@ def test_automap_metadata_for_mn():
         Column("id", Integer, primary_key=True),
         Column("name", String(50)),
     )
-    AutobaseSingleton._clear()
 
-    automap_metadata(metadata)
-
-    base = AutobaseSingleton.instance()
+    base = automap_metadata(metadata)
 
     people_orm = getattr(base.classes, "People")
     assert isinstance(getattr(people_orm, "id"), InstrumentedAttribute)

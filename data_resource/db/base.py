@@ -2,8 +2,7 @@
 
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-
+from sqlalchemy.orm import scoped_session, sessionmaker
 
 # Works with docker-compose -- hostname and hostport
 
@@ -22,56 +21,13 @@ SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{}:{}@{}:{}/{}".format(
 
 engine = create_engine(SQLALCHEMY_DATABASE_URI)
 
-# from sqlalchemy.schema import CreateSchema
-# if not engine.dialect.has_schema(engine, "managed"):
-#     engine.execute(CreateSchema("managed"))
+from sqlalchemy.schema import CreateSchema
 
-Session = sessionmaker(bind=engine)
+if not engine.dialect.has_schema(engine, "admin"):
+    engine.execute(CreateSchema("admin"))
 
+db_session = scoped_session(
+    sessionmaker(autocommit=False, autoflush=False, bind=engine)
+)
 
-class MetadataSingleton:
-    __slots__ = (
-        []
-    )  # prevents additional attributes from being added to instances and same-named attributes from shadowing the class's attributes
-    metadata = None
-
-    @classmethod
-    def instance(cls):
-        if cls.metadata is None:
-            raise RuntimeError(
-                "No MetaData reference was found stored in the MetaData singleton."
-            )
-        return cls.metadata
-
-    @classmethod
-    def set_metadata(cls, metadata):
-        cls.metadata = metadata
-
-    @classmethod
-    def _clear(cls):
-        """This method is for use in unit tests."""
-        cls.metadata = None
-
-
-class AutobaseSingleton:
-    __slots__ = (
-        []
-    )  # prevents additional attributes from being added to instances and same-named attributes from shadowing the class's attributes
-    base = None
-
-    @classmethod
-    def instance(cls):
-        if cls.base is None:
-            raise RuntimeError(
-                "No base reference was found stored in the base singleton."
-            )
-        return cls.base
-
-    @classmethod
-    def set_autobase(cls, base):
-        cls.base = base
-
-    @classmethod
-    def _clear(cls):
-        """This method is for use in unit tests."""
-        cls.base = None
+admin_base = declarative_base(metadata=MetaData(bind=engine, schema="admin"))

@@ -56,7 +56,46 @@ Simply provide the application a declarative database and API specification and 
 
 ## How to use Data Resource
 
-...
+### Definitions
+
+Data Resource Descriptor: BrightHive specification. Includes an API definition and a tableschema to describe the database. Please see [BrightHive Data Resource API](https://github.com/brighthive/data-resource-api).
+
+Data Catalog: BrightHive specification. JSONLD document Please see [specification in progress](example.com) for more information.
+
+### Start the application
+
+1. Restart the database to clear the data.
+
+```bash
+docker-compose -f test-database-docker-compose.yml down && docker-compose -f test-database-docker-compose.yml up -d
+```
+
+1. To run the application,
+
+```bash
+pipenv run python run.py
+```
+
+### Generate Data Resources
+
+Interact with the "Admin" routes to generate Data Resources.
+
+- `PUT /tableschema/1` Put Data Resource Descriptor to this route.
+- `GET /tableschema` Get all Data Resource Descriptors you have posted.
+- `GET /swagger` Generate a swagger file from all the Data Resource Descriptors you have submitted.
+- `POST /generator` Given a Data Catalog, this will generate all of the described Data Resources.
+
+### Interacting with Generated Data Resources
+
+An interactive API (using Swagger UI) is generated at `/ui`.
+
+The following are the API routes that you can interact with for each of your generated resources:
+
+- `GET resource`
+- `GET resource/1`
+- `POST resource`
+- `PUT resource/1`
+- `DELETE resource/1`
 
 ## How to develop Data Resource
 

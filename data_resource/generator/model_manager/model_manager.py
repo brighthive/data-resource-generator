@@ -1,20 +1,18 @@
 from tableschema_sql import Storage
 from tableschema.exceptions import ValidationError
 from sqlalchemy import Table, Integer, ForeignKey, Column
-from data_resource.db import engine, MetadataSingleton, AutobaseSingleton
+from data_resource.db import engine
 from sqlalchemy.orm import relationship, mapper
 from sqlalchemy.ext.automap import automap_base
 import itertools
 
 
 # main
-def main(data_catalog: list) -> None:
+def create_models(data_catalog: list) -> None:
     """Given the data portion of a data catalog, Produce all the SQLAlchemy
     ORM."""
     # Create base items
-    create_all_tables_from_schemas(data_catalog)
-
-    metadata = MetadataSingleton.instance()
+    metadata = create_all_tables_from_schemas(data_catalog)
 
     relationships = get_relationships_from_data_dict(data_catalog)
 
@@ -25,7 +23,8 @@ def main(data_catalog: list) -> None:
         assoc_table_name = construct_many_to_many_assoc(metadata, relationship)
 
     # Create ORM relationships
-    automap_metadata(metadata)
+    base = automap_metadata(metadata)
+    return base
 
 
 # base
@@ -39,9 +38,9 @@ def create_all_tables_from_schemas(table_schemas: list) -> "Metadata":
 
         metadata = storage._Storage__metadata
 
-        storage.create(table_names, descriptors)
+        storage.create(table_names, descriptors)  # I think this is hanging a connection
 
-        MetadataSingleton.set_metadata(metadata)
+        return metadata
 
     except ValidationError as e:
         print(e.errors)
@@ -49,7 +48,7 @@ def create_all_tables_from_schemas(table_schemas: list) -> "Metadata":
 
 
 # base
-def automap_metadata(metadata):
+def automap_metadata(metadata) -> "Base":
     """Given a complete set of tables with foreign keys setup correctly, this
     will produce python classes that contain methods that handle the magic of
     relationships."""
@@ -58,12 +57,12 @@ def automap_metadata(metadata):
     # calling prepare() just sets up mapped classes and relationships.
     base.prepare()
 
-    AutobaseSingleton.set_autobase(base)
-
     # For testing
     if base.metadata.is_bound() is True:
         base.metadata.drop_all()
         base.metadata.create_all()
+
+    return base
 
 
 # util

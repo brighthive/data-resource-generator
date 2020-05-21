@@ -6,8 +6,8 @@ def start_data_resource_generator(data_catalog, app):
     data_dict = data_catalog["data"]
     api_dict = data_catalog["api"]["apiSpec"]
 
-    # get models
+    # Generate ORM
     base = create_models(data_dict)
 
-    # add api
+    # Generate APIs
     api_manager_run(base=base, api_dict=api_dict, app=app)

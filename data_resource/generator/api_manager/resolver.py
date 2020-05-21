@@ -6,15 +6,6 @@ from data_resource.generator.api_manager.rest_functions import (
 )
 
 
-def resolver_stub(fn_name):
-    """dynamic function resolver."""  # TODO can probably be deleted, not used for tests anymore?
-
-    def get_stub():
-        return {}, 200
-
-    return get_stub
-
-
 def generate_fn_dict(base):
     fn_dict = {}
 

@@ -2,6 +2,10 @@ import connexion
 from connexion import NoContent
 from data_resource.db.base import db_session
 import flask
+import logging
+
+
+logging.basicConfig(level=logging.INFO)
 
 
 def dump(item):
@@ -46,12 +50,10 @@ def put_resource_closure(resource_orm):
 
         resource["id"] = resource_id
         if p is not None:
-            print("Updating pet %s..", resource_id)
-            # logging.info("Updating pet %s..", resource_id)
+            logging.info(f"Updating '{resource_orm.__name__}' {resource_id}..")
             p.update(**resource)
         else:
-            print("Creating pet %s..", resource_id)
-            # logging.info("Creating pet %s..", resource_id)
+            logging.info(f"Creating '{resource_orm.__name__}' {resource_id}..")
             # resource['created'] = datetime.datetime.utcnow()
             db_session.add(resource_orm(**resource))
         db_session.commit()
@@ -66,7 +68,7 @@ def delete_resource_id_closure(resource_orm):
             db_session.query(resource_orm).filter(resource_orm.id == id).one_or_none()
         )
         if resource is not None:
-            # logging.info('Deleting resource %s..', id)
+            logging.info("Deleting resource %s..", id)
             db_session.query(resource_orm).filter(resource_orm.id == id).delete()
             db_session.commit()
             return NoContent, 204

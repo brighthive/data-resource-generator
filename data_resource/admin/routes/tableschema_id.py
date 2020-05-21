@@ -9,17 +9,16 @@ import json
 from convert_descriptor_to_swagger import convert_descriptor_to_swagger
 
 
-def generate_swagger(descriptor):
-    logging.info("O WOW")
-    logging.info(json.dumps(descriptor, indent=4))
-    swagger = convert_descriptor_to_swagger([descriptor])
-    return swagger
-
-
 logging.basicConfig(level=logging.INFO)
 
 tableschema_id_bp = Blueprint("tableschema_id_bp", __name__)
 api = Api(tableschema_id_bp)
+
+
+def generate_swagger(descriptor):
+    logging.info(json.dumps(descriptor, indent=4))
+    swagger = convert_descriptor_to_swagger([descriptor])
+    return swagger
 
 
 class TableSchemaID(Resource):

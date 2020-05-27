@@ -99,6 +99,8 @@ The following are the API routes that you can interact with for each of your gen
 
 ## How to develop Data Resource Generator
 
+Please see https://data-resource-generator.readthedocs.io/en/latest/ for docs.
+
 > We welcome code contributions, suggestions, and reports! Please report bugs and make suggestions using Github issues. The BrightHive team will triage and prioritize your issue as soon as possible.
 
 1. Install pipenv.

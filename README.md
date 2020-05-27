@@ -1,4 +1,4 @@
-# Data Resource
+# Data Resource Generator
 
 ![Maintenance](https://img.shields.io/maintenance/yes/2020)
 
@@ -54,7 +54,7 @@ Simply provide the application a declarative database and API specification and 
 - Automatic REST API
 - Enable/disable HTTP routes -->
 
-## How to use Data Resource
+## How to use Data Resource Generator
 
 ### Definitions
 
@@ -97,7 +97,7 @@ The following are the API routes that you can interact with for each of your gen
 - `PUT resource/1`
 - `DELETE resource/1`
 
-## How to develop Data Resource
+## How to develop Data Resource Generator
 
 > We welcome code contributions, suggestions, and reports! Please report bugs and make suggestions using Github issues. The BrightHive team will triage and prioritize your issue as soon as possible.
 

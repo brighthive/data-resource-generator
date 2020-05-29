@@ -410,8 +410,9 @@ class Database:
             db_session.execute("drop schema public cascade")
             db_session.execute("create schema public")
             db_session.commit()
-        except:
+        except Exception as e:
             db_session.rollback()
+            raise e
         finally:
             db_session.close()
 
@@ -430,16 +431,16 @@ def database():
 
 @pytest.fixture(scope="function")
 def admin_e2e(empty_database):
-    connexion_app = start(actually_run=False)
-    return connexion_app.app.test_client()
+    app = start(actually_run=False)
+    return app.test_client()
 
 
 @pytest.fixture(scope="function")
 def generated_e2e(empty_database):
     # start the app
-    connexion_app = start(actually_run=False)
+    app = start(actually_run=False)
 
     # skip generation process -- inject the data dict
-    start_data_resource_generator(DATA_DICTIONARY, connexion_app)
+    start_data_resource_generator(DATA_DICTIONARY, app)
 
-    return connexion_app.app.test_client()
+    return app.test_client()

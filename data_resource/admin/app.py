@@ -5,25 +5,26 @@ from data_resource.admin.routes import (
     generator_bp,
 )
 from data_resource.db import db_session, admin_base, engine
+from flask import Flask
 
 
 def start(actually_run=True):
-    app = connexion.FlaskApp(__name__)  # FIX
+    app = Flask(__name__)  # FIX
 
     # register admin
-    app.app.register_blueprint(tableschema_bp)
-    app.app.register_blueprint(tableschema_id_bp)
-    app.app.register_blueprint(swagger_bp)
-    app.app.register_blueprint(generator_bp)
+    app.register_blueprint(tableschema_bp)
+    app.register_blueprint(tableschema_id_bp)
+    app.register_blueprint(swagger_bp)
+    app.register_blueprint(generator_bp)
 
-    app.app.config["connexion_app"] = app  # FIX
-    application = app.app  # FIX
+    # app.app.config["connexion_app"] = app  # FIX
+    # application = app.app  # FIX
 
     import data_resource.admin.models
 
     admin_base.metadata.create_all(engine)
 
-    @application.teardown_appcontext
+    @app.teardown_appcontext
     def shutdown_session(exception=None):
         db_session.remove()
 

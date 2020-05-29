@@ -1,4 +1,3 @@
-import connexion
 from data_resource.admin.routes import (
     tableschema_bp,
     tableschema_id_bp,
@@ -9,7 +8,7 @@ from data_resource.db import db_session, admin_base, engine
 
 
 def start(actually_run=True):
-    app = connexion.FlaskApp(__name__)
+    app = connexion.FlaskApp(__name__)  # FIX
 
     # register admin
     app.app.register_blueprint(tableschema_bp)
@@ -17,8 +16,8 @@ def start(actually_run=True):
     app.app.register_blueprint(swagger_bp)
     app.app.register_blueprint(generator_bp)
 
-    app.app.config["connexion_app"] = app
-    application = app.app
+    app.app.config["connexion_app"] = app  # FIX
+    application = app.app  # FIX
 
     import data_resource.admin.models
 

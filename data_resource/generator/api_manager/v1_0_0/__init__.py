@@ -1,0 +1,1 @@
+from data_resource.generator.api_manager.v1_0_0.resource_handler import ResourceHandler

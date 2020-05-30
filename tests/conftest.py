@@ -1,13 +1,11 @@
 import pytest
-from data_resource.db import engine
-from sqlalchemy import MetaData
 from sqlalchemy.exc import OperationalError
-from sqlalchemy.sql import text
-from convert_descriptor_to_swagger import convert_descriptor_to_swagger
-import json
 from data_resource import start
 from data_resource.db import db_session
 from data_resource.generator.app import start_data_resource_generator
+from data_resource.generator.model_manager.model_manager import create_models
+from flask_restful import Api
+from flask import Flask
 
 
 data_dict = [
@@ -423,6 +421,13 @@ def empty_database():
     db.destory_db()
 
 
+@pytest.fixture
+def valid_base(VALID_DATA_DICTIONARY, empty_database):
+    table_descriptors = VALID_DATA_DICTIONARY["data"]
+    base = create_models(table_descriptors)
+    return base
+
+
 @pytest.fixture(scope="function")
 def database():
     db = Database()
@@ -444,3 +449,10 @@ def generated_e2e(empty_database):
     start_data_resource_generator(DATA_DICTIONARY, app)
 
     return app.test_client()
+
+
+@pytest.fixture(scope="function")
+def empty_api():
+    app = Flask("what")
+    api = Api(app)
+    return api

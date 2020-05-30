@@ -25,15 +25,17 @@ def MethodNotAllowed(temp):
 
 
 class VersionedResourceParent(Resource):
-    __slots__ = [
-        "data_resource_name",
-        "data_model",
-        "table_schema",
-        "api_schema",
-        "restricted_fields",
-    ]
+    # __slots__ = [
+    #     "data_resource_name",
+    #     "data_model",
+    #     "table_schema",
+    #     "api_schema",
+    #     "restricted_fields",
+    # ]
 
-    def __init__(self):
+    def __init__(self, name=None, resource_orm=None):
+        self.name = name
+        self.resource_orm = resource_orm
         Resource.__init__(self)
 
     def get_api_version(self, headers):

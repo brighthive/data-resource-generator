@@ -46,7 +46,6 @@ def test_create_models_can_add_data_with_orm(VALID_DATA_DICTIONARY, empty_databa
     # Arrange
     # create orm
     table_descriptors = VALID_DATA_DICTIONARY["data"]
-
     base = create_models(table_descriptors)
 
     # Act
@@ -70,7 +69,7 @@ def test_create_models_can_add_data_with_orm(VALID_DATA_DICTIONARY, empty_databa
 
 
 @pytest.mark.requiresdb
-def test_valid_descriptor_creates_databased(VALID_DATA_DICTIONARY, empty_database):
+def test_valid_descriptor_creates_base(VALID_DATA_DICTIONARY, empty_database):
     table_descriptors = VALID_DATA_DICTIONARY["data"]
 
     metadata = create_all_tables_from_schemas(table_descriptors)

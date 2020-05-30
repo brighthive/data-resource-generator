@@ -18,8 +18,8 @@ class Generator(Resource):
     def post(self):
         data_catalog = request.json["data_catalog"]
 
-        app = current_app.config["connexion_app"]
-        start_data_resource_generator(data_catalog, app)
+        api = current_app.config["api"]
+        start_data_resource_generator(data_catalog, api)
 
         return "", 200
 

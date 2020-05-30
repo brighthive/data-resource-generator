@@ -6,21 +6,24 @@ from data_resource.admin.routes import (
 )
 from data_resource.db import db_session, admin_base, engine
 from flask import Flask
+from flask_restful import Api
 
 
 def start(actually_run=True):
-    app = Flask(__name__)  # FIX
+    app = Flask(__name__)
+    api = Api(app)
 
-    # register admin
+    # Register admin routes
     app.register_blueprint(tableschema_bp)
     app.register_blueprint(tableschema_id_bp)
     app.register_blueprint(swagger_bp)
     app.register_blueprint(generator_bp)
 
-    # app.app.config["connexion_app"] = app  # FIX
-    # application = app.app  # FIX
+    # Save API to grab later at generation time
+    app.config["api"] = api
 
-    import data_resource.admin.models
+    # Create the models
+    import data_resource.admin.models  # noqa: F401
 
     admin_base.metadata.create_all(engine)
 

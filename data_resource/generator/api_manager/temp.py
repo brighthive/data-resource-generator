@@ -1,6 +1,6 @@
 from data_resource.generator.api_manager import VersionedResource
 from flask_restful import Api
-from sqlalchemy import Table
+from sqlalchemy.ext.declarative import DeclarativeMeta
 
 
 def generate_api(base=None, data_resource_specs=None, swagger=None, api=None) -> None:
@@ -11,8 +11,8 @@ def generate_api(base=None, data_resource_specs=None, swagger=None, api=None) ->
     # Generate x:x REST API
 
 
-def generate_rest_api_routes(api: Api, resource_orm: Table) -> None:
-    resource_name = resource_orm.__tablename__
+def generate_rest_api_routes(api: Api, resource_orm: DeclarativeMeta) -> None:
+    resource_name = resource_orm.__name__
     resources = [
         f"/{resource_name}",
         f"/{resource_name}/<int:id>",

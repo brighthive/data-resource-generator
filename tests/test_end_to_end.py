@@ -2,7 +2,7 @@ import pytest
 import json
 
 
-@pytest.mark.xfail
+# @pytest.mark.xfail
 @pytest.mark.requiresdb
 def test_end_to_end(generated_e2e, empty_database):
     api = generated_e2e

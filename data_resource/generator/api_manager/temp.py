@@ -12,7 +12,7 @@ def generate_api(base=None, data_resource_specs=None, swagger=None, api=None) ->
 
 
 def generate_rest_api_routes(api: Api, resource_orm: DeclarativeMeta) -> None:
-    resource_name = resource_orm.__name__
+    resource_name = resource_orm.__name__.lower()
     resources = [
         f"/{resource_name}",
         f"/{resource_name}/<int:id>",

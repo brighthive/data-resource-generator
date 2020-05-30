@@ -159,53 +159,59 @@ class VersionedResourceMany(VersionedResourceParent):
             )
 
 
-class VersionedResource(VersionedResourceParent):
+class VersionedResource(Resource):
     _query_route = "/query"
 
+    def __init__(self, name=None, resource_orm=None):
+        self.name = name
+        self.resource_orm = resource_orm
+
     def get(self, id=None):
-        if not self.api_schema["get"]["enabled"]:
-            raise MethodNotAllowed()
-        if request.path.endswith("/query"):
-            raise MethodNotAllowed()
 
-        offset = 0
-        limit = 20
-        try:
-            offset = request.args["offset"]
-        except KeyError:
-            pass
+        # if not self.api_schema["get"]["enabled"]:
+        #     raise MethodNotAllowed()
+        # if request.path.endswith("/query"):
+        #     raise MethodNotAllowed()
 
-        try:
-            limit = request.args["limit"]
-        except KeyError:
-            pass
+        # offset = 0
+        # limit = 20
+        # try:
+        #     offset = request.args["offset"]
+        # except KeyError:
+        #     pass
 
-        if id is None:
-            if self.api_schema["get"]["secured"]:
-                return self.get_resource_handler(request.headers).get_all_secure(
-                    self.data_model,
-                    self.data_resource_name,
-                    self.restricted_fields,
-                    offset,
-                    limit,
-                )
-            else:
-                return self.get_resource_handler(request.headers).get_all(
-                    self.data_model,
-                    self.data_resource_name,
-                    self.restricted_fields,
-                    offset,
-                    limit,
-                )
-        else:
-            if self.api_schema["get"]["secured"]:
-                return self.get_resource_handler(request.headers).get_one_secure(
-                    id, self.data_model, self.data_resource_name, self.table_schema
-                )
-            else:
-                return self.get_resource_handler(request.headers).get_one(
-                    id, self.data_model, self.data_resource_name, self.table_schema
-                )
+        # try:
+        #     limit = request.args["limit"]
+        # except KeyError:
+        #     pass
+
+        # if id is None:
+        #     if self.api_schema["get"]["secured"]:
+        #         return self.get_resource_handler(request.headers).get_all_secure(
+        #             self.data_model,
+        #             self.data_resource_name,
+        #             self.restricted_fields,
+        #             offset,
+        #             limit,
+        #         )
+        #     else:
+        #         return self.get_resource_handler(request.headers).get_all(
+        #             self.data_model,
+        #             self.data_resource_name,
+        #             self.restricted_fields,
+        #             offset,
+        #             limit,
+        #         )
+        # else:
+        #     if self.api_schema["get"]["secured"]:
+        #         return self.get_resource_handler(request.headers).get_one_secure(
+        #             id, self.data_model, self.data_resource_name, self.table_schema
+        #         )
+        #     else:
+        #         return self.get_resource_handler(request.headers).get_one(
+        #             id, self.data_model, self.data_resource_name, self.table_schema
+        #         )
+        return {"hello": "world"}, 200
 
     def post(self):
         if not self.api_schema["post"]["enabled"]:

@@ -8,7 +8,7 @@ def test_end_to_end(generated_e2e, empty_database):
     api = generated_e2e
 
     # GET
-    response = api.get("/peoples", json={})
+    response = api.get("/people", json={})
     assert response.status_code == 200
 
     body = json.loads(response.data)

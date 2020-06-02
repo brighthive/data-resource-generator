@@ -20,6 +20,11 @@ from sqlalchemy import and_
 from tableschema import Schema, validate
 
 
+from data_resource.db.base import db_session
+import flask
+import logging
+
+
 def ApiError(temp):
     return
 
@@ -50,7 +55,9 @@ class ResourceHandler:
         # self.logger = LogFactory.get_console_logger("resource-handler")
         self.logger = lambda x: x
 
-    def build_json_from_object(self, obj: object, restricted_fields: dict = []):
+    def build_json_from_object(
+        self, obj: object, restricted_fields: dict = []
+    ):  # should this be a = {}?
         resp = {
             key: value if value is not None else ""
             for key, value in obj.__dict__.items()
@@ -177,7 +184,7 @@ class ResourceHandler:
         )
 
     def get_all(
-        self, data_model, data_resource_name, restricted_fields, offset=0, limit=1
+        self, name="resource", resource_orm=None, offset: int = 0, limit: int = 1
     ):
         """Retrieve a paginated list of items.
 
@@ -190,26 +197,25 @@ class ResourceHandler:
         Return:
             dict, int: The response object and associated HTTP status code.
         """
-        session = Session()
         response = OrderedDict()
-        response[data_resource_name] = []
+        response[name] = []  # FIX
+        restricted_fields = {}  # FIX
         response["links"] = []
         links = []
 
         try:
-            results = session.query(data_model).limit(limit).offset(offset).all()
+            results = db_session.query(resource_orm).limit(limit).offset(offset).all()
             for row in results:
-                response[data_resource_name].append(
+                response[name].append(
                     self.build_json_from_object(row, restricted_fields)
                 )
-            row_count = session.query(data_model).count()
+            row_count = db_session.query(resource_orm).count()
             if row_count > 0:
-                links = self.build_links(data_resource_name, offset, limit, row_count)
+                links = self.build_links(name, offset, limit, row_count)
             response["links"] = links
         except Exception:
             raise InternalServerError()
 
-        session.close()
         return response, 200
 
     # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())

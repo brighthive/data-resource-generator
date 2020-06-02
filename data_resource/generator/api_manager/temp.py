@@ -19,7 +19,11 @@ def generate_rest_api_routes(api: Api, resource_orm: DeclarativeMeta) -> None:
         f"/{resource_name}/query",
     ]
 
-    resource_api = VersionedResource(name=resource_name, resource_orm=resource_orm)
+    resource_api = type(
+        resource_name,
+        (VersionedResource,),
+        {"name": resource_name, "resource_orm": resource_orm},
+    )
 
     for idx, route in enumerate(resources):
         api.add_resource(resource_api, route, endpoint=f"{resource_name}_ep_{idx}")

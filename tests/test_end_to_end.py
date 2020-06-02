@@ -2,7 +2,19 @@ import pytest
 import json
 
 
-# @pytest.mark.xfail
+@pytest.mark.requiresdb
+def test_end_to_end_refactor_helper_delete_me(generated_e2e, empty_database):
+    api = generated_e2e
+
+    # GET
+    response = api.get("/people", json={})
+    assert response.status_code == 200
+
+    body = json.loads(response.data)
+    assert len(body["people"]) == 0
+
+
+@pytest.mark.xfail
 @pytest.mark.requiresdb
 def test_end_to_end(generated_e2e, empty_database):
     api = generated_e2e
@@ -12,7 +24,7 @@ def test_end_to_end(generated_e2e, empty_database):
     assert response.status_code == 200
 
     body = json.loads(response.data)
-    assert len(body) == 0
+    assert len(body["people"]) == 0
 
     # POST
     response = api.post("/peoples", json={"name": "testname"})

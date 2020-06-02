@@ -1,10 +1,7 @@
 """Generic Resource Handler."""
-
-import math
-import re
-from collections import OrderedDict
-
 from brighthive_authlib import token_required
+from collections import OrderedDict
+from data_resource.generator.api_manager.v1_0_0.resource_get import ResourceGet
 
 # from data_resource.app.utils.exception_handler import (
 #     ApiError,
@@ -12,13 +9,10 @@ from brighthive_authlib import token_required
 #     InternalServerError,
 #     SchemaValidationFailure,
 # ) # FIX
-# from data_resource.app.utils.junc_holder import JuncHolder
 # from data_resource.config import ConfigurationFactory
-# from data_resource.db import Session
 # from data_resource.logging import LogFactory
 from sqlalchemy import and_
 from tableschema import Schema, validate
-
 
 from data_resource.db.base import db_session
 import flask
@@ -50,103 +44,10 @@ class Session:
     pass
 
 
-class ResourceHandler:
+class ResourceHandler(ResourceGet):
     def __init__(self):
         # self.logger = LogFactory.get_console_logger("resource-handler")
         self.logger = lambda x: x
-
-    def build_json_from_object(
-        self, obj: object, restricted_fields: dict = []
-    ):  # should this be a = {}?
-        resp = {
-            key: value if value is not None else ""
-            for key, value in obj.__dict__.items()
-            if not key.startswith("_")
-            and not callable(key)
-            and key not in restricted_fields
-        }
-        return resp
-
-    def compute_offset(self, page: int, items_per_page: int) -> int:
-        """Compute the offset value for pagination.
-
-        Args:
-            page (int): The current page to compute the offset from.
-            items_per_page (int): Number of items per page.
-        Returns:
-            int: The offset value.
-        """
-        return int(int(int(page) - 1) * int(items_per_page))
-
-    def compute_page(self, offset: int, items_per_page: int) -> int:
-        """Compute the current page number based on offset.
-
-        Args:
-            offset (int): The offset to use to compute the page.
-            items_per_page (int): Nimber of items per page.
-        Returns:
-            int: The page number.
-        """
-
-        return int(math.ceil((int(offset) + 1) / int(items_per_page)))
-
-    def build_links(self, endpoint: str, offset: int, limit: int, rows: int):
-        """Build links for a paginated response
-        Args:
-            endpoint (str): Name of the endpoint to provide in the link.
-            offset (int): Database query offset.
-            limit (int): Number of items to return in query.
-            rows (int): Count of rows in table.
-
-        Returns:
-            dict: The links based on the offset and limit
-        """
-        offset = int(offset)
-        limit = int(limit)
-        rows = int(rows)
-
-        # URL and pages
-        url_link = "/{}?offset={}&limit={}"
-        total_pages = int(math.ceil(int(rows) / int(limit)))
-        current_page = self.compute_page(offset, limit)
-
-        # Links
-        current = OrderedDict()
-        first = OrderedDict()
-        prev = OrderedDict()
-        next = OrderedDict()
-        last = OrderedDict()
-        links = []
-
-        current["rel"] = "self"
-        current["href"] = url_link.format(endpoint, offset, limit)
-        links.append(current)
-
-        first["rel"] = "first"
-        first["href"] = url_link.format(endpoint, self.compute_offset(1, limit), limit)
-        links.append(first)
-
-        if current_page > 1:
-            prev["rel"] = "prev"
-            prev["href"] = url_link.format(
-                endpoint, self.compute_offset(current_page - 1, limit), limit
-            )
-            links.append(prev)
-
-        if current_page < total_pages:
-            next["rel"] = "next"
-            next["href"] = url_link.format(
-                endpoint, self.compute_offset(current_page + 1, limit), limit
-            )
-            links.append(next)
-
-        last["rel"] = "last"
-        last["href"] = url_link.format(
-            endpoint, self.compute_offset(total_pages, limit), limit
-        )
-        links.append(last)
-
-        return links
 
     # def validate_email(email_address):
     #     """Rudimentary email address validator.
@@ -163,60 +64,6 @@ class ResourceHandler:
     #         is_valid = True
 
     #     return is_valid
-
-    # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
-    def get_all_secure(
-        self, data_model, data_resource_name, restricted_fields, offset=0, limit=1
-    ):
-        """Wrapper method for get_all method.
-
-        Args:
-            data_model (object): SQLAlchemy ORM model.
-            data_resource_name (str): Name of the data resource.
-            offset (int): Pagination offset.
-            limit (int): Result limit.
-
-        Return:
-            function: The wrapped method.
-        """
-        return self.get_all(
-            data_model, data_resource_name, restricted_fields, offset, limit
-        )
-
-    def get_all(
-        self, name="resource", resource_orm=None, offset: int = 0, limit: int = 10
-    ):
-        """Retrieve a paginated list of items.
-
-        Args:
-            data_model (object): SQLAlchemy ORM model.
-            data_resource_name (str): Name of the data resource.
-            offset (int): Pagination offset.
-            limit (int): Result limit.
-
-        Return:
-            dict, int: The response object and associated HTTP status code.
-        """
-        response = OrderedDict()
-        response[name] = []
-        restricted_fields = {}  # FIX
-        response["links"] = []
-        links = []
-
-        try:
-            results = db_session.query(resource_orm).limit(limit).offset(offset).all()
-            for row in results:
-                response[name].append(
-                    self.build_json_from_object(row, restricted_fields)
-                )
-            row_count = db_session.query(resource_orm).count()
-            if row_count > 0:
-                links = self.build_links(name, offset, limit, row_count)
-            response["links"] = links
-        except Exception:
-            raise InternalServerError()
-
-        return response, 200
 
     # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
     def query_secure(
@@ -269,7 +116,7 @@ class ResourceHandler:
                     results = session.query(data_model).filter_by(**request_obj)
                     for row in results:
                         response["results"].append(
-                            self.build_json_from_object(row, restricted_fields)
+                            build_json_from_object(row, restricted_fields)
                         )
 
                     if len(response["results"]) == 0:
@@ -412,98 +259,6 @@ class ResourceHandler:
                     session.rollback()
                 else:
                     raise InternalServerError()
-
-    # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
-    def get_one_secure(self, id, data_model, data_resource_name, table_schema):
-        """Wrapper method for get one method.
-
-        Args:
-            id (any): The primary key for the specific object.
-            data_model (object): SQLAlchemy ORM model.
-            data_resource_name (str): Name of the data resource.
-            table_schema (dict): The Table Schema object to use for validation.
-
-        Return:
-            function: The wrapped method.
-        """
-        return self.get_one(id, data_model, data_resource_name, table_schema)
-
-    def get_one(self, id, data_model, data_resource_name, table_schema):
-        """Retrieve a single object from the data model based on it's primary
-        key.
-
-        Args:
-            id (any): The primary key for the specific object.
-            data_model (object): SQLAlchemy ORM model.
-            data_resource_name (str): Name of the data resource.
-            table_schema (dict): The Table Schema object to use for validation.
-
-        Return:
-            dict, int: The response object and the HTTP status code.
-        """
-        try:
-            primary_key = table_schema["primaryKey"]
-            session = Session()
-            result = (
-                session.query(data_model)
-                .filter(getattr(data_model, primary_key) == id)
-                .first()
-            )
-            response = self.build_json_from_object(result)
-            return response, 200
-        except Exception:
-            raise ApiUnhandledError(f"Resource with id '{id}' not found.", 404)
-        finally:
-            session.close()
-
-    # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
-    def get_many_one_secure(self, id: int, parent: str, child: str):
-        """Wrapper method for get many method.
-
-        Args:
-            id (int): Given ID of type parent
-            parent (str): Type of parent
-            child (str): Type of child
-
-        Return:
-            function: The wrapped method.
-        """
-        return self.get_many_one(id, parent, child)
-
-    def get_many_one(self, id: int, parent: str, child: str):
-        """Retrieve the many to many relationship data of a parent and child.
-
-        Args:
-            id (int): Given ID of type parent
-            parent (str): Type of parent
-            child (str): Type of child
-        """
-        join_table = JuncHolder.lookup_table(parent, child)
-
-        # This should not be reachable
-        # if join_table is None:
-        # return {'error': f"relationship '{child}' of '{parent}' not found."}
-        try:
-            session = Session()
-            parent_col_str = f"{parent}_id"
-            child_col_str = f"{child}_id"
-
-            cols = {parent_col_str: id}
-            query = session.query(join_table).filter_by(**cols).all()
-
-            children = []
-            for row in query:
-                # example - {'programs_id': 2, 'credentials_id': 3}
-                row_dict = row._asdict()
-                children.append(row_dict[child_col_str])
-
-        except Exception:
-            raise InternalServerError()
-
-        finally:
-            session.close()
-
-        return {f"{child}": children}, 200
 
     # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
     def put_many_one_secure(self, id: int, parent: str, child: str, values):

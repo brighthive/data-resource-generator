@@ -148,21 +148,21 @@ class ResourceHandler:
 
         return links
 
-    def validate_email(email_address):
-        """Rudimentary email address validator.
+    # def validate_email(email_address):
+    #     """Rudimentary email address validator.
 
-        Args:
-            email_address (str): Email address string to validate.
-        Return:
-            bool: True if the email address is valid, False if not.
-        """
-        email_regex = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
-        is_valid = False
+    #     Args:
+    #         email_address (str): Email address string to validate.
+    #     Return:
+    #         bool: True if the email address is valid, False if not.
+    #     """
+    #     email_regex = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
+    #     is_valid = False
 
-        if email_regex.match(email_address):
-            is_valid = True
+    #     if email_regex.match(email_address):
+    #         is_valid = True
 
-        return is_valid
+    #     return is_valid
 
     # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
     def get_all_secure(
@@ -184,7 +184,7 @@ class ResourceHandler:
         )
 
     def get_all(
-        self, name="resource", resource_orm=None, offset: int = 0, limit: int = 1
+        self, name="resource", resource_orm=None, offset: int = 0, limit: int = 10
     ):
         """Retrieve a paginated list of items.
 
@@ -198,7 +198,7 @@ class ResourceHandler:
             dict, int: The response object and associated HTTP status code.
         """
         response = OrderedDict()
-        response[name] = []  # FIX
+        response[name] = []
         restricted_fields = {}  # FIX
         response["links"] = []
         links = []

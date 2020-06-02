@@ -428,6 +428,11 @@ def valid_base(VALID_DATA_DICTIONARY, empty_database):
     return base
 
 
+@pytest.fixture
+def valid_people_orm(valid_base):
+    return getattr(valid_base.classes, "People")
+
+
 @pytest.fixture(scope="function")
 def database():
     db = Database()

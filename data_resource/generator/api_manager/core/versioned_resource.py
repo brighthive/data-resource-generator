@@ -284,12 +284,10 @@ class VersionedResource(VersionedResourceParent):
             )
 
     def delete(self, id):
-        if self.api_schema["delete"]["enabled"]:
-            raise MethodNotAllowed()
-        if request.path.endswith("/query"):
-            raise MethodNotAllowed()
+        # if self.api_schema["delete"]["enabled"]:
+        #     raise MethodNotAllowed()
 
-        if self.api_schema["delete"]["secured"]:
-            return {"message": "Unimplemented secure delete"}
-        else:
-            return {"message": "Unimplemented unsecure delete"}
+        # if self.api_schema["delete"]["secured"]:
+        # return {"message": "Unimplemented secure delete"}, 405
+        # else:
+        return {"message": "Unimplemented unsecure delete"}, 405

@@ -199,35 +199,35 @@ class VersionedResource(VersionedResourceParent):
         #         )
 
     def post(self):
-        if not self.api_schema["post"]["enabled"]:
-            raise MethodNotAllowed()
+        # if not self.api_schema["post"]["enabled"]:
+        #     raise MethodNotAllowed()
 
-        if self.api_schema["post"]["secured"]:
-            if request.path.endswith("/query"):
-                return self.get_resource_handler(request.headers).query_secure(
-                    self.data_model,
-                    self.data_resource_name,
-                    self.restricted_fields,
-                    self.table_schema,
-                    request,
-                )
-            else:
-                return self.get_resource_handler(request.headers).insert_one_secure(
-                    self.data_model, self.data_resource_name, self.table_schema, request
-                )
-        else:
-            if request.path.endswith("/query"):
-                return self.get_resource_handler(request.headers).query(
-                    self.data_model,
-                    self.data_resource_name,
-                    self.restricted_fields,
-                    self.table_schema,
-                    request,
-                )
-            else:
-                return self.get_resource_handler(request.headers).insert_one(
-                    self.data_model, self.data_resource_name, self.table_schema, request
-                )
+        # if self.api_schema["post"]["secured"]:
+        #     if request.path.endswith("/query"):
+        #         return self.get_resource_handler(request.headers).query_secure(
+        #             self.data_model,
+        #             self.data_resource_name,
+        #             self.restricted_fields,
+        #             self.table_schema,
+        #             request,
+        #         )
+        #     else:
+        #         return self.get_resource_handler(request.headers).insert_one_secure(
+        #             self.data_model, self.data_resource_name, self.table_schema, request
+        #         )
+        # else:
+        # if request.path.endswith("/query"):
+        #     return self.get_resource_handler(request.headers).query(
+        #         self.data_model,
+        #         self.data_resource_name,
+        #         self.restricted_fields,
+        #         self.table_schema,
+        #         request,
+        #     )
+        # else:
+        return self.get_resource_handler(request.headers).insert_one(
+            name=self.name, resource_orm=self.resource_orm
+        )
 
     def put(self, id):
         if not self.api_schema["put"]["enabled"]:

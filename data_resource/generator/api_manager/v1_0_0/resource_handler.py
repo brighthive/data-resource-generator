@@ -2,6 +2,7 @@
 from brighthive_authlib import token_required
 from collections import OrderedDict
 from data_resource.generator.api_manager.v1_0_0.resource_get import ResourceGet
+from data_resource.generator.api_manager.v1_0_0.resource_post import ResourcePost
 
 # from data_resource.app.utils.exception_handler import (
 #     ApiError,
@@ -44,26 +45,10 @@ class Session:
     pass
 
 
-class ResourceHandler(ResourceGet):
+class ResourceHandler(ResourceGet, ResourcePost):
     def __init__(self):
         # self.logger = LogFactory.get_console_logger("resource-handler")
         self.logger = lambda x: x
-
-    # def validate_email(email_address):
-    #     """Rudimentary email address validator.
-
-    #     Args:
-    #         email_address (str): Email address string to validate.
-    #     Return:
-    #         bool: True if the email address is valid, False if not.
-    #     """
-    #     email_regex = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
-    #     is_valid = False
-
-    #     if email_regex.match(email_address):
-    #         is_valid = True
-
-    #     return is_valid
 
     # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
     def query_secure(
@@ -131,98 +116,6 @@ class ResourceHandler(ResourceGet):
             raise SchemaValidationFailure()
 
         return {"message": "querying data resource"}, 200
-
-    # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
-    def insert_one_secure(
-        self, data_model, data_resource_name, table_schema, request_obj
-    ):
-        """Wrapper method for insert one method.
-
-        Args:
-            data_model (object): SQLAlchemy ORM model.
-            data_resource_name (str): Name of the data resource.
-            table_schema (dict): The Table Schema object to use for validation.
-            request_obj (dict): HTTP request object.
-
-        Return:
-            function: The wrapped method.
-        """
-        return self.insert_one(
-            data_model, data_resource_name, table_schema, request_obj
-        )
-
-    def insert_one(self, data_model, data_resource_name, table_schema, request_obj):
-        """Insert a new object.
-
-        Args:
-            data_model (object): SQLAlchemy ORM model.
-            data_resource_name (str): Name of the data resource.
-            table_schema (dict): The Table Schema object to use for validation.
-            request_obj (dict): HTTP request object.
-
-        Return:
-            dict, int: The response object and associated HTTP status code.
-        """
-        try:
-            request_obj = request_obj.json
-        except Exception:
-            raise ApiError("No request body found.", 400)
-
-        _ = Schema(table_schema)
-        errors = []
-        accepted_fields = []
-
-        if not validate(table_schema):
-            raise SchemaValidationFailure()
-
-        # Check for required fields
-        for field in table_schema["fields"]:
-            accepted_fields.append(field["name"])
-
-            if field["required"] and not field["name"] in request_obj.keys():
-                errors.append(f"Required field '{field['name']}' is missing.")
-
-        valid_fields = []
-        many_query = []
-
-        for field in request_obj.keys():
-            if field in accepted_fields:
-                valid_fields.append(field)
-            else:
-                junc_table = JuncHolder.lookup_table(field, data_resource_name)
-
-                if junc_table is not None:
-                    values = request_obj[field]
-                    if not isinstance(values, list):
-                        values = [values]
-                    many_query.append([field, values, junc_table])
-                else:
-                    errors.append(f"Unknown field '{field}' found.")
-
-        if len(errors) > 0:
-            raise ApiError("Invalid request body.", 400, errors)
-
-        try:
-            session = Session()
-            new_object = data_model()
-            for field in valid_fields:
-                value = request_obj[field]
-                setattr(new_object, field, value)
-            session.add(new_object)
-            session.commit()
-            id_value = getattr(new_object, table_schema["primaryKey"])
-
-            # process the many_query
-            for field, values, table in many_query:
-                self.process_many_query(
-                    session, table, id_value, field, data_resource_name, values
-                )
-
-            return {"message": "Successfully added new resource.", "id": id_value}, 201
-        except Exception:
-            raise ApiUnhandledError("Failed to create new resource.", 400)
-        finally:
-            session.close()
 
     def process_many_query(
         self,

@@ -10,7 +10,7 @@ def test_get_all(empty_database, valid_people_orm):
     resource_orm = valid_people_orm
 
     result = resource_handler.get_all(
-        name=resource_name, resource_orm=resource_orm, offset=0, limit=10
+        resource_name=resource_name, resource_orm=resource_orm, offset=0, limit=10
     )
 
     assert len(result[0]["test"]) == 0
@@ -21,7 +21,7 @@ def test_get_all(empty_database, valid_people_orm):
     db_session.commit()
 
     result = resource_handler.get_all(
-        name=resource_name, resource_orm=resource_orm, offset=0, limit=10
+        resource_name=resource_name, resource_orm=resource_orm, offset=0, limit=10
     )
 
     assert result[0]["test"] == [{"id": 1, "name": "tester"}]

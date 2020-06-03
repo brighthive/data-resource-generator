@@ -1,7 +1,6 @@
 from flask_restful import Api, Resource
 from flask import Blueprint, current_app, request
 from data_resource.db import db_session
-import connexion
 import data_resource.admin.models as orm
 import logging
 from tableschema import Schema

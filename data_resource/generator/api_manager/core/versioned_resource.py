@@ -183,7 +183,7 @@ class VersionedResource(VersionedResourceParent):
             #         )
             #     else:
             return self.get_resource_handler(request.headers).get_all(
-                name=self.name,
+                resource_name=self.name,
                 resource_orm=self.resource_orm,
                 offset=offset,
                 limit=limit,
@@ -226,7 +226,7 @@ class VersionedResource(VersionedResourceParent):
         #     )
         # else:
         return self.get_resource_handler(request.headers).insert_one(
-            name=self.name, resource_orm=self.resource_orm
+            resource_name=self.name, resource_orm=self.resource_orm, request=request
         )
 
     def put(self, id):

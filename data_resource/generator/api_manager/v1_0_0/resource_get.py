@@ -17,29 +17,33 @@ class ResourceGet:
     def get_all_secure(
         self, data_model, data_resource_name, restricted_fields, offset=0, limit=1
     ):
-        """Wrapper method for get_all method.
+        # """Wrapper method for get_all method.
 
-        Args:
-            data_model (object): SQLAlchemy ORM model.
-            data_resource_name (str): Name of the data resource.
-            offset (int): Pagination offset.
-            limit (int): Result limit.
+        # Args:
+        #     data_model (object): SQLAlchemy ORM model.
+        #     data_resource_name (str): Name of the data resource.
+        #     offset (int): Pagination offset.
+        #     limit (int): Result limit.
 
-        Return:
-            function: The wrapped method.
-        """
+        # Return:
+        #     function: The wrapped method.
+        # """
         return self.get_all(
             data_model, data_resource_name, restricted_fields, offset, limit
         )
 
     def get_all(
-        self, name="resource", resource_orm=None, offset: int = 0, limit: int = 10
+        self,
+        resource_name="resource",
+        resource_orm=None,
+        offset: int = 0,
+        limit: int = 10,
     ):
         """Retrieve a paginated list of items.
 
         Args:
-            data_model (object): SQLAlchemy ORM model.
-            data_resource_name (str): Name of the data resource.
+            resource_name (str): Name of the data resource.
+            resource_orm (object): SQLAlchemy ORM model.
             offset (int): Pagination offset.
             limit (int): Result limit.
 
@@ -47,7 +51,7 @@ class ResourceGet:
             dict, int: The response object and associated HTTP status code.
         """
         response = OrderedDict()
-        response[name] = []
+        response[resource_name] = []
         restricted_fields = {}  # FIX
         response["links"] = []
         links = []
@@ -55,10 +59,12 @@ class ResourceGet:
         try:
             results = db_session.query(resource_orm).limit(limit).offset(offset).all()
             for row in results:
-                response[name].append(build_json_from_object(row, restricted_fields))
+                response[resource_name].append(
+                    build_json_from_object(row, restricted_fields)
+                )
             row_count = db_session.query(resource_orm).count()
             if row_count > 0:
-                links = build_links(name, offset, limit, row_count)
+                links = build_links(resource_name, offset, limit, row_count)
             response["links"] = links
         except Exception:
             # raise InternalServerError()
@@ -68,32 +74,32 @@ class ResourceGet:
 
     # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
     def get_one_secure(self, id, data_model, data_resource_name, table_schema):
-        """Wrapper method for get one method.
+        # """Wrapper method for get one method.
 
-        Args:
-            id (any): The primary key for the specific object.
-            data_model (object): SQLAlchemy ORM model.
-            data_resource_name (str): Name of the data resource.
-            table_schema (dict): The Table Schema object to use for validation.
+        # Args:
+        #     id (any): The primary key for the specific object.
+        #     data_model (object): SQLAlchemy ORM model.
+        #     data_resource_name (str): Name of the data resource.
+        #     table_schema (dict): The Table Schema object to use for validation.
 
-        Return:
-            function: The wrapped method.
-        """
+        # Return:
+        #     function: The wrapped method.
+        # """
         return self.get_one(id, data_model, data_resource_name, table_schema)
 
     def get_one(self, id, data_model, data_resource_name, table_schema):
-        """Retrieve a single object from the data model based on it's primary
-        key.
+        # """Retrieve a single object from the data model based on it's primary
+        # key.
 
-        Args:
-            id (any): The primary key for the specific object.
-            data_model (object): SQLAlchemy ORM model.
-            data_resource_name (str): Name of the data resource.
-            table_schema (dict): The Table Schema object to use for validation.
+        # Args:
+        #     id (any): The primary key for the specific object.
+        #     data_model (object): SQLAlchemy ORM model.
+        #     data_resource_name (str): Name of the data resource.
+        #     table_schema (dict): The Table Schema object to use for validation.
 
-        Return:
-            dict, int: The response object and the HTTP status code.
-        """
+        # Return:
+        #     dict, int: The response object and the HTTP status code.
+        # """
         try:
             primary_key = table_schema["primaryKey"]
             session = Session()
@@ -111,26 +117,26 @@ class ResourceGet:
 
     # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
     def get_many_one_secure(self, id: int, parent: str, child: str):
-        """Wrapper method for get many method.
+        # """Wrapper method for get many method.
 
-        Args:
-            id (int): Given ID of type parent
-            parent (str): Type of parent
-            child (str): Type of child
+        # Args:
+        #     id (int): Given ID of type parent
+        #     parent (str): Type of parent
+        #     child (str): Type of child
 
-        Return:
-            function: The wrapped method.
-        """
+        # Return:
+        #     function: The wrapped method.
+        # """
         return self.get_many_one(id, parent, child)
 
     def get_many_one(self, id: int, parent: str, child: str):
-        """Retrieve the many to many relationship data of a parent and child.
+        # """Retrieve the many to many relationship data of a parent and child.
 
-        Args:
-            id (int): Given ID of type parent
-            parent (str): Type of parent
-            child (str): Type of child
-        """
+        # Args:
+        #     id (int): Given ID of type parent
+        #     parent (str): Type of parent
+        #     child (str): Type of child
+        # """
         join_table = JuncHolder.lookup_table(parent, child)
 
         # This should not be reachable

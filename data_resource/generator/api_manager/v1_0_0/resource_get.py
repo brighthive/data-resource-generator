@@ -87,7 +87,7 @@ class ResourceGet:
         # """
         return self.get_one(id, data_model, data_resource_name, table_schema)
 
-    def get_one(self, id, data_model, data_resource_name, table_schema):
+    def get_one(self, resource_name="resource", resource_orm=None, id: int = None):
         # """Retrieve a single object from the data model based on it's primary
         # key.
 
@@ -101,19 +101,21 @@ class ResourceGet:
         #     dict, int: The response object and the HTTP status code.
         # """
         try:
-            primary_key = table_schema["primaryKey"]
-            session = Session()
+            # primary_key = table_schema["primaryKey"]
+            primary_key = "id"
             result = (
-                session.query(data_model)
-                .filter(getattr(data_model, primary_key) == id)
+                db_session.query(resource_orm)
+                .filter(getattr(resource_orm, primary_key) == id)
                 .first()
             )
+            if result is None:
+                return {"error": f"Resource with id '{id}' not found."}, 404
+
             response = build_json_from_object(result)
             return response, 200
         except Exception:
-            raise ApiUnhandledError(f"Resource with id '{id}' not found.", 404)
-        finally:
-            session.close()
+            # raise ApiUnhandledError(f"Resource with id '{id}' not found.", 404)
+            raise
 
     # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
     def get_many_one_secure(self, id: int, parent: str, child: str):

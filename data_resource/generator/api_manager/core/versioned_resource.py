@@ -188,15 +188,15 @@ class VersionedResource(VersionedResourceParent):
                 offset=offset,
                 limit=limit,
             )
-        # else:
-        #     if self.api_schema["get"]["secured"]:
-        #         return self.get_resource_handler(request.headers).get_one_secure(
-        #             id, self.data_model, self.data_resource_name, self.table_schema
-        #         )
-        #     else:
-        #         return self.get_resource_handler(request.headers).get_one(
-        #             id, self.data_model, self.data_resource_name, self.table_schema
-        #         )
+        else:
+            #     if self.api_schema["get"]["secured"]:
+            #         return self.get_resource_handler(request.headers).get_one_secure(
+            #             id, self.data_model, self.data_resource_name, self.table_schema
+            #         )
+            #     else:
+            return self.get_resource_handler(request.headers).get_one(
+                id=id, resource_name=self.name, resource_orm=self.resource_orm
+            )
 
     def post(self):
         # if not self.api_schema["post"]["enabled"]:

@@ -46,3 +46,10 @@ def test_end_to_end(
 
     body = json.loads(response.data)
     assert body["id"] == 1
+
+    # Patch the item
+    response = api.patch("/people/1", json={"name": "patched"})
+    assert response.status_code == 201
+
+    body = json.loads(response.data)
+    assert body["id"] == 1

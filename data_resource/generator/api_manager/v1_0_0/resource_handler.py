@@ -1,9 +1,9 @@
 """Generic Resource Handler."""
 from brighthive_authlib import token_required
 from collections import OrderedDict
-from data_resource.generator.api_manager.v1_0_0.resource_get import ResourceGet
-from data_resource.generator.api_manager.v1_0_0.resource_post import ResourcePost
-from data_resource.generator.api_manager.v1_0_0.resource_put import ResourcePut
+from data_resource.generator.api_manager.v1_0_0.resource_read import ResourceGet
+from data_resource.generator.api_manager.v1_0_0.resource_create import ResourcePost
+from data_resource.generator.api_manager.v1_0_0.resource_update import ResourcePut
 
 # from data_resource.app.utils.exception_handler import (
 #     ApiError,

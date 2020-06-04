@@ -1,10 +1,9 @@
 from tableschema import Schema, validate
 from data_resource.db.base import db_session
-from data_resource.generator.api_manager.v1_0_0.resource_post import ResourcePost
+from data_resource.generator.api_manager.v1_0_0.resource_create import ResourcePost
 
 
 class ResourcePut:
-
     # # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
     # def put_many_one_secure(self, id: int, parent: str, child: str, values):
     #     """Wrapper method for put many method.
@@ -131,7 +130,7 @@ class ResourcePut:
             )
             if mode == "PATCH" and data_obj is None:
                 # raise ApiUnhandledError(f"Resource with id '{id}' not found.", 404)
-                raise
+                return {"error": f"Resource with id '{id}' not found."}, 404
 
             if data_obj is None:
                 # data_obj = resource_orm() # do a post with ID?
@@ -142,8 +141,7 @@ class ResourcePut:
                 )
 
         except Exception:
-            # raise ApiUnhandledError(f"Resource with id '{id}' not found.", 404)
-            raise
+            raise ApiUnhandledError(f"Resource with id '{id}' not found.", 404)
 
         # _ = Schema(table_schema)
         # errors = []
@@ -185,5 +183,4 @@ class ResourcePut:
 
         id_value = data_obj.id
 
-        # db_session.close()
         return {"message": "Successfully updated resource.", "id": id_value}, 201

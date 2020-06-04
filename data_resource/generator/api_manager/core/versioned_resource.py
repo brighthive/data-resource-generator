@@ -255,31 +255,29 @@ class VersionedResource(VersionedResourceParent):
         )
 
     def patch(self, id):
-        if not self.api_schema["patch"]["enabled"]:
-            raise MethodNotAllowed()
-        if request.path.endswith("/query"):
-            raise MethodNotAllowed()
+        # if not self.api_schema["patch"]["enabled"]:
+        #     raise MethodNotAllowed()
+        # if request.path.endswith("/query"):
+        #     raise MethodNotAllowed()
 
-        if self.api_schema["patch"]["secured"]:
-            return self.get_resource_handler(request.headers).update_one_secure(
-                id,
-                self.data_model,
-                self.data_resource_name,
-                self.table_schema,
-                self.restricted_fields,
-                request,
-                mode="PATCH",
-            )
-        else:
-            return self.get_resource_handler(request.headers).update_one(
-                id,
-                self.data_model,
-                self.data_resource_name,
-                self.table_schema,
-                self.restricted_fields,
-                request,
-                mode="PATCH",
-            )
+        # if self.api_schema["patch"]["secured"]:
+        #     return self.get_resource_handler(request.headers).update_one_secure(
+        #         id,
+        #         self.data_model,
+        #         self.data_resource_name,
+        #         self.table_schema,
+        #         self.restricted_fields,
+        #         request,
+        #         mode="PATCH",
+        #     )
+        # else:
+        return self.get_resource_handler(request.headers).update_one(
+            id=id,
+            resource_name=self.name,
+            resource_orm=self.resource_orm,
+            request=request,
+            mode="PATCH",
+        )
 
     def delete(self, id):
         # if self.api_schema["delete"]["enabled"]:

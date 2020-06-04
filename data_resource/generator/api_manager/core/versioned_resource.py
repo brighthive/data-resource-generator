@@ -230,31 +230,29 @@ class VersionedResource(VersionedResourceParent):
         )
 
     def put(self, id):
-        if not self.api_schema["put"]["enabled"]:
-            raise MethodNotAllowed()
-        if request.path.endswith("/query"):
-            raise MethodNotAllowed()
+        # if not self.api_schema["put"]["enabled"]:
+        #     raise MethodNotAllowed()
+        # if request.path.endswith("/query"):
+        #     raise MethodNotAllowed()
 
-        if self.api_schema["put"]["secured"]:
-            return self.get_resource_handler(request.headers).update_one_secure(
-                id,
-                self.data_model,
-                self.data_resource_name,
-                self.table_schema,
-                self.restricted_fields,
-                request,
-                mode="PUT",
-            )
-        else:
-            return self.get_resource_handler(request.headers).update_one(
-                id,
-                self.data_model,
-                self.data_resource_name,
-                self.table_schema,
-                self.restricted_fields,
-                request,
-                mode="PUT",
-            )
+        # if self.api_schema["put"]["secured"]:
+        #     return self.get_resource_handler(request.headers).update_one_secure(
+        #         id,
+        #         self.data_model,
+        #         self.data_resource_name,
+        #         self.table_schema,
+        #         self.restricted_fields,
+        #         request,
+        #         mode="PUT",
+        #     )
+        # else:
+        return self.get_resource_handler(request.headers).update_one(
+            id=id,
+            resource_name=self.name,
+            resource_orm=self.resource_orm,
+            request=request,
+            mode="PUT",
+        )
 
     def patch(self, id):
         if not self.api_schema["patch"]["enabled"]:

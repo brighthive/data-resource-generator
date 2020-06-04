@@ -4,7 +4,7 @@ from collections import OrderedDict
 
 
 def test_post(empty_database, valid_people_orm):
-    # When nothing in DB, returns nothing
+    # When nothing in DB, adds to db.
     resource_handler = ResourceHandler()
     resource_name = "test"
     resource_orm = valid_people_orm

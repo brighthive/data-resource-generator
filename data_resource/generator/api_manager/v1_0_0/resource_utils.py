@@ -2,17 +2,6 @@ import math
 from collections import OrderedDict
 
 
-def build_json_from_object(obj: object, restricted_fields: list = []):
-    resp = {
-        key: value if value is not None else ""
-        for key, value in obj.__dict__.items()
-        if not key.startswith("_")
-        and not callable(key)
-        and key not in restricted_fields
-    }
-    return resp
-
-
 def _compute_offset(page: int, items_per_page: int) -> int:
     """Compute the offset value for pagination.
 
@@ -93,6 +82,17 @@ def build_links(endpoint: str, offset: int, limit: int, rows: int):
     links.append(last)
 
     return links
+
+
+def build_json_from_object(obj: object, restricted_fields: list = []):
+    resp = {
+        key: value if value is not None else ""
+        for key, value in obj.__dict__.items()
+        if not key.startswith("_")
+        and not callable(key)
+        and key not in restricted_fields
+    }
+    return resp
 
 
 # def validate_email(email_address):

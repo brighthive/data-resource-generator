@@ -1,9 +1,11 @@
 from tableschema import Schema, validate
 from data_resource.db.base import db_session
-from data_resource.generator.api_manager.v1_0_0.resource_create import ResourcePost
+from data_resource.generator.api_manager.v1_0_0.crud_functions.resource_create import (
+    ResourceCreate,
+)
 
 
-class ResourcePut:
+class ResourceUpdate:
     # # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
     # def put_many_one_secure(self, id: int, parent: str, child: str, values):
     #     """Wrapper method for put many method.
@@ -134,14 +136,14 @@ class ResourcePut:
 
             if data_obj is None:
                 # data_obj = resource_orm() # do a post with ID?
-                return ResourcePost().insert_one(
+                return ResourceCreate().insert_one(
                     resource_name=resource_name,
                     resource_orm=resource_orm,
                     request=request,
                 )
 
         except Exception:
-            raise ApiUnhandledError(f"Resource with id '{id}' not found.", 404)
+            raise ApiUnhandledError("unk", 500)
 
         # _ = Schema(table_schema)
         # errors = []

@@ -44,113 +44,6 @@ class VersionedResourceParent(Resource):
             return V1_0_0_ResourceHandler()
 
 
-class VersionedResourceMany(VersionedResourceParent):
-    def error_if_resource_is_disabled(self, verb: str, resource: str, api_schema: dict):
-        """This will raise an exception that will return an error to the client
-        if they attempt to access a disabled resource.
-
-        Returns nothing.
-        """
-        enabled = False
-        try:
-            for custom_resource in api_schema["custom"]:
-                if custom_resource["resource"] == resource:
-                    for method in custom_resource["methods"]:
-                        enabled = method[verb]["enabled"]
-                        if not enabled:
-                            raise MethodNotAllowed()
-
-                        return
-
-        except KeyError:
-            raise MethodNotAllowed()
-
-    def is_secured(self, verb: str, resource: str, api_schema: dict):
-        """Defaults to secured for security."""
-        try:
-            secured = False
-            for custom_resource in api_schema["custom"]:
-                if custom_resource["resource"] == resource:
-                    # assert is bool?
-                    for method in custom_resource["methods"]:
-                        secured = method[verb]["secured"]
-
-            return secured
-
-        except KeyError:
-            return True
-
-    def get(self, id=None):
-        # route should be parent/<id>/child
-        paths = request.path.split("/")
-        parent, child = paths[1], paths[3]
-
-        resource = f"/{parent}/{child}"
-        self.error_if_resource_is_disabled("get", resource, self.api_schema)
-
-        if self.is_secured("get", resource, self.api_schema):
-            return self.get_resource_handler(request.headers).get_many_one_secure(
-                id, parent, child
-            )
-        else:
-            return self.get_resource_handler(request.headers).get_many_one(
-                id, parent, child
-            )
-
-    def put(self, id=None):
-        # Replaces all data
-        paths = request.path.split("/")
-        parent, child = paths[1], paths[3]
-
-        resource = f"/{parent}/{child}"
-        self.error_if_resource_is_disabled("put", resource, self.api_schema)
-
-        value = request.json[child]
-        if self.is_secured("put", resource, self.api_schema):
-            return self.get_resource_handler(request.headers).put_many_one_secure(
-                id, parent, child, value
-            )
-        else:
-            return self.get_resource_handler(request.headers).put_many_one(
-                id, parent, child, value
-            )
-
-    def patch(self, id=None):
-        # Adds data
-        paths = request.path.split("/")
-        parent, child = paths[1], paths[3]
-
-        resource = f"/{parent}/{child}"
-        self.error_if_resource_is_disabled("patch", resource, self.api_schema)
-
-        value = request.json[child]
-        if self.is_secured("put", resource, self.api_schema):
-            return self.get_resource_handler(request.headers).patch_many_one_secure(
-                id, parent, child, value
-            )
-        else:
-            return self.get_resource_handler(request.headers).patch_many_one(
-                id, parent, child, value
-            )
-
-    def delete(self, id=None):
-        paths = request.path.split("/")
-        parent, child = paths[1], paths[3]
-
-        resource = f"/{parent}/{child}"
-        self.error_if_resource_is_disabled("delete", resource, self.api_schema)
-
-        value = request.json[child]  # Needs an except KeyError
-        if self.is_secured("delete", resource, self.api_schema):
-            return self.get_resource_handler(request.headers).delete_many_one_secure(
-                id, parent, child, value
-            )
-        else:
-            return self.get_resource_handler(request.headers).delete_many_one(
-                id, parent, child, value
-            )
-
-
 class VersionedResource(VersionedResourceParent):
     _query_route = "/query"
 
@@ -287,3 +180,110 @@ class VersionedResource(VersionedResourceParent):
         # return {"message": "Unimplemented secure delete"}, 405
         # else:
         return {"message": "Unimplemented unsecure delete"}, 405
+
+
+# class VersionedResourceMany(VersionedResourceParent):
+#     def error_if_resource_is_disabled(self, verb: str, resource: str, api_schema: dict):
+#         """This will raise an exception that will return an error to the client
+#         if they attempt to access a disabled resource.
+
+#         Returns nothing.
+#         """
+#         enabled = False
+#         try:
+#             for custom_resource in api_schema["custom"]:
+#                 if custom_resource["resource"] == resource:
+#                     for method in custom_resource["methods"]:
+#                         enabled = method[verb]["enabled"]
+#                         if not enabled:
+#                             raise MethodNotAllowed()
+
+#                         return
+
+#         except KeyError:
+#             raise MethodNotAllowed()
+
+#     def is_secured(self, verb: str, resource: str, api_schema: dict):
+#         """Defaults to secured for security."""
+#         try:
+#             secured = False
+#             for custom_resource in api_schema["custom"]:
+#                 if custom_resource["resource"] == resource:
+#                     # assert is bool?
+#                     for method in custom_resource["methods"]:
+#                         secured = method[verb]["secured"]
+
+#             return secured
+
+#         except KeyError:
+#             return True
+
+#     def get(self, id=None):
+#         # route should be parent/<id>/child
+#         paths = request.path.split("/")
+#         parent, child = paths[1], paths[3]
+
+#         resource = f"/{parent}/{child}"
+#         self.error_if_resource_is_disabled("get", resource, self.api_schema)
+
+#         if self.is_secured("get", resource, self.api_schema):
+#             return self.get_resource_handler(request.headers).get_many_one_secure(
+#                 id, parent, child
+#             )
+#         else:
+#             return self.get_resource_handler(request.headers).get_many_one(
+#                 id, parent, child
+#             )
+
+#     def put(self, id=None):
+#         # Replaces all data
+#         paths = request.path.split("/")
+#         parent, child = paths[1], paths[3]
+
+#         resource = f"/{parent}/{child}"
+#         self.error_if_resource_is_disabled("put", resource, self.api_schema)
+
+#         value = request.json[child]
+#         if self.is_secured("put", resource, self.api_schema):
+#             return self.get_resource_handler(request.headers).put_many_one_secure(
+#                 id, parent, child, value
+#             )
+#         else:
+#             return self.get_resource_handler(request.headers).put_many_one(
+#                 id, parent, child, value
+#             )
+
+#     def patch(self, id=None):
+#         # Adds data
+#         paths = request.path.split("/")
+#         parent, child = paths[1], paths[3]
+
+#         resource = f"/{parent}/{child}"
+#         self.error_if_resource_is_disabled("patch", resource, self.api_schema)
+
+#         value = request.json[child]
+#         if self.is_secured("put", resource, self.api_schema):
+#             return self.get_resource_handler(request.headers).patch_many_one_secure(
+#                 id, parent, child, value
+#             )
+#         else:
+#             return self.get_resource_handler(request.headers).patch_many_one(
+#                 id, parent, child, value
+#             )
+
+#     def delete(self, id=None):
+#         paths = request.path.split("/")
+#         parent, child = paths[1], paths[3]
+
+#         resource = f"/{parent}/{child}"
+#         self.error_if_resource_is_disabled("delete", resource, self.api_schema)
+
+#         value = request.json[child]  # Needs an except KeyError
+#         if self.is_secured("delete", resource, self.api_schema):
+#             return self.get_resource_handler(request.headers).delete_many_one_secure(
+#                 id, parent, child, value
+#             )
+#         else:
+#             return self.get_resource_handler(request.headers).delete_many_one(
+#                 id, parent, child, value
+#             )

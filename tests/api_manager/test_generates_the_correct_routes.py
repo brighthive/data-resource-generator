@@ -1,4 +1,4 @@
-from data_resource.generator.api_manager.temp import generate_rest_api_routes
+from data_resource.generator.api_manager.api_generator import generate_rest_api_routes
 import pytest
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer
@@ -7,6 +7,7 @@ from flask import url_for
 
 # Given a tableschema assert the correct flask restful routes are generated
 # use declarative base/table for ease instead of DeclarativeMeta
+@pytest.mark.unit
 def test_generate_rest_api_routes(valid_base, empty_api):
     test_base = declarative_base()
 

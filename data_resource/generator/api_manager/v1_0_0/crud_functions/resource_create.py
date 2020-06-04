@@ -2,7 +2,7 @@ from tableschema import Schema, validate
 from data_resource.db.base import db_session
 
 
-class ResourcePost:
+class ResourceCreate:
     # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
     def insert_one_secure(self, *args, **kwargs):
         """Wrapper method for insert one method.

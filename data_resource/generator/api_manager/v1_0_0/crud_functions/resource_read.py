@@ -12,7 +12,7 @@ def InternalServerError(*args, **kwarg):
     return
 
 
-class ResourceGet:
+class ResourceRead:
     # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
     def get_all_secure(
         self, data_model, data_resource_name, restricted_fields, offset=0, limit=1
@@ -117,51 +117,51 @@ class ResourceGet:
             # raise ApiUnhandledError(f"Resource with id '{id}' not found.", 404)
             raise
 
-    # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
-    def get_many_one_secure(self, id: int, parent: str, child: str):
-        # """Wrapper method for get many method.
+    # # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
+    # def get_many_one_secure(self, id: int, parent: str, child: str):
+    #     # """Wrapper method for get many method.
 
-        # Args:
-        #     id (int): Given ID of type parent
-        #     parent (str): Type of parent
-        #     child (str): Type of child
+    #     # Args:
+    #     #     id (int): Given ID of type parent
+    #     #     parent (str): Type of parent
+    #     #     child (str): Type of child
 
-        # Return:
-        #     function: The wrapped method.
-        # """
-        return self.get_many_one(id, parent, child)
+    #     # Return:
+    #     #     function: The wrapped method.
+    #     # """
+    #     return self.get_many_one(id, parent, child)
 
-    def get_many_one(self, id: int, parent: str, child: str):
-        # """Retrieve the many to many relationship data of a parent and child.
+    # def get_many_one(self, id: int, parent: str, child: str):
+    #     # """Retrieve the many to many relationship data of a parent and child.
 
-        # Args:
-        #     id (int): Given ID of type parent
-        #     parent (str): Type of parent
-        #     child (str): Type of child
-        # """
-        join_table = JuncHolder.lookup_table(parent, child)
+    #     # Args:
+    #     #     id (int): Given ID of type parent
+    #     #     parent (str): Type of parent
+    #     #     child (str): Type of child
+    #     # """
+    #     join_table = JuncHolder.lookup_table(parent, child)
 
-        # This should not be reachable
-        # if join_table is None:
-        # return {'error': f"relationship '{child}' of '{parent}' not found."}
-        try:
-            session = Session()
-            parent_col_str = f"{parent}_id"
-            child_col_str = f"{child}_id"
+    #     # This should not be reachable
+    #     # if join_table is None:
+    #     # return {'error': f"relationship '{child}' of '{parent}' not found."}
+    #     try:
+    #         session = Session()
+    #         parent_col_str = f"{parent}_id"
+    #         child_col_str = f"{child}_id"
 
-            cols = {parent_col_str: id}
-            query = session.query(join_table).filter_by(**cols).all()
+    #         cols = {parent_col_str: id}
+    #         query = session.query(join_table).filter_by(**cols).all()
 
-            children = []
-            for row in query:
-                # example - {'programs_id': 2, 'credentials_id': 3}
-                row_dict = row._asdict()
-                children.append(row_dict[child_col_str])
+    #         children = []
+    #         for row in query:
+    #             # example - {'programs_id': 2, 'credentials_id': 3}
+    #             row_dict = row._asdict()
+    #             children.append(row_dict[child_col_str])
 
-        except Exception:
-            raise InternalServerError()
+    #     except Exception:
+    #         raise InternalServerError()
 
-        finally:
-            session.close()
+    #     finally:
+    #         session.close()
 
-        return {f"{child}": children}, 200
+    #     return {f"{child}": children}, 200

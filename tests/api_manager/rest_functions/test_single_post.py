@@ -1,8 +1,8 @@
 from data_resource.generator.api_manager.v1_0_0.resource_handler import ResourceHandler
-from data_resource.db.base import db_session
-from collections import OrderedDict
+import pytest
 
 
+@pytest.mark.requiresdb
 def test_post(empty_database, valid_people_orm):
     # When nothing in DB, adds to db.
     resource_handler = ResourceHandler()

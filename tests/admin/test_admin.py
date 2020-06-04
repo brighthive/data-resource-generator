@@ -730,6 +730,7 @@ data_catalog = {
 }
 
 
+@pytest.mark.requiresdb
 def test_admin_api(admin_e2e, mocker):
     m = mocker.patch(
         "data_resource.generator.app.start_data_resource_generator", return_value=None

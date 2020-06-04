@@ -1,7 +1,6 @@
 import pytest
 
 
-# @pytest.mark.xfail
 @pytest.mark.unit
 def test_all_routes_exist(generated_e2e):
     api = generated_e2e

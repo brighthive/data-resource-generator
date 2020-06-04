@@ -2,7 +2,6 @@ from data_resource.generator.api_manager.api_generator import generate_rest_api_
 import pytest
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer
-from flask import url_for
 
 
 # Given a tableschema assert the correct flask restful routes are generated

@@ -1,8 +1,10 @@
 from data_resource.generator.api_manager.v1_0_0.resource_handler import ResourceHandler
+import pytest
 
 
+@pytest.mark.requiresdb
 def test_put(empty_database, valid_people_orm):
-    # When nothing in DB, puts
+    # When nothing in DB - PUT will add the resource
     resource_handler = ResourceHandler()
     resource_name = "test"
     resource_orm = valid_people_orm
@@ -20,7 +22,7 @@ def test_put(empty_database, valid_people_orm):
 
     assert result == ({"id": 1, "message": "Successfully added new resource."}, 201)
 
-    #  When something in DB, changes the items
+    #  When something in DB - PUT changes the item
     class FakeFlaskRequestPut:
         json = {"name": "newtester"}
 
@@ -33,5 +35,3 @@ def test_put(empty_database, valid_people_orm):
     )
 
     assert result == ({"id": 1, "message": "Successfully updated resource."}, 201)
-
-    #  When something in DB, changes the items

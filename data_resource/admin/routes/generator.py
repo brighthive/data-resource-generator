@@ -21,7 +21,7 @@ class Generator(Resource):
         api = current_app.config["api"]
         start_data_resource_generator(data_catalog, api)
 
-        return "", 200
+        return "", 204
 
 
 api.add_resource(Generator, "/generator")

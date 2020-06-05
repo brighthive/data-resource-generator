@@ -84,6 +84,38 @@ data_dict = [
             "missingValues": [],
         },
     },
+    {
+        "@id": "https://mydatatrust.brighthive.io/dr1/Order",
+        "@type": "table",
+        "name": "Required",
+        "tableSchema": {
+            "fields": [
+                {
+                    "name": "id",
+                    "title": "Order ID",
+                    "type": "integer",
+                    "description": "Unique identifer for an Order.",
+                    "constraints": {},
+                },
+                {
+                    "name": "required",
+                    "title": "Required item",
+                    "type": "integer",
+                    "description": "A required field.",
+                    "constraints": {"required": True},
+                },
+                {
+                    "name": "optional",
+                    "title": "Optional item",
+                    "type": "integer",
+                    "description": "Optional field.",
+                    "constraints": {},
+                },
+            ],
+            "primaryKey": "id",
+            "missingValues": [],
+        },
+    },
 ]
 
 people_descriptor = {
@@ -431,6 +463,11 @@ def valid_base(VALID_DATA_DICTIONARY, empty_database):
 @pytest.fixture
 def valid_people_orm(valid_base):
     return getattr(valid_base.classes, "People")
+
+
+@pytest.fixture
+def valid_orm_with_required_field(valid_base):
+    return getattr(valid_base.classes, "Required")
 
 
 @pytest.fixture(scope="function")

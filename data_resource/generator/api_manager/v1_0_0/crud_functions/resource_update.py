@@ -3,6 +3,7 @@ from data_resource.db.base import db_session
 from data_resource.generator.api_manager.v1_0_0.crud_functions.resource_create import (
     ResourceCreate,
 )
+from data_resource.logging.api_exceptions import ApiError, ApiUnhandledError
 
 
 class ResourceUpdate:
@@ -107,8 +108,7 @@ class ResourceUpdate:
         try:
             request_obj = request.json
         except Exception:
-            # raise ApiError("No request body found.", 400)
-            raise
+            raise ApiError("No request body found.", 400)
 
         try:
             # primary_key = table_schema["primaryKey"]
@@ -119,8 +119,7 @@ class ResourceUpdate:
                 .first()
             )
             if mode == "PATCH" and data_obj is None:
-                # raise ApiUnhandledError(f"Resource with id '{id}' not found.", 404)
-                return {"error": f"Resource with id '{id}' not found."}, 404
+                raise ApiUnhandledError(f"Resource with id '{id}' not found.", 404)
 
             if data_obj is None:
                 # data_obj = resource_orm() # do a post with ID?
@@ -129,8 +128,7 @@ class ResourceUpdate:
                 )
 
         except Exception:
-            # raise ApiUnhandledError("unk", 500)
-            return {"error": "unknown"}, 500
+            raise ApiUnhandledError("Unknown error", 500)
 
         # _ = Schema(table_schema)
         # errors = []

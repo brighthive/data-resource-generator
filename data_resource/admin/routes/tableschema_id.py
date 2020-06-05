@@ -6,7 +6,11 @@ import logging
 from tableschema import Schema
 import json
 from convert_descriptor_to_swagger import convert_descriptor_to_swagger
-
+from data_resource.logging.api_exceptions import (
+    ApiError,
+    ApiUnhandledError,
+    InternalServerError,
+)
 
 logging.basicConfig(level=logging.INFO)
 
@@ -38,13 +42,13 @@ class TableSchemaID(Resource):
 
         try:
             json.dumps(pet["tableschema"]["datastore"]["schema"])
-        except:
-            return {"errors": "Invalid JSON"}, 400
+        except KeyError:
+            raise ApiError("Invalid JSON", 400)
 
         schema = Schema(descriptor=pet["tableschema"]["datastore"]["schema"])
 
         if not schema.valid:
-            return {"errors": [str(e) for e in schema.errors]}, 400
+            raise ApiError([str(e) for e in schema.errors], 400)  # TODO unit test
 
         p = (
             db_session.query(orm.TableSchema)

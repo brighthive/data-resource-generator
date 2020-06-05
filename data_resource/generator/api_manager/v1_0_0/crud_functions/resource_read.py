@@ -4,12 +4,13 @@ from data_resource.generator.api_manager.v1_0_0.resource_utils import (
 )
 from collections import OrderedDict
 from data_resource.db.base import db_session
+from data_resource.logging.api_exceptions import (
+    ApiUnhandledError,
+    InternalServerError,
+    ApiError,
+)
 
 # import logging
-
-
-def InternalServerError(*args, **kwarg):
-    return
 
 
 class ResourceRead:
@@ -61,8 +62,7 @@ class ResourceRead:
                 links = build_links(resource_name, offset, limit, row_count)
             response["links"] = links
         except Exception:
-            # raise InternalServerError()
-            raise
+            raise InternalServerError()
 
         return response, 200
 
@@ -102,13 +102,14 @@ class ResourceRead:
                 .first()
             )
             if result is None:
-                return {"error": f"Resource with id '{id}' not found."}, 404
+                raise ApiError(f"Resource with id '{id}' not found.", 404)
 
             response = build_json_from_object(result)
             return response, 200
+        except ApiError as e:
+            raise e
         except Exception:
-            # raise ApiUnhandledError(f"Resource with id '{id}' not found.", 404)
-            raise
+            raise ApiUnhandledError(f"Resource with id '{id}' not found.", 404)
 
     # # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
     # def get_many_one_secure(self, id: int, parent: str, child: str):

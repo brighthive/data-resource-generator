@@ -74,7 +74,7 @@ def test_valid_descriptor_creates_base(VALID_DATA_DICTIONARY, empty_database):
 
     metadata = create_all_tables_from_schemas(table_descriptors)
 
-    assert len(metadata.tables) == 3
+    assert len(metadata.tables) == 4
 
 
 @pytest.mark.unit
@@ -83,9 +83,9 @@ def test_get_table_names_and_descriptors(VALID_DATA_DICTIONARY):
 
     table_names, descriptors = get_table_names_and_descriptors(table_descriptors)
 
-    assert len(table_names) == 3
-    assert table_names == ["People", "Team", "Order"]
-    assert len(descriptors) == 3
+    assert len(table_names) == 4
+    assert table_names == ["People", "Team", "Order", "Required"]
+    assert len(descriptors) == 4
 
 
 @pytest.mark.unit

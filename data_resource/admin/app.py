@@ -7,11 +7,13 @@ from data_resource.admin.routes import (
 from data_resource.db import db_session, admin_base, engine
 from flask import Flask
 from flask_restful import Api
+from data_resource.logging.api_exceptions import handle_errors
 
 
 def start(actually_run=True):
     app = Flask(__name__)
     api = Api(app)
+    app.register_error_handler(Exception, handle_errors)
 
     # Register admin routes
     app.register_blueprint(tableschema_bp)

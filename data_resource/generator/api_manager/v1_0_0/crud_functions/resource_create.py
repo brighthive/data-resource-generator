@@ -1,6 +1,7 @@
 # from tableschema import Schema, validate
 from data_resource.db.base import db_session
 from flask import Request
+from data_resource.logging.api_exceptions import ApiError, ApiUnhandledError
 
 
 class ResourceCreate:
@@ -32,8 +33,7 @@ class ResourceCreate:
         try:
             request_obj = request.json
         except Exception:
-            # raise ApiError("No request body found.", 400)
-            raise
+            raise ApiError("No request body found.", 400)
 
         # Validate our schema? This should have already occured # TODO add test for do not let unvalidated tableschema in
         # _ = Schema(table_schema)
@@ -65,6 +65,7 @@ class ResourceCreate:
             # try except here to catch errors? # TODO
             db_session.add(new_object)
             db_session.commit()
+
             # Can we get primary key(s) from sqlalchemy model?
             # https://stackoverflow.com/questions/6745189/how-do-i-get-the-name-of-an-sqlalchemy-objects-primary-key
             # id_value = getattr(new_object, table_schema["primaryKey"])
@@ -74,5 +75,7 @@ class ResourceCreate:
 
             return {"message": "Successfully added new resource.", "id": id_value}, 201
         except Exception:
-            # raise ApiUnhandledError("Failed to create new resource.", 400)
-            raise
+            # wrong type -- psycopg2.errors.InvalidTextRepresentation
+            # IntegrityError('(psycopg2.errors.NotNullViolation) null value in column "required" violates not-null constraint\nDETAIL:  Failing row contains (1, null, 1).\n')
+            db_session.rollback()
+            raise ApiError("Failed to create new resource.", 400)

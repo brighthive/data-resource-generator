@@ -8,7 +8,7 @@ from data_resource.generator.api_manager.v1_0_0 import (
     ResourceHandler as V1_0_0_ResourceHandler,
 )
 
-# from data_resource.app.utils.exception_handler import MethodNotAllowed # FIX
+# from data_resource.logging.api_exceptions import MethodNotAllowed
 from flask import request
 from flask_restful import Resource
 
@@ -17,10 +17,6 @@ from flask_restful import Resource
 
 # logger = LogFactory.get_console_logger("versioned-resource")
 def logger(temp):
-    return
-
-
-def MethodNotAllowed(temp):
     return
 
 

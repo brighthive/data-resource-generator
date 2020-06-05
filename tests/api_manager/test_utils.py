@@ -7,6 +7,7 @@ from data_resource.generator.api_manager.v1_0_0.resource_utils import (
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer
+from collections import OrderedDict
 
 
 @pytest.mark.unit
@@ -53,8 +54,11 @@ def test_build_json_from_object_works_with_dict():
 
 @pytest.mark.unit
 def test_build_links():
-    pass
+    result = build_links("test", 0, 10, 10)
+
+    assert result == [
+        OrderedDict([("rel", "self"), ("href", "/test?offset=0&limit=10")]),
+        OrderedDict([("rel", "first"), ("href", "/test?offset=0&limit=10")]),
+        OrderedDict([("rel", "last"), ("href", "/test?offset=0&limit=10")]),
+    ]
     # "links": [
-    #     {"rel": "self", "href": "/people?offset=0&limit=20"},
-    #     {"rel": "first", "href": "/people?offset=0&limit=20"},
-    #     {"rel": "last", "href": "/people?offset=0&limit=20"},

@@ -28,7 +28,7 @@ def _compute_page(offset: int, items_per_page: int) -> int:
     return int(math.ceil((int(offset) + 1) / int(items_per_page)))
 
 
-def build_links(endpoint: str, offset: int, limit: int, rows: int):
+def build_links(endpoint: str, offset: int, limit: int, rows: int) -> OrderedDict:
     """Build links for a paginated response
     Args:
         endpoint (str): Name of the endpoint to provide in the link.
@@ -85,7 +85,20 @@ def build_links(endpoint: str, offset: int, limit: int, rows: int):
     return links
 
 
-def build_json_from_object(obj: AutomapBase.classes, restricted_fields: list = []):
+def build_json_from_object(
+    obj: AutomapBase.classes, restricted_fields: list = []
+) -> dict:
+    """Takes a SQLAlchemy ORM object and removes any restricted fields and
+    returns a dict.
+
+    Args:
+        obj (Sqlalchemy ORM): SQLAlchemy ORM object (or dict)
+        restricted_fields (str list): List of field names that should be removed
+    from the returned dict.
+
+    Returns:
+        dict: key and values from SQLAlchemy ORM but with restricted fields removed.
+    """
     get_items = None
 
     if hasattr(obj, "__dict__"):
@@ -105,7 +118,7 @@ def build_json_from_object(obj: AutomapBase.classes, restricted_fields: list = [
 
 
 # def validate_email(email_address):
-#     """Rudimentary email address validator.
+#     """Rudimentary email address validator. Not used yet.
 
 #     Args:
 #         email_address (str): Email address string to validate.

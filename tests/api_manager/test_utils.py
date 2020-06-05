@@ -61,4 +61,3 @@ def test_build_links():
         OrderedDict([("rel", "first"), ("href", "/test?offset=0&limit=10")]),
         OrderedDict([("rel", "last"), ("href", "/test?offset=0&limit=10")]),
     ]
-    # "links": [

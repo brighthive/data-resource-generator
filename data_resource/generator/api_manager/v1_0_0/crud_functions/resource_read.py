@@ -4,8 +4,8 @@ from data_resource.generator.api_manager.v1_0_0.resource_utils import (
 )
 from collections import OrderedDict
 from data_resource.db.base import db_session
-import flask
-import logging
+
+# import logging
 
 
 def InternalServerError(*args, **kwarg):

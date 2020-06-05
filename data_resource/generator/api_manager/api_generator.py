@@ -8,7 +8,7 @@ def generate_api(base=None, data_resource_specs=None, swagger=None, api=None) ->
     for resource_orm in base.classes:
         generate_rest_api_routes(api, resource_orm)
 
-    # Generate x:x REST API
+    # TODO Generate x:x REST API
 
 
 def generate_rest_api_routes(api: Api, resource_orm: DeclarativeMeta) -> None:

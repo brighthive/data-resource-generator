@@ -2,9 +2,7 @@ from tableschema_sql import Storage
 from tableschema.exceptions import ValidationError
 from sqlalchemy import Table, Integer, ForeignKey, Column
 from data_resource.db import engine
-from sqlalchemy.orm import relationship, mapper
 from sqlalchemy.ext.automap import automap_base
-import itertools
 
 
 # main
@@ -20,7 +18,7 @@ def create_models(data_catalog: list, bypass_db: bool = False) -> None:
         add_foreign_keys_to_one_to_many_parent(metadata, relationship)
 
     for relationship in relationships["manyToMany"]:
-        assoc_table_name = construct_many_to_many_assoc(metadata, relationship)
+        _ = construct_many_to_many_assoc(metadata, relationship)
 
     # Create ORM relationships
     base = automap_metadata(metadata)

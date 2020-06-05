@@ -1,4 +1,4 @@
-from tableschema import Schema, validate
+# from tableschema import Schema, validate
 from data_resource.db.base import db_session
 from flask import Request
 

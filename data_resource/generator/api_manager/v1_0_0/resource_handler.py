@@ -15,12 +15,11 @@ from data_resource.generator.api_manager.v1_0_0.crud_functions import (
 # ) # FIX
 # from data_resource.config import ConfigurationFactory
 # from data_resource.logging import LogFactory
-from sqlalchemy import and_
-from tableschema import Schema, validate
-
-from data_resource.db.base import db_session
-import flask
-import logging
+# from sqlalchemy import and_
+# from tableschema import Schema, validate
+# from data_resource.db.base import db_session
+# import flask
+# import logging
 
 
 def ApiError(temp):

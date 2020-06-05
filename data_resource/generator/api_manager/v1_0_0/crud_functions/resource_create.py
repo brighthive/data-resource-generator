@@ -1,40 +1,36 @@
 from tableschema import Schema, validate
 from data_resource.db.base import db_session
+from flask import Request
 
 
 class ResourceCreate:
     # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
-    def insert_one_secure(self, *args, **kwargs):
-        """Wrapper method for insert one method.
+    # def insert_one_secure(self, *args, **kwargs):
+    #     """Wrapper method for insert one method.
 
-        Args:
-            data_model (object): SQLAlchemy ORM model.
-            data_resource_name (str): Name of the data resource.
-            table_schema (dict): The Table Schema object to use for validation.
-            request_obj (dict): HTTP request object.
+    #     Args:
+    #         data_model (object): SQLAlchemy ORM model.
+    #         data_resource_name (str): Name of the data resource.
+    #         table_schema (dict): The Table Schema object to use for validation.
+    #         request_obj (dict): HTTP request object.
 
-        Return:
-            function: The wrapped method.
-        """
-        return self.insert_one(*args, **kwargs)
+    #     Return:
+    #         function: The wrapped method.
+    #     """
+    #     return self.insert_one(*args, **kwargs)
 
-    def insert_one(
-        self, resource_name: str = "", resource_orm: object = None, request=None
-    ):
+    def insert_one(self, resource_orm: object = None, request: Request = None):
         """Insert a new object.
 
         Args:
-            data_model (object): SQLAlchemy ORM model.
-            data_resource_name (str): Name of the data resource.
-            table_schema (dict): The Table Schema object to use for validation.
-            request_obj (dict): HTTP request object.
+            resource_orm (object): SQLAlchemy ORM model.
+            request_obj (flask.Request): HTTP request object.
 
         Return:
             dict, int: The response object and associated HTTP status code.
         """
-        # get the request obj...
         try:
-            request_obj = request.json  # uh what
+            request_obj = request.json
         except Exception:
             # raise ApiError("No request body found.", 400)
             raise

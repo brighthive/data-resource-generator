@@ -57,52 +57,40 @@ class ResourceUpdate:
 
     #     return self.get_many_one(id, parent, child)
 
-    # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
-    def update_one_secure(
-        self,
-        id,
-        data_model,
-        data_resource_name,
-        table_schema,
-        restricted_fields,
-        request_obj,
-        mode="PATCH",
-    ):
-        """Wrapper method for update one method.
+    # # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
+    # def update_one_secure(
+    #     self,
+    #     id,
+    #     data_model,
+    #     data_resource_name,
+    #     table_schema,
+    #     restricted_fields,
+    #     request_obj,
+    #     mode="PATCH",
+    # ):
+    #     """Wrapper method for update one method.
 
-        Args:
-            id (any): The primary key for the specific object.
-            data_model (object): SQLAlchemy ORM model.
-            data_resource_name (str): Name of the data resource.
-            table_schema (dict): The Table Schema object to use for validation.
+    #     Args:
+    #         id (any): The primary key for the specific object.
+    #         data_model (object): SQLAlchemy ORM model.
+    #         data_resource_name (str): Name of the data resource.
+    #         table_schema (dict): The Table Schema object to use for validation.
 
-        Return:
-            function: The wrapped method.
-        """
-        return self.update_one(
-            id,
-            data_model,
-            data_resource_name,
-            table_schema,
-            restricted_fields,
-            request_obj,
-            mode,
-        )
+    #     Return:
+    #         function: The wrapped method.
+    #     """
+    #     return self.update_one(
+    #         id,
+    #         data_model,
+    #         data_resource_name,
+    #         table_schema,
+    #         restricted_fields,
+    #         request_obj,
+    #         mode,
+    #     )
 
     def update_one(
-        self,
-        # id,
-        # data_model,
-        # data_resource_name,
-        # table_schema,
-        # restricted_fields,
-        # request_obj,
-        # mode="PATCH",
-        id=1,
-        resource_name=None,
-        resource_orm=None,
-        request=None,
-        mode="PUT",
+        self, id=1, resource_name=None, resource_orm=None, request=None, mode="PUT"
     ):
         """Update a single object from the data model based on it's primary
         key.
@@ -137,13 +125,12 @@ class ResourceUpdate:
             if data_obj is None:
                 # data_obj = resource_orm() # do a post with ID?
                 return ResourceCreate().insert_one(
-                    resource_name=resource_name,
-                    resource_orm=resource_orm,
-                    request=request,
+                    resource_orm=resource_orm, request=request
                 )
 
         except Exception:
-            raise ApiUnhandledError("unk", 500)
+            # raise ApiUnhandledError("unk", 500)
+            return {"error": "unknown"}, 500
 
         # _ = Schema(table_schema)
         # errors = []

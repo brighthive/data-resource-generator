@@ -41,17 +41,17 @@ class ApiUnhandledError(DRApiError):
     pass
 
 
+class InternalServerError(ApiUnhandledError):
+    def __init__(self, status_code=500):
+        message = "Internal Server Error"
+        DRApiError.__init__(self, message, status_code)
+
+
 class MethodNotAllowed(ApiError):
     def __init__(self):
         message = "Method not allowed"
         status_code = 405
-        ApiError.__init__(self, message, status_code)
-
-
-class InternalServerError(ApiUnhandledError):
-    def __init__(self, status_code=500):
-        message = "Internal Server Error"
-        ApiError.__init__(self, message, status_code)
+        DRApiError.__init__(self, message, status_code)
 
 
 class SchemaValidationFailure(ApiError):
@@ -60,14 +60,14 @@ class SchemaValidationFailure(ApiError):
     def __init__(self):
         message = "Data schema validation error."
         status_code = 400
-        ApiError.__init__(self, message, status_code)
+        DRApiError.__init__(self, message, status_code)
 
 
 class NoRequestBodyFound(ApiError):
     def __init__(self):
         message = "No request body found."
         status_code = 400
-        ApiError.__init__(self, message, status_code)
+        DRApiError.__init__(self, message, status_code)
 
 
 def handle_errors(e):

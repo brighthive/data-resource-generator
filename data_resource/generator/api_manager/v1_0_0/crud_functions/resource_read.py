@@ -4,11 +4,7 @@ from data_resource.generator.api_manager.v1_0_0.resource_utils import (
 )
 from collections import OrderedDict
 from data_resource.db.base import db_session
-from data_resource.logging.api_exceptions import (
-    ApiUnhandledError,
-    InternalServerError,
-    ApiError,
-)
+from data_resource.logging.api_exceptions import InternalServerError, ApiError
 
 # import logging
 
@@ -109,7 +105,7 @@ class ResourceRead:
         except ApiError as e:
             raise e
         except Exception:
-            raise ApiUnhandledError(f"Resource with id '{id}' not found.", 404)
+            raise InternalServerError()
 
     # # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
     # def get_many_one_secure(self, id: int, parent: str, child: str):

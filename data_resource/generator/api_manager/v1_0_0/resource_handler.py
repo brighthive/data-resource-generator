@@ -1,56 +1,18 @@
 """Generic Resource Handler."""
-from brighthive_authlib import token_required
-from collections import OrderedDict
 from data_resource.generator.api_manager.v1_0_0.crud_functions import (
     ResourceRead,
     ResourceCreate,
     ResourceUpdate,
 )
 
-# from data_resource.app.utils.exception_handler import (
-#     ApiError,
-#     ApiUnhandledError,
-#     InternalServerError,
-#     SchemaValidationFailure,
-# ) # FIX
 # from data_resource.config import ConfigurationFactory
 # from data_resource.logging import LogFactory
-# from sqlalchemy import and_
-# from tableschema import Schema, validate
-# from data_resource.db.base import db_session
-# import flask
-# import logging
-
-
-def ApiError(temp):
-    return
-
-
-def ApiUnhandledError(temp):
-    return
-
-
-def InternalServerError(temp):
-    return
-
-
-def SchemaValidationFailure(temp):
-    return
-
-
-class JuncHolder:
-    def __init__(self, *args, **kwargs):
-        return
-
-
-class Session:
-    pass
 
 
 class ResourceHandler(ResourceRead, ResourceCreate, ResourceUpdate):
-    def __init__(self):
-        # self.logger = LogFactory.get_console_logger("resource-handler")
-        self.logger = lambda x: x
+    # def __init__(self):
+    #    self.logger = LogFactory.get_console_logger("resource-handler")
+    #    self.logger = lambda x: x
 
     # # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
     # def query_secure(
@@ -202,46 +164,6 @@ class ResourceHandler(ResourceRead, ResourceCreate, ResourceUpdate):
 
     #     return self.get_many_one(id, parent, child)
 
-    # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
-    def delete_one_secure(self, id, data_resource):
-        """Wrapper method for delete one method.
-
-        Args:
-            id (any): The primary key for the specific object.
-            data_model (object): SQLAlchemy ORM model.
-            data_resource_name (str): Name of the data resource.
-            table_schema (dict): The Table Schema object to use for validation.
-
-        Return:
-            function: The wrapped method.
-        """
-        return self.delete_one(id, data_resource)
-
-    def delete_one(self, id, data_resource):
-        """Delete a single object from the data model based on it's primary
-        key.
-
-        Args:
-            id (any): The primary key for the specific object.
-            data_model (object): SQLAlchemy ORM model.
-            data_resource_name (str): Name of the data resource.
-            table_schema (dict): The Table Schema object to use for validation.
-
-        Return:
-            dict, int: The response object and the HTTP status code.
-        """
-        # resource = (
-        #     db_session.query(resource_orm).filter(resource_orm.id == id).one_or_none()
-        # )
-        # if resource is not None:
-        #     logging.info("Deleting resource %s..", id)
-        #     db_session.query(resource_orm).filter(resource_orm.id == id).delete()
-        #     db_session.commit()
-        #     return NoContent, 204
-        # else:
-        #     return NoContent, 404
-        pass
-
     # # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
     # def delete_many_one_secure(self, id: int, parent: str, child: str, values):
     #     return self.delete_many_one(id, parent, child, values)
@@ -273,3 +195,4 @@ class ResourceHandler(ResourceRead, ResourceCreate, ResourceUpdate):
     #         session.close()
 
     #     return self.get_many_one(id, parent, child)
+    pass

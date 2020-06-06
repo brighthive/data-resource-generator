@@ -43,23 +43,23 @@ def test_end_to_end(
     assert response.status_code == 200
     assert body == {"name": "testname", "id": 1}
 
-    # DELETE is not implemented. For reasons!
-    response = api.delete("/people/1", json={})
-    body = json.loads(response.data)
-
-    assert response.status_code == 405
-    assert body == {"message": "Unimplemented unsecure delete"}
-
     # Modify the item
     response = api.put("/people/1", json={"name": "newname"})
     body = json.loads(response.data)
 
-    assert response.status_code == 201
+    assert response.status_code == 200
     assert body == {"message": "Successfully updated resource.", "id": 1}
 
     # Patch the item
     response = api.patch("/people/1", json={"name": "patched"})
     body = json.loads(response.data)
 
-    assert response.status_code == 201
+    assert response.status_code == 200
     assert body == {"message": "Successfully updated resource.", "id": 1}
+
+    # DELETE is not implemented. For reasons!
+    response = api.delete("/people/1", json={})
+    body = json.loads(response.data)
+
+    assert response.status_code == 405
+    assert body == {"message": "Unimplemented unsecure delete"}

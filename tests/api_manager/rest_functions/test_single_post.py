@@ -17,6 +17,7 @@ def test_post(empty_database, valid_people_orm):
     )
 
     assert result[0]["id"] == 1
+    assert result[1] == 201
 
 
 def test_post_missing_required_fields(empty_database, valid_orm_with_required_field):

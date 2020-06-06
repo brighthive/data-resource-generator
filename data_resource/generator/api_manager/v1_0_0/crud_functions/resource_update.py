@@ -172,4 +172,4 @@ class ResourceUpdate:
 
         id_value = data_obj.id
 
-        return {"message": "Successfully updated resource.", "id": id_value}, 201
+        return {"message": "Successfully updated resource.", "id": id_value}, 200

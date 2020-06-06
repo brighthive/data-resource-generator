@@ -49,4 +49,4 @@ def test_patch_works_when_item_exists(empty_database, valid_people_orm):
         mode="PATCH",
     )
 
-    assert result == ({"id": 1, "message": "Successfully updated resource."}, 201)
+    assert result == ({"id": 1, "message": "Successfully updated resource."}, 200)

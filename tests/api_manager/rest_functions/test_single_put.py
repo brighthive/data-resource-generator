@@ -25,4 +25,4 @@ def test_put(empty_database, valid_people_orm):
         id=1, resource_orm=resource_orm, request=FakeFlaskRequestPut(), mode="PUT"
     )
 
-    assert result == ({"id": 1, "message": "Successfully updated resource."}, 201)
+    assert result == ({"id": 1, "message": "Successfully updated resource."}, 200)

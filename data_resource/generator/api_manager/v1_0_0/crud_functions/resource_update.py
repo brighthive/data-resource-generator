@@ -119,7 +119,7 @@ class ResourceUpdate:
                 .first()
             )
             if mode == "PATCH" and data_obj is None:
-                raise ApiUnhandledError(f"Resource with id '{id}' not found.", 404)
+                raise ApiError(f"Resource with id '{id}' not found.", 404)
 
             if data_obj is None:
                 # data_obj = resource_orm() # do a post with ID?
@@ -127,6 +127,8 @@ class ResourceUpdate:
                     resource_orm=resource_orm, request=request
                 )
 
+        except ApiError as e:
+            raise e
         except Exception:
             raise ApiUnhandledError("Unknown error", 500)
 

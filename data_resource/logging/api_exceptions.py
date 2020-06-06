@@ -25,9 +25,6 @@ class DRApiError(Exception):
     def get_status_code(self):
         return self.status_code
 
-    # def __str__(self):
-    #     return self.get_message(), self.get_status_code()
-
 
 class ApiError(DRApiError):
     """Returns an error to the client and does not log the exception."""

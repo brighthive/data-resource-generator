@@ -43,6 +43,7 @@ Simply provide the application a declarative database and API specification and 
 - Generate database from table schema
 - Many to many
 - Many to one
+- Automatic REST API
 
 ### Assumed supported -- untested
 - one to one ?
@@ -51,7 +52,6 @@ Simply provide the application a declarative database and API specification and 
 - many to many self-referential
 
 ### Future
-- Automatic REST API
 - Enable/disable HTTP routes -->
 
 ## How to use Data Resource Generator
@@ -60,7 +60,7 @@ Simply provide the application a declarative database and API specification and 
 
 Data Resource Descriptor: BrightHive specification. Includes an API definition and a tableschema to describe the database. Please see [BrightHive Data Resource API](https://github.com/brighthive/data-resource-api).
 
-Data Catalog: BrightHive specification. JSONLD document Please see [specification in progress](example.com) for more information.
+Data Resource Schema: BrightHive specification. JSONLD document. Please see [specification in progress](example.com) for more information.
 
 ### Start the application
 
@@ -78,12 +78,19 @@ pipenv run python run.py
 
 ### Generate Data Resources
 
-Interact with the "Admin" routes to generate Data Resources.
+#### Utilities to help create a Data Resource Schema
+
+(You can Interact with the "Admin" routes to generate Data Resources. These provide a utility to help generate a swagger spec using https://github.com/brighthive/convert_descriptor_to_swagger
 
 - `PUT /tableschema/1` Put Data Resource Descriptor to this route.
 - `GET /tableschema` Get all Data Resource Descriptors you have posted.
 - `GET /swagger` Generate a swagger file from all the Data Resource Descriptors you have submitted.
-- `POST /generator` Given a Data Catalog, this will generate all of the described Data Resources.
+
+#### Submit a Data Resource Schema
+
+Once you have your table schema files and swagger API you will need to convert them into a Data Resource Schema.
+
+- `POST /generator` Given a Data Resource Schema, this trigger the generation of all of the described Data Resources.
 
 ### Interacting with Generated Data Resources
 

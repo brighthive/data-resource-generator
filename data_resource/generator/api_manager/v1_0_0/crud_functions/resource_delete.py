@@ -1,3 +1,9 @@
+from data_resource.logging import LogFactory
+
+
+logger = LogFactory.get_console_logger("generator:resource-delete")
+
+
 class ResourceDelete:
     # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
     def delete_one_secure(self, id, data_resource):

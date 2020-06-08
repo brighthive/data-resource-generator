@@ -4,6 +4,10 @@ from data_resource.generator.api_manager.v1_0_0.crud_functions.resource_create i
     ResourceCreate,
 )
 from data_resource.logging.api_exceptions import ApiError, ApiUnhandledError
+from data_resource.logging import LogFactory
+
+
+logger = LogFactory.get_console_logger("generator:resource-update")
 
 
 class ResourceUpdate:

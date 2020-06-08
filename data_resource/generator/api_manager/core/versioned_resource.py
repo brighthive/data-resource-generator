@@ -7,17 +7,12 @@ look for the API version number in the request header.
 from data_resource.generator.api_manager.v1_0_0 import (
     ResourceHandler as V1_0_0_ResourceHandler,
 )
-
-# from data_resource.logging.api_exceptions import MethodNotAllowed
 from flask import request
 from flask_restful import Resource
+from data_resource.logging import LogFactory
 
-# from data_resource.logging import LogFactory
 
-
-# logger = LogFactory.get_console_logger("versioned-resource")
-def logger(temp):
-    return
+logger = LogFactory.get_console_logger("generator:versioned-resource")
 
 
 class VersionedResourceParent(Resource):

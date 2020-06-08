@@ -6,7 +6,6 @@ from data_resource.generator.api_manager.v1_0_0.crud_functions import (
 )
 
 # from data_resource.config import ConfigurationFactory
-# from data_resource.logging import LogFactory
 
 
 class ResourceHandler(ResourceRead, ResourceCreate, ResourceUpdate):

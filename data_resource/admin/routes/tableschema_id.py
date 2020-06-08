@@ -2,24 +2,19 @@ from flask_restful import Api, Resource
 from flask import Blueprint, request
 from data_resource.db import db_session
 import data_resource.admin.models as orm
-import logging
 from tableschema import Schema
 import json
 from convert_descriptor_to_swagger import convert_descriptor_to_swagger
-from data_resource.logging.api_exceptions import (
-    ApiError,
-    ApiUnhandledError,
-    InternalServerError,
-)
-
-logging.basicConfig(level=logging.INFO)
+from data_resource.logging.api_exceptions import ApiError
+from data_resource.logging import LogFactory
 
 tableschema_id_bp = Blueprint("tableschema_id_bp", __name__)
 api = Api(tableschema_id_bp)
+logger = LogFactory.get_console_logger("admin:route-tableschema-id")
 
 
 def generate_swagger(descriptor):
-    logging.info(json.dumps(descriptor, indent=4))
+    logger.info(json.dumps(descriptor, indent=4))
     swagger = convert_descriptor_to_swagger([descriptor])
     return swagger
 
@@ -58,11 +53,11 @@ class TableSchemaID(Resource):
         pet["id"] = _id
         pet["swagger"] = generate_swagger(pet["tableschema"])
         if p is not None:
-            logging.info("Updating pet %s..", _id)
+            logger.info("Updating resource %s..", _id)  # TODO Needed?
             p.update(**pet)
             entry = p
         else:
-            logging.info("Creating pet %s..", _id)
+            logger.info("Creating resource %s..", _id)  # TODO Needed?
             # pet['created'] = datetime.datetime.utcnow()
             entry = orm.TableSchema(**pet)
             db_session.add(entry)
@@ -80,7 +75,7 @@ class TableSchemaID(Resource):
             .one_or_none()
         )
         if pet is not None:
-            logging.info("Deleting pet %s..", _id)
+            logger.info("Deleting resource %s..", _id)  # TODO Needed?
             db_session.query(orm.TableSchema).filter(orm.TableSchema.id == _id).delete()
             db_session.commit()
             return "", 204

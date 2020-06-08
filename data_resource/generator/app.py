@@ -1,5 +1,9 @@
 from data_resource.generator.api_manager import generate_api
 from data_resource.generator.model_manager import create_models
+from data_resource.logging import LogFactory
+
+
+logger = LogFactory.get_console_logger("generator:app")
 
 
 def start_data_resource_generator(data_catalog, api):

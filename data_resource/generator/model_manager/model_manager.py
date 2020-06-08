@@ -3,6 +3,10 @@ from tableschema.exceptions import ValidationError
 from sqlalchemy import Table, Integer, ForeignKey, Column
 from data_resource.db import engine
 from sqlalchemy.ext.automap import automap_base
+from data_resource.logging import LogFactory
+
+
+logger = LogFactory.get_console_logger("generator:model-manager")
 
 
 # main

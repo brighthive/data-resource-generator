@@ -1,6 +1,10 @@
 from data_resource.generator.api_manager import VersionedResource
 from flask_restful import Api
 from sqlalchemy.ext.declarative import DeclarativeMeta
+from data_resource.logging import LogFactory
+
+
+logger = LogFactory.get_console_logger("generator:api-generator")
 
 
 def generate_api(base=None, data_resource_specs=None, swagger=None, api=None) -> None:

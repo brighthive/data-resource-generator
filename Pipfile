@@ -20,6 +20,7 @@ connexion = {extras = ["swagger-ui"],version = "*"}
 flask-restful = "*"
 tableschema = "*"
 brighthive-authlib = "*"
+flask-swagger-ui = "*"
 
 [requires]
 python_version = "3.7"

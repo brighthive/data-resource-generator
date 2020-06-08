@@ -24,3 +24,6 @@ docs/build
 # sonarqube
 .scannerwork/
 .sonar/
+
+# generated swagger file
+swagger.json

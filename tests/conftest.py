@@ -478,12 +478,12 @@ def valid_base(VALID_DATA_DICTIONARY, empty_database):
 
 @pytest.fixture
 def valid_people_orm(valid_base):
-    return getattr(valid_base.classes, "People")
+    return getattr(valid_base.classes, "people")
 
 
 @pytest.fixture
 def valid_orm_with_required_field(valid_base):
-    return getattr(valid_base.classes, "Required")
+    return getattr(valid_base.classes, "required")
 
 
 @pytest.fixture(scope="function")

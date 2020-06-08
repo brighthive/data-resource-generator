@@ -46,7 +46,6 @@ def test_create_models_can_add_data_with_orm(VALID_DATA_DICTIONARY, empty_databa
     # Arrange
     # create orm
     table_descriptors = VALID_DATA_DICTIONARY["data"]
-
     base = create_models(table_descriptors)
 
     # Act
@@ -70,12 +69,12 @@ def test_create_models_can_add_data_with_orm(VALID_DATA_DICTIONARY, empty_databa
 
 
 @pytest.mark.requiresdb
-def test_valid_descriptor_creates_databased(VALID_DATA_DICTIONARY, empty_database):
+def test_valid_descriptor_creates_base(VALID_DATA_DICTIONARY, empty_database):
     table_descriptors = VALID_DATA_DICTIONARY["data"]
 
     metadata = create_all_tables_from_schemas(table_descriptors)
 
-    assert len(metadata.tables) == 3
+    assert len(metadata.tables) == 4
 
 
 @pytest.mark.unit
@@ -84,9 +83,9 @@ def test_get_table_names_and_descriptors(VALID_DATA_DICTIONARY):
 
     table_names, descriptors = get_table_names_and_descriptors(table_descriptors)
 
-    assert len(table_names) == 3
-    assert table_names == ["People", "Team", "Order"]
-    assert len(descriptors) == 3
+    assert len(table_names) == 4
+    assert table_names == ["People", "Team", "Order", "Required"]
+    assert len(descriptors) == 4
 
 
 @pytest.mark.unit

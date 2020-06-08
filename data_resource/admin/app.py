@@ -1,4 +1,3 @@
-import connexion
 from data_resource.admin.routes import (
     tableschema_bp,
     tableschema_id_bp,
@@ -6,25 +5,31 @@ from data_resource.admin.routes import (
     generator_bp,
 )
 from data_resource.db import db_session, admin_base, engine
+from flask import Flask
+from flask_restful import Api
+from data_resource.logging.api_exceptions import handle_errors
 
 
 def start(actually_run=True):
-    app = connexion.FlaskApp(__name__)
+    app = Flask(__name__)
+    api = Api(app)
+    app.register_error_handler(Exception, handle_errors)
 
-    # register admin
-    app.app.register_blueprint(tableschema_bp)
-    app.app.register_blueprint(tableschema_id_bp)
-    app.app.register_blueprint(swagger_bp)
-    app.app.register_blueprint(generator_bp)
+    # Register admin routes
+    app.register_blueprint(tableschema_bp)
+    app.register_blueprint(tableschema_id_bp)
+    app.register_blueprint(swagger_bp)
+    app.register_blueprint(generator_bp)
 
-    app.app.config["connexion_app"] = app
-    application = app.app
+    # Save API to grab later at generation time
+    app.config["api"] = api
 
-    import data_resource.admin.models
+    # Create the models
+    import data_resource.admin.models  # noqa: F401
 
     admin_base.metadata.create_all(engine)
 
-    @application.teardown_appcontext
+    @app.teardown_appcontext
     def shutdown_session(exception=None):
         db_session.remove()
 

@@ -1,11 +1,10 @@
-from sqlalchemy import MetaData, Column, Integer, String
+from sqlalchemy import Column, Integer
 from data_resource.db import admin_base
 from sqlalchemy.dialects.postgresql import JSONB
-import json
-import logging
+from data_resource.logging import LogFactory
 
 
-logging.basicConfig(level=logging.INFO)
+logger = LogFactory.get_console_logger("admin:model-tableschema")
 
 
 class TableSchema(admin_base):

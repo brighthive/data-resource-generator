@@ -1,5 +1,7 @@
 import json
 from pytest_mock import mocker
+import pytest
+
 
 tableschema_1 = {
     "tableschema": {
@@ -728,6 +730,7 @@ data_catalog = {
 }
 
 
+@pytest.mark.requiresdb
 def test_admin_api(admin_e2e, mocker):
     m = mocker.patch(
         "data_resource.generator.app.start_data_resource_generator", return_value=None
@@ -762,8 +765,8 @@ def test_admin_api(admin_e2e, mocker):
 
     # assert generator fn gets called?
     response = api.post("/generator", json=data_catalog)
-    assert response.status_code == 200
+    assert response.status_code == 204
 
-    assert response.data == b'""\n'
+    assert response.data == b""
 
     assert m.called_once()

@@ -1,13 +1,11 @@
 import pytest
-from data_resource.db import engine
-from sqlalchemy import MetaData
 from sqlalchemy.exc import OperationalError
-from sqlalchemy.sql import text
-from convert_descriptor_to_swagger import convert_descriptor_to_swagger
-import json
 from data_resource import start
 from data_resource.db import db_session
 from data_resource.generator.app import start_data_resource_generator
+from data_resource.generator.model_manager.model_manager import create_models
+from flask_restful import Api
+from flask import Flask
 
 
 data_dict = [
@@ -79,6 +77,38 @@ data_dict = [
                     "title": "Items in Order",
                     "type": "string",
                     "description": "Textual list of items in order.",
+                    "constraints": {},
+                },
+            ],
+            "primaryKey": "id",
+            "missingValues": [],
+        },
+    },
+    {
+        "@id": "https://mydatatrust.brighthive.io/dr1/Order",
+        "@type": "table",
+        "name": "Required",
+        "tableSchema": {
+            "fields": [
+                {
+                    "name": "id",
+                    "title": "Order ID",
+                    "type": "integer",
+                    "description": "Unique identifer for an Order.",
+                    "constraints": {},
+                },
+                {
+                    "name": "required",
+                    "title": "Required item",
+                    "type": "integer",
+                    "description": "A required field.",
+                    "constraints": {"required": True},
+                },
+                {
+                    "name": "optional",
+                    "title": "Optional item",
+                    "type": "integer",
+                    "description": "Optional field.",
                     "constraints": {},
                 },
             ],
@@ -410,8 +440,9 @@ class Database:
             db_session.execute("drop schema public cascade")
             db_session.execute("create schema public")
             db_session.commit()
-        except:
+        except Exception as e:
             db_session.rollback()
+            raise e
         finally:
             db_session.close()
 
@@ -422,6 +453,23 @@ def empty_database():
     db.destory_db()
 
 
+@pytest.fixture
+def valid_base(VALID_DATA_DICTIONARY, empty_database):
+    table_descriptors = VALID_DATA_DICTIONARY["data"]
+    base = create_models(table_descriptors)
+    return base
+
+
+@pytest.fixture
+def valid_people_orm(valid_base):
+    return getattr(valid_base.classes, "People")
+
+
+@pytest.fixture
+def valid_orm_with_required_field(valid_base):
+    return getattr(valid_base.classes, "Required")
+
+
 @pytest.fixture(scope="function")
 def database():
     db = Database()
@@ -430,16 +478,25 @@ def database():
 
 @pytest.fixture(scope="function")
 def admin_e2e(empty_database):
-    connexion_app = start(actually_run=False)
-    return connexion_app.app.test_client()
+    app = start(actually_run=False)
+    return app.test_client()
 
 
 @pytest.fixture(scope="function")
 def generated_e2e(empty_database):
     # start the app
-    connexion_app = start(actually_run=False)
+    app = start(actually_run=False)
+
+    api = app.config["api"]
 
     # skip generation process -- inject the data dict
-    start_data_resource_generator(DATA_DICTIONARY, connexion_app)
+    start_data_resource_generator(DATA_DICTIONARY, api)
 
-    return connexion_app.app.test_client()
+    return app.test_client()
+
+
+@pytest.fixture(scope="function")
+def empty_api():
+    app = Flask("what")
+    api = Api(app)
+    return api

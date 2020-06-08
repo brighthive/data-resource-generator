@@ -11,16 +11,16 @@ from sqlalchemy.orm.attributes import InstrumentedAttribute
 
 @pytest.mark.unit
 def test_create_mn_association_table():
-    many_to_many_relationships = ["People", "Team"]
+    many_to_many_relationships = ["people", "team"]
     metadata = MetaData()
     People = Table(
-        "People",
+        "people",
         metadata,
         Column("id", Integer, primary_key=True),
         Column("name", String(50)),
     )
     Team = Table(
-        "Team",
+        "team",
         metadata,
         Column("id", Integer, primary_key=True),
         Column("name", String(50)),
@@ -33,14 +33,14 @@ def test_create_mn_association_table():
     assert "assoc_people_team" in metadata.tables
     # The field has the correct foreign key
     try:
-        assert "{ForeignKey('People.id')}" == str(
+        assert "{ForeignKey('people.id')}" == str(
             metadata.tables["assoc_people_team"].columns["people"].foreign_keys
         )
     except KeyError:
         pytest.fail("KeyError: Column was probably not found.")
 
     try:
-        assert "{ForeignKey('Team.id')}" == str(
+        assert "{ForeignKey('team.id')}" == str(
             metadata.tables["assoc_people_team"].columns["team"].foreign_keys
         )
     except KeyError:
@@ -53,17 +53,17 @@ def test_automap_metadata_for_mn():
     association = Table(
         f"assoc_people_team",
         metadata,
-        Column("People", Integer, ForeignKey("People.id"), primary_key=True),
-        Column("Team", Integer, ForeignKey("Team.id"), primary_key=True),
+        Column("people", Integer, ForeignKey("people.id"), primary_key=True),
+        Column("team", Integer, ForeignKey("team.id"), primary_key=True),
     )
     People = Table(
-        "People",
+        "people",
         metadata,
         Column("id", Integer, primary_key=True),
         Column("name", String(50)),
     )
     Team = Table(
-        "Team",
+        "team",
         metadata,
         Column("id", Integer, primary_key=True),
         Column("name", String(50)),
@@ -71,11 +71,11 @@ def test_automap_metadata_for_mn():
 
     base = automap_metadata(metadata)
 
-    people_orm = getattr(base.classes, "People")
+    people_orm = getattr(base.classes, "people")
     assert isinstance(getattr(people_orm, "id"), InstrumentedAttribute)
     assert isinstance(getattr(people_orm, "name"), InstrumentedAttribute)
 
-    team_orm = getattr(base.classes, "Team")
+    team_orm = getattr(base.classes, "team")
     assert isinstance(getattr(team_orm, "id"), InstrumentedAttribute)
     assert isinstance(getattr(team_orm, "name"), InstrumentedAttribute)
 

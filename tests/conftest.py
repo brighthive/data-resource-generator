@@ -11,8 +11,8 @@ from flask import Flask
 data_dict = [
     {
         "@id": "https://mydatatrust.brighthive.io/dr1/People",
-        "@type": "table",
-        "name": "People",
+        "@type": "bh:table",
+        "name": "people",
         "tableSchema": {
             "fields": [
                 {
@@ -36,8 +36,8 @@ data_dict = [
     },
     {
         "@id": "https://mydatatrust.brighthive.io/dr1/Team",
-        "@type": "table",
-        "name": "Team",
+        "@type": "bh:table",
+        "name": "team",
         "tableSchema": {
             "fields": [
                 {
@@ -61,8 +61,8 @@ data_dict = [
     },
     {
         "@id": "https://mydatatrust.brighthive.io/dr1/Order",
-        "@type": "table",
-        "name": "Order",
+        "@type": "bh:table",
+        "name": "order",
         "tableSchema": {
             "fields": [
                 {
@@ -86,8 +86,8 @@ data_dict = [
     },
     {
         "@id": "https://mydatatrust.brighthive.io/dr1/Order",
-        "@type": "table",
-        "name": "Required",
+        "@type": "bh:table",
+        "name": "required",
         "tableSchema": {
             "fields": [
                 {
@@ -118,43 +118,43 @@ data_dict = [
     },
 ]
 
-people_descriptor = {
-    "api": {
-        "resource": "peoples",
-        "methods": [
-            {
-                "get": {"enabled": True, "secured": False, "grants": ["get:users"]},
-                "post": {"enabled": True, "secured": False, "grants": []},
-                "put": {"enabled": True, "secured": False, "grants": []},
-                "patch": {"enabled": True, "secured": False, "grants": []},
-                "delete": {"enabled": True, "secured": False, "grants": []},
-            }
-        ],
-    },
-    "datastore": {
-        "tablename": "peoples",
-        "restricted_fields": [],
-        "schema": {
-            "fields": [
-                {
-                    "name": "id",
-                    "title": "Person ID",
-                    "type": "integer",
-                    "description": "A unique identifer for person.",
-                    "required": False,
-                },
-                {
-                    "name": "name",
-                    "title": "Person's Name",
-                    "type": "string",
-                    "description": "The name that a Person goes by. This is left intentionally generic.",
-                    "required": False,
-                },
-            ],
-            "primaryKey": "id",
-        },
-    },
-}
+# people_descriptor = {
+#     "api": {
+#         "resource": "peoples",
+#         "methods": [
+#             {
+#                 "get": {"enabled": True, "secured": False, "grants": ["get:users"]},
+#                 "post": {"enabled": True, "secured": False, "grants": []},
+#                 "put": {"enabled": True, "secured": False, "grants": []},
+#                 "patch": {"enabled": True, "secured": False, "grants": []},
+#                 "delete": {"enabled": True, "secured": False, "grants": []},
+#             }
+#         ],
+#     },
+#     "datastore": {
+#         "tablename": "peoples",
+#         "restricted_fields": [],
+#         "schema": {
+#             "fields": [
+#                 {
+#                     "name": "id",
+#                     "title": "Person ID",
+#                     "type": "integer",
+#                     "description": "A unique identifer for person.",
+#                     "required": False,
+#                 },
+#                 {
+#                     "name": "name",
+#                     "title": "Person's Name",
+#                     "type": "string",
+#                     "description": "The name that a Person goes by. This is left intentionally generic.",
+#                     "required": False,
+#                 },
+#             ],
+#             "primaryKey": "id",
+#         },
+#     },
+# }
 
 # print(json.dumps(convert_descriptor_to_swagger([people_descriptor]), indent=4))
 
@@ -394,12 +394,28 @@ api_dict = {
 
 
 DATA_DICTIONARY = {
+    "@context": ["https://schema.org", {"bh": "https://schema.brighthive.io/"}],
+    "@type": "bh:DataResource",
     "@id": "https://mydatatrust.brighthive.io/dr1",
-    "@type": "dataResource",
     "name": "2020 Census Data",
     "description": "Description of data resource",
-    "owner": "org",
-    "pointOfContact": "Tim the Pointman",  # probably a person node
+    "ownerOrg": [
+        {
+            "@type": "Organization",
+            "@id": "#brighthive-org",
+            "name": "BrightHive",
+            "contactPoint": [
+                {
+                    "@type": "ContactPoint",
+                    "@id": "#matt",
+                    "name": "Matt Gee",
+                    "telephone": "555-555-5555",
+                    "email": "matt@company.io",
+                    "contactType": "Developer",
+                }
+            ],
+        }
+    ],
     "published": True,
     "dateCreated": "date",
     "dateUpdated": "date",
@@ -462,12 +478,12 @@ def valid_base(VALID_DATA_DICTIONARY, empty_database):
 
 @pytest.fixture
 def valid_people_orm(valid_base):
-    return getattr(valid_base.classes, "People")
+    return getattr(valid_base.classes, "people")
 
 
 @pytest.fixture
 def valid_orm_with_required_field(valid_base):
-    return getattr(valid_base.classes, "Required")
+    return getattr(valid_base.classes, "required")
 
 
 @pytest.fixture(scope="function")

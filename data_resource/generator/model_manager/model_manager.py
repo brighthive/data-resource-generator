@@ -79,7 +79,7 @@ def get_table_names_and_descriptors(data_dict: list) -> (list, list):
     table_names = []
     descriptors = []
 
-    table_names = [schema["name"] for schema in data_dict]
+    table_names = [schema["name"].lower() for schema in data_dict]
     descriptors = [schema["tableSchema"] for schema in data_dict]
 
     return table_names, descriptors
@@ -106,13 +106,13 @@ def construct_many_to_many_assoc(metadata: "MetaData", relationship: list) -> st
         Column(
             f"{relationship[0].lower()}",
             Integer,
-            ForeignKey(f"{relationship[0]}.id"),
+            ForeignKey(f"{relationship[0].lower()}.id"),
             primary_key=True,
         ),
         Column(
             f"{relationship[1].lower()}",
             Integer,
-            ForeignKey(f"{relationship[1]}.id"),
+            ForeignKey(f"{relationship[1].lower()}.id"),
             primary_key=True,
         ),
     )
@@ -124,14 +124,14 @@ def construct_many_to_many_assoc(metadata: "MetaData", relationship: list) -> st
 def add_foreign_keys_to_one_to_many_parent(metadata, one_to_many_relationships):
     """Given a single one to many relationship, extends the existing child
     table with the correct foreign key information."""
-    parent_table = one_to_many_relationships[0]
-    child_table = one_to_many_relationships[1]
+    parent_table = one_to_many_relationships[0].lower()
+    child_table = one_to_many_relationships[1].lower()
 
     Table(
         f"{child_table}",
         metadata,
         Column(
-            f"om_reference_{parent_table.lower()}",
+            f"om_reference_{parent_table}",
             Integer,
             ForeignKey(f"{parent_table}.id"),  # lookup their primary key? TODO?
         ),

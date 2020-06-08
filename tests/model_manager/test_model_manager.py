@@ -17,27 +17,27 @@ def test_create_models_creates_all_required_orm(VALID_DATA_DICTIONARY, empty_dat
 
     metadata = base.metadata
 
-    assert "People" in metadata.tables
-    assert "Team" in metadata.tables
-    assert "Order" in metadata.tables
+    assert "people" in metadata.tables
+    assert "team" in metadata.tables
+    assert "order" in metadata.tables
     assert "assoc_people_team" in metadata.tables
 
     # Assert that the auto mapped python classes exist
-    assert base.classes.People
-    people_orm = getattr(base.classes, "People")
+    assert base.classes.people
+    people_orm = getattr(base.classes, "people")
 
     # Assert that the relational fields exist on the orm instance
     person1 = people_orm()
     assert person1.order_collection is not None
     assert person1.team_collection is not None
 
-    assert base.classes.Team
-    team_orm = getattr(base.classes, "Team")
+    assert base.classes.team
+    team_orm = getattr(base.classes, "team")
 
     team1 = team_orm()
     assert team1.people_collection is not None
 
-    assert base.classes.Order
+    assert base.classes.order
 
 
 # end to end test
@@ -50,9 +50,9 @@ def test_create_models_can_add_data_with_orm(VALID_DATA_DICTIONARY, empty_databa
 
     # Act
     # add items to db via classes
-    people_orm = getattr(base.classes, "People")
-    order_orm = getattr(base.classes, "Order")
-    team_orm = getattr(base.classes, "Team")
+    people_orm = getattr(base.classes, "people")
+    order_orm = getattr(base.classes, "order")
+    team_orm = getattr(base.classes, "team")
 
     person1 = people_orm(name="testperson")
     order1 = order_orm(items="testitems")
@@ -84,7 +84,7 @@ def test_get_table_names_and_descriptors(VALID_DATA_DICTIONARY):
     table_names, descriptors = get_table_names_and_descriptors(table_descriptors)
 
     assert len(table_names) == 4
-    assert table_names == ["People", "Team", "Order", "Required"]
+    assert table_names == ["people", "team", "order", "required"]
     assert len(descriptors) == 4
 
 

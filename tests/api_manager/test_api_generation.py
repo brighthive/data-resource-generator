@@ -45,7 +45,7 @@ def test_generate_rest_api_routes(valid_base, empty_api):
 def test_generate_saves_swagger_file(valid_base, empty_api, mocker):
     # save_file = mocker
     mocked_file = mocker.patch("data_resource.generator.app.open", mocker.mock_open())
-    fake_file_path = "./swagger.json"
+    fake_file_path = "./static/swagger.json"
 
     save_swagger({"hello": True})
 

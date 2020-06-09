@@ -4,6 +4,10 @@ import json
 # from data_resource_api.logging import LogFactory
 from flask import jsonify
 from werkzeug.exceptions import NotFound
+from data_resource.logging import LogFactory
+
+
+logger = LogFactory.get_console_logger("errors")
 
 
 class DRApiError(Exception):
@@ -81,6 +85,8 @@ def handle_errors(e):
     Return:
         dict, int: The error message and associated error code.
     """
+    logger.exception("Encountered an error while processing a request.")
+
     # if isinstance(e, OAuth2ProviderError):
     #     return json.dumps({"message": "Access Denied"}), 401
 

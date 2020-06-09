@@ -7,7 +7,7 @@ from data_resource.logging import LogFactory
 logger = LogFactory.get_console_logger("generator:api-generator")
 
 
-def generate_api(base=None, data_resource_specs=None, swagger=None, api=None) -> None:
+def generate_api(base=None, swagger: dict = None, api=None) -> None:
     # Generate REST API for resources
     for resource_orm in base.classes:
         generate_rest_api_routes(api, resource_orm)

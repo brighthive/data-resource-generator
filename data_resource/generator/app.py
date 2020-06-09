@@ -9,8 +9,13 @@ import os
 logger = LogFactory.get_console_logger("generator:app")
 
 
-def save_swagger(swagger):
+def get_static_folder_from_app():
     static_folder = current_app.config["static_folder"]
+    return static_folder
+
+
+def save_swagger(swagger):
+    static_folder = get_static_folder_from_app()
     swagger_file = os.path.join(static_folder, "static/swagger.json")
 
     logger.info(swagger_file)

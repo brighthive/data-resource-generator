@@ -43,13 +43,17 @@ def test_generate_rest_api_routes(valid_base, empty_api):
 
 @pytest.mark.unit
 def test_generate_saves_swagger_file(valid_base, empty_api, mocker):
-    # save_file = mocker
+    mocker.patch("data_resource.generator.app.current_app")
+    static_folder = mocker.patch(
+        "data_resource.generator.app.get_static_folder_from_app"
+    )
+    static_folder.return_value = ""
     mocked_file = mocker.patch("data_resource.generator.app.open", mocker.mock_open())
-    fake_file_path = "./static/swagger.json"
+    mocker.patch("os.path.join").return_value = "test"
 
     save_swagger({"hello": True})
 
-    mocked_file.assert_called_once_with(fake_file_path, "w")
+    mocked_file.assert_called_once_with("test", "w")
     mocked_file().write.assert_called_once_with('{"hello": true}')
 
 

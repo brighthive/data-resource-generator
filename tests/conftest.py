@@ -505,8 +505,9 @@ def generated_e2e(empty_database):
 
     api = app.config["api"]
 
-    # skip generation process -- inject the data dict
-    start_data_resource_generator(DATA_DICTIONARY, api)
+    with app.app_context():
+        # skip generation process -- inject the data dict
+        start_data_resource_generator(DATA_DICTIONARY, api)
 
     return app.test_client()
 

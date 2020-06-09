@@ -3,25 +3,13 @@
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
+from data_resource.config import ConfigurationFactory
 
-# Works with docker-compose -- hostname and hostport
 
-POSTGRES_USER = "test_user"
-POSTGRES_PASSWORD = "test_password"  # nosec
-POSTGRES_DATABASE = "data_resource_dev"
-POSTGRES_HOSTNAME = "localhost"
-POSTGRES_PORT = 5433
-SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{}:{}@{}:{}/{}".format(
-    POSTGRES_USER,
-    POSTGRES_PASSWORD,
-    POSTGRES_HOSTNAME,
-    POSTGRES_PORT,
-    POSTGRES_DATABASE,
-)
+data_resource_config = ConfigurationFactory.from_env()
+engine = create_engine(data_resource_config.SQLALCHEMY_DATABASE_URI)
 
-engine = create_engine(SQLALCHEMY_DATABASE_URI)
-
-from sqlalchemy.schema import CreateSchema
+from sqlalchemy.schema import CreateSchema  # noqa: E402
 
 if not engine.dialect.has_schema(engine, "admin"):
     engine.execute(CreateSchema("admin"))

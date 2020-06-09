@@ -770,3 +770,12 @@ def test_admin_api(admin_e2e, mocker):
     assert response.data == b""
 
     assert m.called_once()
+
+
+def test_swagger_ui_exists(admin_e2e):
+    api = admin_e2e
+
+    response = api.get("/ui")
+
+    # Should get 308 redirect to data['location']
+    assert response.status_code in [200, 308]

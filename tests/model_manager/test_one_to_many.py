@@ -1,12 +1,9 @@
 import pytest
 from sqlalchemy import MetaData, Table, Column, Integer, String, ForeignKey
 from data_resource.generator.model_manager.model_manager import (
-    construct_many_to_many_assoc,
     add_foreign_keys_to_one_to_many_parent,
     automap_metadata,
 )
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy.orm.collections import InstrumentedList
 
@@ -15,13 +12,13 @@ from sqlalchemy.orm.collections import InstrumentedList
 def test_add_foreign_keys_to_tables():
     one_to_many_relationships = ["People", "Order"]
     metadata = MetaData()
-    People = Table(
+    _ = Table(
         "people",
         metadata,
         Column("id", Integer, primary_key=True),
         Column("name", String(50)),
     )
-    Order = Table(
+    _ = Table(
         "order",
         metadata,
         Column("id", Integer, primary_key=True),
@@ -39,18 +36,18 @@ def test_add_foreign_keys_to_tables():
 @pytest.mark.unit
 def test_automap_metadata_for_m1():
     metadata = MetaData()
-    People = Table(
+    _ = Table(
         "people",
         metadata,
         Column("id", Integer, primary_key=True),
         Column("name", String(50)),
     )
-    Order = Table(
+    _ = Table(
         "order",
         metadata,
         Column("id", Integer, primary_key=True),
         Column("name", String(50)),
-        Column(f"om_reference_people", Integer, ForeignKey(f"people.id")),
+        Column("om_reference_people", Integer, ForeignKey("people.id")),
     )
 
     base = automap_metadata(metadata)

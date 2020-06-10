@@ -772,6 +772,7 @@ def test_admin_api(admin_e2e, mocker):
     assert m.called_once()
 
 
+@pytest.mark.requiresdb
 def test_swagger_ui_exists(admin_e2e):
     api = admin_e2e
 

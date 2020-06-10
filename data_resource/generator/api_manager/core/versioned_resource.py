@@ -96,28 +96,11 @@ class VersionedResource(VersionedResourceParent):
         #     raise MethodNotAllowed()
 
         # if self.api_schema["post"]["secured"]:
-        #     if request.path.endswith("/query"):
-        #         return self.get_resource_handler(request.headers).query_secure(
-        #             self.data_model,
-        #             self.data_resource_name,
-        #             self.restricted_fields,
-        #             self.table_schema,
-        #             request,
-        #         )
-        #     else:
-        #         return self.get_resource_handler(request.headers).insert_one_secure(
-        #             self.data_model, self.data_resource_name, self.table_schema, request
-        #         )
-        # else:
-        # if request.path.endswith("/query"):
-        #     return self.get_resource_handler(request.headers).query(
-        #         self.data_model,
-        #         self.data_resource_name,
-        #         self.restricted_fields,
-        #         self.table_schema,
-        #         request,
-        #     )
-        # else:
+        if request.path.endswith("/query"):
+            return self.get_resource_handler(request.headers).query_one(
+                resource_orm=self.resource_orm, request=request
+            )
+
         return self.get_resource_handler(request.headers).insert_one(
             resource_orm=self.resource_orm, request=request
         )

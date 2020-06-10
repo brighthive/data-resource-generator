@@ -62,3 +62,17 @@ def test_end_to_end(generated_e2e, empty_database):
 
     assert response.status_code == 405
     assert body == {"message": "Unimplemented unsecure delete"}
+
+    # QUERY with valid data
+    response = api.post("/people/query", json={"name": "patched"})
+    body = json.loads(response.data)
+
+    assert response.status_code == 200
+    assert body == {"results": [{"id": 1, "name": "patched"}]}
+
+    # QUERY with wrong data
+    response = api.post("/people/query", json={"name": "does not exist"})
+    body = json.loads(response.data)
+
+    assert response.status_code == 404
+    assert body == {"message": "No matches found"}

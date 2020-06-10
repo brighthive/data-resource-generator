@@ -158,7 +158,7 @@ class ConfigurationFactory:
     """A factory for handling configuration object creation."""
 
     @staticmethod
-    def get_config(config_type: str):
+    def get_config(config_type: str = "DEVELOPMENT"):
         """Retrieve a configuration factory based on a configuration type.
 
         Args:

@@ -3,7 +3,6 @@
 import pytest
 from data_resource.config import ConfigurationFactory, InvalidConfigurationError
 
-
 """Application Configuration Unit Tests."""
 
 

@@ -11,6 +11,8 @@ from data_resource.logging.api_exceptions import handle_errors
 from flask_swagger_ui import get_swaggerui_blueprint
 from data_resource.logging import LogFactory
 import os
+from data_resource.config import ConfigurationFactory
+
 
 logger = LogFactory.get_console_logger("admin:app")
 
@@ -23,18 +25,20 @@ def start(actually_run=True):
     )  # This should be the static folder at the root of the project folder
 
     app = Flask(__name__, static_url_path="", static_folder=static_folder)
+    app.config.from_object(ConfigurationFactory.from_env())
+
+    app.register_error_handler(Exception, handle_errors)
 
     # SWAGGER UI
     SWAGGER_URL = "/ui"
     API_URL = "/static/swagger.json"
     SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
-        SWAGGER_URL, API_URL, config={"app_name": "Python-Flask-REST-Boilerplate"}
+        SWAGGER_URL, API_URL, config={"app_name": "BrightHive Data Resource"}
     )
     app.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
 
     # Flask RESTFUL
     api = Api(app)
-    app.register_error_handler(Exception, handle_errors)
 
     # Register admin routes
     app.register_blueprint(tableschema_bp)

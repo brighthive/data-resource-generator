@@ -1,11 +1,7 @@
-import json
-
-# from brighthive_authlib import OAuth2ProviderError
-# from data_resource_api.logging import LogFactory
 from flask import jsonify
 from werkzeug.exceptions import NotFound
 from data_resource.logging import LogFactory
-
+from brighthive_authlib import OAuth2ProviderError
 
 logger = LogFactory.get_console_logger("errors")
 
@@ -85,19 +81,20 @@ def handle_errors(e):
     Return:
         dict, int: The error message and associated error code.
     """
-    logger.exception("Encountered an error while processing a request.")
 
-    # if isinstance(e, OAuth2ProviderError):
-    #     return json.dumps({"message": "Access Denied"}), 401
+    logger.exception("Encountered a handled error while processing a request.")
+
+    if isinstance(e, OAuth2ProviderError):
+        return jsonify({"message": "Access Denied"}), 401
 
     if isinstance(e, NotFound):
-        return json.dumps({"error": "Location not found"}), 404
+        return jsonify({"error": "Location not found"}), 404
 
     if isinstance(e, ApiError):
         return e.get_message(), e.get_status_code()
 
     # logger = LogFactory.get_console_logger("exception-handler")
-    # logger.exception("Encountered an error while processing a request.")
+    logger.exception("Encountered an unhandled error while processing a request.")
 
     if isinstance(e, ApiUnhandledError):
         return e.get_message(), e.get_status_code()

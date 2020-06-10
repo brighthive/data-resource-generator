@@ -10,9 +10,13 @@ from data_resource.generator.api_manager.v1_0_0 import (
 from flask import request
 from flask_restful import Resource
 from data_resource.logging import LogFactory
+from data_resource.config import ConfigurationFactory
+from brighthive_authlib import token_required
+import os
 
 
 logger = LogFactory.get_console_logger("generator:versioned-resource")
+provider = ConfigurationFactory.from_env().get_oauth2_provider()
 
 
 class VersionedResourceParent(Resource):
@@ -34,11 +38,21 @@ class VersionedResourceParent(Resource):
         else:
             return V1_0_0_ResourceHandler()
 
+    def check_auth(self):
+        """Raises authlib error if not authorized."""
+
+        if os.environ["FLASK_ENV"] != "testing":
+            # provider.validate_token()
+            token_required(provider)(lambda: None)()
+
 
 class VersionedResource(VersionedResourceParent):
     _query_route = "/query"
 
     def get(self, id=None):
+        # if self.api_schema["get"]["secured"]:
+        self.check_auth()
+
         # if not self.api_schema["get"]["enabled"]:
         #     raise MethodNotAllowed()
         # if request.path.endswith("/query"):
@@ -57,21 +71,13 @@ class VersionedResource(VersionedResourceParent):
             pass
 
         if id is None:
-            #     if self.api_schema["get"]["secured"]:
-            #         return self.get_resource_handler(request.headers).get_all_secure(
-            #             self.data_model,
-            #             self.data_resource_name,
-            #             self.restricted_fields,
-            #             offset,
-            #             limit,
-            #         )
-            #     else:
             return self.get_resource_handler(request.headers).get_all(
                 resource_name=self.name,
                 resource_orm=self.resource_orm,
                 offset=offset,
                 limit=limit,
             )
+
         else:
             #     if self.api_schema["get"]["secured"]:
             #         return self.get_resource_handler(request.headers).get_one_secure(
@@ -83,6 +89,9 @@ class VersionedResource(VersionedResourceParent):
             )
 
     def post(self):
+        # if self.api_schema["get"]["secured"]:
+        self.check_auth()
+
         # if not self.api_schema["post"]["enabled"]:
         #     raise MethodNotAllowed()
 
@@ -114,6 +123,8 @@ class VersionedResource(VersionedResourceParent):
         )
 
     def put(self, id):
+        # if self.api_schema["get"]["secured"]:
+        self.check_auth()
         # if not self.api_schema["put"]["enabled"]:
         #     raise MethodNotAllowed()
         # if request.path.endswith("/query"):
@@ -139,6 +150,8 @@ class VersionedResource(VersionedResourceParent):
         )
 
     def patch(self, id):
+        # if self.api_schema["get"]["secured"]:
+        self.check_auth()
         # if not self.api_schema["patch"]["enabled"]:
         #     raise MethodNotAllowed()
         # if request.path.endswith("/query"):
@@ -164,6 +177,8 @@ class VersionedResource(VersionedResourceParent):
         )
 
     def delete(self, id):
+        # if self.api_schema["get"]["secured"]:
+        self.check_auth()
         # if self.api_schema["delete"]["enabled"]:
         #     raise MethodNotAllowed()
 

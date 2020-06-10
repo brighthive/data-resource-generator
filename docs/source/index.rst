@@ -6,6 +6,8 @@ Welcome to Data Resource Generator's documentation!
    :caption: Contents:
 
    help
+   configuration
+
 
 
 

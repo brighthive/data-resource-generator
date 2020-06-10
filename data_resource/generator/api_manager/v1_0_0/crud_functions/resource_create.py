@@ -4,26 +4,10 @@ from flask import Request
 from data_resource.logging.api_exceptions import ApiError
 from data_resource.logging import LogFactory
 
-
 logger = LogFactory.get_console_logger("generator:resource-create")
 
 
 class ResourceCreate:
-    # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
-    # def insert_one_secure(self, *args, **kwargs):
-    #     """Wrapper method for insert one method.
-
-    #     Args:
-    #         data_model (object): SQLAlchemy ORM model.
-    #         data_resource_name (str): Name of the data resource.
-    #         table_schema (dict): The Table Schema object to use for validation.
-    #         request_obj (dict): HTTP request object.
-
-    #     Return:
-    #         function: The wrapped method.
-    #     """
-    #     return self.insert_one(*args, **kwargs)
-
     def insert_one(self, resource_orm: object = None, request: Request = None):
         """Insert a new object.
 

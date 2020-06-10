@@ -20,6 +20,7 @@ def test_post(empty_database, valid_people_orm):
     assert result[1] == 201
 
 
+@pytest.mark.requiresdb
 def test_post_missing_required_fields(empty_database, valid_orm_with_required_field):
     # Creating without required fields errors
     resource_handler = ResourceHandler()

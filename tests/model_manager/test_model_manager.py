@@ -6,7 +6,6 @@ from data_resource.generator.model_manager.model_manager import (
     get_relationships_from_data_dict,
 )
 from data_resource.db.base import db_session
-from sqlalchemy.orm.attributes import InstrumentedAttribute
 
 
 @pytest.mark.unit  # Does this requiredb tho?
@@ -40,7 +39,6 @@ def test_create_models_creates_all_required_orm(VALID_DATA_DICTIONARY, empty_dat
     assert base.classes.order
 
 
-# end to end test
 @pytest.mark.requiresdb
 def test_create_models_can_add_data_with_orm(VALID_DATA_DICTIONARY, empty_database):
     # Arrange

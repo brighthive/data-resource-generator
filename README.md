@@ -33,10 +33,11 @@ From the technical perspective, a BrightHive Data Resource is an entity comprise
 
 ## Features
 
-Simply provide the application a declarative database and API specification and it will automatically stand up a RESTful database and API!
+Simply provide the application a declarative database and API specification via API and it will automatically stand up a RESTful database and API!
 
-- Declarative Database using frictionless table schema
-- Generates SQLAlchemy ORM (including many to many)
+- Declarative Database using frictionless table schema using RESTful API
+- Dynamically generates SQLAlchemy ORM
+- Dynamically generates RESTful routing
 
 <!--
 ### Supported -- tested
@@ -96,10 +97,11 @@ Once you have your table schema files and swagger API you will need to convert t
 
 An interactive API (using Swagger UI) is generated at `/ui`.
 
-The following are the API routes that you can interact with for each of your generated resources:
+The following are the API routes that you can interact with for each of your generated resources (see the docs for more information):
 
 - `GET resource`
 - `GET resource/1`
+- `POST resource/query`
 - `POST resource`
 - `PUT resource/1`
 - `DELETE resource/1`

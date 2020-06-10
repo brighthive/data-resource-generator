@@ -3,82 +3,13 @@ from data_resource.generator.api_manager.v1_0_0.crud_functions import (
     ResourceRead,
     ResourceCreate,
     ResourceUpdate,
+    ResourceQuery,
 )
 
 # from data_resource.config import ConfigurationFactory
 
 
-class ResourceHandler(ResourceRead, ResourceCreate, ResourceUpdate):
-    # def __init__(self):
-    #    self.logger = LogFactory.get_console_logger("resource-handler")
-    #    self.logger = lambda x: x
-
-    # # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
-    # def query_secure(
-    #     self,
-    #     data_model,
-    #     data_resource_name,
-    #     restricted_fields,
-    #     table_schema,
-    #     request_obj,
-    # ):
-    #     """Wrapper method for query."""
-    #     return self.query(
-    #         data_model, data_resource_name, restricted_fields, table_schema, request_obj
-    #     )
-
-    # def query(
-    #     self,
-    #     data_model,
-    #     data_resource_name,
-    #     restricted_fields,
-    #     table_schema,
-    #     request_obj,
-    # ):
-    #     """Query the data resource."""
-
-    #     try:
-    #         request_obj = request_obj.json
-    #     except Exception:
-    #         raise ApiError("No request body found.", 400)
-
-    #     errors = []
-    #     _ = Schema(table_schema)
-    #     accepted_fields = []
-    #     response = OrderedDict()
-    #     response["results"] = []
-    #     if validate(table_schema):
-    #         for field in table_schema["fields"]:
-    #             if field["name"] not in restricted_fields:
-    #                 accepted_fields.append(field["name"])
-    #         for field in request_obj.keys():
-    #             if field not in accepted_fields:
-    #                 errors.append(
-    #                     "Unknown or restricted field '{}' found.".format(field)
-    #                 )
-    #         if len(errors) > 0:
-    #             raise ApiUnhandledError("Invalid request body.", 400, errors)
-    #         else:
-    #             try:
-    #                 session = Session()
-    #                 results = session.query(data_model).filter_by(**request_obj)
-    #                 for row in results:
-    #                     response["results"].append(
-    #                         build_json_from_object(row, restricted_fields)
-    #                     )
-
-    #                 if len(response["results"]) == 0:
-    #                     return {"message": "No matches found"}, 404
-    #                 else:
-    #                     return response, 200
-    #             except Exception:
-    #                 raise ApiUnhandledError("Failed to create new resource.", 400)
-    #             finally:
-    #                 session.close()
-    #     else:
-    #         raise SchemaValidationFailure()
-
-    #     return {"message": "querying data resource"}, 200
+class ResourceHandler(ResourceRead, ResourceCreate, ResourceUpdate, ResourceQuery):
 
     # def process_many_query(
     #     self,

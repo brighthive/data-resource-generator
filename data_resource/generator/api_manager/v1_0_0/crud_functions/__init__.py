@@ -7,3 +7,6 @@ from data_resource.generator.api_manager.v1_0_0.crud_functions.resource_create i
 from data_resource.generator.api_manager.v1_0_0.crud_functions.resource_update import (
     ResourceUpdate,
 )
+from data_resource.generator.api_manager.v1_0_0.crud_functions.resource_query import (
+    ResourceQuery,
+)

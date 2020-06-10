@@ -50,19 +50,19 @@ def test_create_mn_association_table():
 @pytest.mark.unit
 def test_automap_metadata_for_mn():
     metadata = MetaData()
-    association = Table(
-        f"assoc_people_team",
+    _ = Table(
+        "assoc_people_team",
         metadata,
         Column("people", Integer, ForeignKey("people.id"), primary_key=True),
         Column("team", Integer, ForeignKey("team.id"), primary_key=True),
     )
-    People = Table(
+    _ = Table(
         "people",
         metadata,
         Column("id", Integer, primary_key=True),
         Column("name", String(50)),
     )
-    Team = Table(
+    _ = Table(
         "team",
         metadata,
         Column("id", Integer, primary_key=True),

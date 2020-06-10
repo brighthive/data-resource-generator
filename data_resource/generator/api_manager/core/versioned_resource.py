@@ -10,9 +10,12 @@ from data_resource.generator.api_manager.v1_0_0 import (
 from flask import request
 from flask_restful import Resource
 from data_resource.logging import LogFactory
+from data_resource.config import ConfigurationFactory
+from brighthive_authlib import token_required
 
 
 logger = LogFactory.get_console_logger("generator:versioned-resource")
+provider = ConfigurationFactory.from_env().get_oauth2_provider()
 
 
 class VersionedResourceParent(Resource):
@@ -66,12 +69,15 @@ class VersionedResource(VersionedResourceParent):
             #             limit,
             #         )
             #     else:
-            return self.get_resource_handler(request.headers).get_all(
+            rest_fn = self.get_resource_handler(request.headers).get_all(
                 resource_name=self.name,
                 resource_orm=self.resource_orm,
                 offset=offset,
                 limit=limit,
             )
+            secured_fn = token_required(provider)(rest_fn)
+            return secured_fn()
+
         else:
             #     if self.api_schema["get"]["secured"]:
             #         return self.get_resource_handler(request.headers).get_one_secure(

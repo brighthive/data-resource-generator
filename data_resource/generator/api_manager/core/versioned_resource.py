@@ -42,6 +42,7 @@ class VersionedResourceParent(Resource):
         """Raises authlib error if not authorized."""
 
         if os.environ["FLASK_ENV"] != "testing":
+            # provider.validate_token()
             token_required(provider)(lambda: None)()
 
 

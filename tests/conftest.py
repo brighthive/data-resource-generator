@@ -298,7 +298,7 @@ api_dict = {
         }
     ],
     "paths": {
-        "/peoples": {
+        "/people": {
             "get": {
                 "operationId": "get_people",
                 "tags": ["peoples"],
@@ -317,7 +317,7 @@ api_dict = {
                 "responses": {"201": {"$ref": "#/components/responses/Created"}},
             },
         },
-        "/peoples/{id}": {
+        "/people/{id}": {
             "get": {
                 "operationId": "get_people_id",
                 "tags": ["peoples"],
@@ -389,6 +389,7 @@ api_dict = {
                 "responses": {"200": {"description": "ok"}},
             },
         },
+        "/people/query": {"get": {}, "post": {}},
     },
 }
 

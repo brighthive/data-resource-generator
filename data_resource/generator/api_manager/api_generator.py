@@ -56,11 +56,16 @@ def generate_rest_api_routes(
     )
 
     for idx, route in enumerate(resources):
-        api.add_resource(
-            resource_api,
-            route,
-            endpoint=f"{resource_name}_ep_{idx}",
-            methods=enabled_routes[route],
-        )
+        try:
+            api.add_resource(
+                resource_api,
+                route,
+                endpoint=f"{resource_name}_ep_{idx}",
+                methods=enabled_routes[route],
+            )
+        except KeyError:
+            logger.warning(
+                f"Route '{route}' not found in swagger. Therefore it is disabled. This may cause errors."
+            )
 
     return resources

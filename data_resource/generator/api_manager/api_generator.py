@@ -56,6 +56,11 @@ def generate_rest_api_routes(
     )
 
     for idx, route in enumerate(resources):
-        api.add_resource(resource_api, route, endpoint=f"{resource_name}_ep_{idx}")
+        api.add_resource(
+            resource_api,
+            route,
+            endpoint=f"{resource_name}_ep_{idx}",
+            methods=enabled_routes[route],
+        )
 
     return resources

@@ -1,8 +1,11 @@
-from data_resource.generator.api_manager.api_generator import generate_rest_api_routes
+from data_resource.generator.api_manager.api_generator import (
+    generate_rest_api_routes,
+    get_enabled_routes_for_orm,
+)
 from data_resource.generator.app import start_data_resource_generator, save_swagger
 import pytest
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer
+from sqlalchemy import Column, Integer, Table, MetaData
 
 
 # Given a tableschema assert the correct flask restful routes are generated
@@ -69,3 +72,25 @@ def test_generate_serves_swagger_ui(valid_base, empty_api, mocker):
     create_models.assert_called_once_with({})
     generate_api.assert_called_once_with(api={}, base=None, swagger={})
     save_swagger.assert_called_once_with({})
+
+
+@pytest.mark.unit
+def test_get_enabled_routes_for_orm():
+    metadata = MetaData()
+    test_orm = Table("test", metadata, Column("id", Integer, primary_key=True))
+    fake_swagger = {
+        "paths": {
+            "/test": {"get": {}, "post": {}, "put": {}, "patch": {}, "delete": {}},
+            "/test/{id}": {"get": {}, "post": {}, "put": {}, "patch": {}},
+            "/test/query": {"get": {}, "post": {}, "put": {}},
+        }
+    }
+    expected_result = {
+        "/test": ["GET", "PUT", "PATCH", "POST", "DELETE"],
+        "/test/<int:id>": ["GET", "PUT", "PATCH", "POST", "DELETE"],
+        "/test/query": ["GET", "PUT", "PATCH", "POST", "DELETE"],
+    }
+
+    result = get_enabled_routes_for_orm(test_orm, fake_swagger)
+
+    assert result == expected_result

@@ -7,9 +7,16 @@ from data_resource.logging import LogFactory
 logger = LogFactory.get_console_logger("generator:api-generator")
 
 
+def get_enabled_routes_for_orm(resource_orm: object, swagger: dict) -> dict:
+    """Given a resource orm (name) and a swagger spec, get all enabled
+    routes."""
+    return {}
+
+
 def generate_api(base=None, swagger: dict = None, api=None) -> None:
     # Generate REST API for resources
     for resource_orm in base.classes:
+        enabled_routes = get_enabled_routes_for_orm(resource_orm, swagger)
         generate_rest_api_routes(api, resource_orm)
 
     # TODO Generate x:x REST API

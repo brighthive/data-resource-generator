@@ -19,3 +19,11 @@ API Configuration
 ^^^^^^^^^^^^^^^^^
 
 A swagger file is used to configure the API. Only HTTP verbs present under routes will be enabled.
+
+Because of this it also means that the three main routes for each resource,
+
+- GET ALL
+- GET ID
+- POST QUERY
+
+If these paths are not included in the swagger spec then they will not be added to the API routing. This is an untested and unsupported feature that probably works.

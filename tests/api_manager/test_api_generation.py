@@ -11,6 +11,7 @@ from sqlalchemy import Column, Integer, Table, MetaData
 
 # Given a tableschema assert the correct flask restful routes are generated
 # use declarative base/table for ease instead of DeclarativeMeta
+# TODO test the e2e case where the top level routes are not present in swagger.
 @pytest.mark.unit
 def test_generate_rest_api_routes(valid_base, empty_api):
     test_base = declarative_base()

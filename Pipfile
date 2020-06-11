@@ -7,7 +7,6 @@ verify_ssl = true
 pytest = "*"
 pre-commit = "*"
 expects = "*"
-convert-descriptor-to-swagger = {editable = true,path = "./../descriptor-to-swagger"}
 pytest-mock = "*"
 sphinx = "*"
 
@@ -21,6 +20,7 @@ flask-restful = "*"
 tableschema = "*"
 brighthive-authlib = "*"
 flask-swagger-ui = "*"
+convert-descriptor-to-swagger = {editable = true,git = "https://github.com/brighthive/convert_descriptor_to_swagger.git",ref = "v0.0.2"}
 
 [requires]
 python_version = "3.7"

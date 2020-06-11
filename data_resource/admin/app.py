@@ -57,6 +57,7 @@ def start(actually_run=True):
 
     @app.teardown_appcontext
     def shutdown_session(exception=None):
+        db_session.rollback()
         db_session.remove()
 
     if actually_run:

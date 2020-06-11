@@ -60,6 +60,7 @@ class ResourceRead:
                 links = build_links(resource_name, offset, limit, row_count)
             response["links"] = links
         except Exception:
+            db_session.rollback()
             raise InternalServerError()
 
         return response, 200
@@ -99,15 +100,16 @@ class ResourceRead:
                 .filter(getattr(resource_orm, primary_key) == id)
                 .first()
             )
-            if result is None:
-                raise ApiError(f"Resource with id '{id}' not found.", 404)
-
-            response = build_json_from_object(result)
-            return response, 200
-        except ApiError as e:
-            raise e
         except Exception:
+            db_session.rollback()
             raise InternalServerError()
+
+        if result is None:
+            db_session.rollback()
+            raise ApiError(f"Resource with id '{id}' not found.", 404)
+
+        response = build_json_from_object(result)
+        return response, 200
 
     # # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
     # def get_many_one_secure(self, id: int, parent: str, child: str):

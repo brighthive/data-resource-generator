@@ -5,7 +5,7 @@ from data_resource.db.base import db_session
 
 
 @pytest.mark.requiresdb
-def test_query_works_with_correct_data(empty_database, valid_people_orm):
+def test_query_works_with_correct_data(valid_people_orm):
     resource_handler = ResourceHandler()
     resource_orm = valid_people_orm
 
@@ -22,11 +22,11 @@ def test_query_works_with_correct_data(empty_database, valid_people_orm):
 
     assert result == ({"results": [{"id": 1, "name": "tester"}]}, 200)
 
+    db_session.rollback()
+
 
 @pytest.mark.requiresdb
-def test_query_returns_none_when_given_incorrect_field_data(
-    empty_database, valid_people_orm
-):
+def test_query_returns_none_when_given_incorrect_field_data(valid_people_orm):
     # When one item in DB - GET returns that item
     resource_handler = ResourceHandler()
     resource_orm = valid_people_orm
@@ -44,25 +44,11 @@ def test_query_returns_none_when_given_incorrect_field_data(
 
     assert result == ({"message": "No matches found"}, 404)
 
-
-@pytest.mark.requiresdb
-def test_query_empty_body_errors(empty_database, valid_people_orm):
-    resource_handler = ResourceHandler()
-    resource_orm = valid_people_orm
-
-    class FakeFlaskRequest:
-        json = {}
-
-    with pytest.raises(ApiError):
-        resource_handler.query_one(
-            resource_orm=resource_orm, request=FakeFlaskRequest()
-        )
-
-    # assert result == ({"error": "No fields found in body."}, 400)
+    db_session.rollback()
 
 
 @pytest.mark.requiresdb
-def test_query_errors_when_given_incorrect_field_data(empty_database, valid_people_orm):
+def test_query_errors_when_given_incorrect_field_data(valid_people_orm):
     # When one item in DB - GET returns that item
     resource_handler = ResourceHandler()
     resource_orm = valid_people_orm
@@ -80,3 +66,23 @@ def test_query_errors_when_given_incorrect_field_data(empty_database, valid_peop
         )
 
     # assert result == ({"errors": "Unknown or restricted field '{}' found."}, 400)
+
+    db_session.rollback()
+
+
+@pytest.mark.requiresdb
+def test_query_empty_body_errors(valid_people_orm):
+    resource_handler = ResourceHandler()
+    resource_orm = valid_people_orm
+
+    class FakeFlaskRequest:
+        json = {}
+
+    with pytest.raises(ApiError):
+        resource_handler.query_one(
+            resource_orm=resource_orm, request=FakeFlaskRequest()
+        )
+
+    # assert result == ({"error": "No fields found in body."}, 400)
+
+    db_session.rollback()

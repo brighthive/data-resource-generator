@@ -112,6 +112,7 @@ class ResourceUpdate:
         try:
             request_obj = request.json
         except Exception:
+            db_session.rollback()
             raise ApiError("No request body found.", 400)
 
         try:
@@ -122,19 +123,20 @@ class ResourceUpdate:
                 .filter(getattr(resource_orm, primary_key) == id)
                 .first()
             )
-            if mode == "PATCH" and data_obj is None:
-                raise ApiError(f"Resource with id '{id}' not found.", 404)
 
-            if data_obj is None:
-                # data_obj = resource_orm() # do a post with ID?
-                return ResourceCreate().insert_one(
-                    resource_orm=resource_orm, request=request
-                )
-
-        except ApiError as e:
-            raise e
         except Exception:
+            db_session.rollback()
             raise ApiUnhandledError("Unknown error", 500)
+
+        if mode == "PATCH" and data_obj is None:
+            db_session.rollback()
+            raise ApiError(f"Resource with id '{id}' not found.", 404)
+
+        if data_obj is None:
+            # data_obj = resource_orm() # do a post with ID?
+            return ResourceCreate().insert_one(
+                resource_orm=resource_orm, request=request
+            )
 
         # _ = Schema(table_schema)
         # errors = []

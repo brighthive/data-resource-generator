@@ -34,12 +34,14 @@ def generate_api(base=None, swagger: dict = None, api=None) -> None:
     # Generate REST API for resources
     for resource_orm in base.classes:
         enabled_routes = get_enabled_routes_for_orm(resource_orm, swagger)
-        generate_rest_api_routes(api, resource_orm)
+        generate_rest_api_routes(api, resource_orm, enabled_routes)
 
     # TODO Generate x:x REST API
 
 
-def generate_rest_api_routes(api: Api, resource_orm: DeclarativeMeta) -> None:
+def generate_rest_api_routes(
+    api: Api, resource_orm: DeclarativeMeta, enabled_routes: dict
+) -> None:
     resource_name = resource_orm.__name__.lower()
     resources = [
         f"/{resource_name}",

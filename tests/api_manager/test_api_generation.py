@@ -1,6 +1,7 @@
 from data_resource.generator.api_manager.api_generator import (
     generate_rest_api_routes,
     get_enabled_routes_for_orm,
+    convert_swagger_bracket_to_flask,
 )
 from data_resource.generator.app import start_data_resource_generator, save_swagger
 import pytest
@@ -80,17 +81,24 @@ def test_get_enabled_routes_for_orm():
     test_orm = Table("test", metadata, Column("id", Integer, primary_key=True))
     fake_swagger = {
         "paths": {
-            "/test": {"get": {}, "post": {}, "put": {}, "patch": {}, "delete": {}},
-            "/test/{id}": {"get": {}, "post": {}, "put": {}, "patch": {}},
-            "/test/query": {"get": {}, "post": {}, "put": {}},
+            "/test": {"GET": {}, "POST": {}, "PUT": {}, "PATCH": {}, "DELETE": {}},
+            "/test/{id}": {"GET": {}, "POST": {}, "PUT": {}, "PATCH": {}},
+            "/test/query": {"GET": {}, "POST": {}, "PUT": {}},
         }
     }
     expected_result = {
-        "/test": ["GET", "PUT", "PATCH", "POST", "DELETE"],
-        "/test/<int:id>": ["GET", "PUT", "PATCH", "POST", "DELETE"],
-        "/test/query": ["GET", "PUT", "PATCH", "POST", "DELETE"],
+        "/test": ["DELETE", "GET", "PATCH", "POST", "PUT"],
+        "/test/<int:id>": ["GET", "PATCH", "POST", "PUT"],
+        "/test/query": ["GET", "POST", "PUT"],
     }
 
     result = get_enabled_routes_for_orm(test_orm, fake_swagger)
 
     assert result == expected_result
+
+
+@pytest.mark.unit
+def test_convert_swagger_bracket_to_flask():
+    result = convert_swagger_bracket_to_flask("/test/{id}")
+
+    assert result == "/test/<int:id>"

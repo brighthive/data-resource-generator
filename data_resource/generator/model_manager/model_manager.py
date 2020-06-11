@@ -10,11 +10,11 @@ logger = LogFactory.get_console_logger("generator:model-manager")
 
 
 # main
-def create_models(data_catalog: list, bypass_db: bool = False) -> None:
+def create_models(data_catalog: list) -> None:
     """Given the data portion of a data catalog, Produce all the SQLAlchemy
     ORM."""
     # Create base items
-    metadata = create_all_tables_from_schemas(data_catalog, bypass_db)
+    metadata = create_all_tables_from_schemas(data_catalog)
 
     relationships = get_relationships_from_data_dict(data_catalog)
 
@@ -30,9 +30,7 @@ def create_models(data_catalog: list, bypass_db: bool = False) -> None:
 
 
 # base
-def create_all_tables_from_schemas(
-    table_schemas: list, bypass_db: bool = False
-) -> "Metadata":
+def create_all_tables_from_schemas(table_schemas: list) -> "Metadata":
     """Generates the tables from frictionless table schema (without
     relations)."""
     table_names, descriptors = get_table_names_and_descriptors(table_schemas)
@@ -42,8 +40,7 @@ def create_all_tables_from_schemas(
 
         metadata = storage._Storage__metadata
 
-        if not bypass_db:
-            storage.create(table_names, descriptors)
+        storage.create(table_names, descriptors)
 
         return metadata
 

@@ -24,6 +24,8 @@ def create_models(data_catalog: list) -> None:
     for relationship in relationships["manyToMany"]:
         _ = construct_many_to_many_assoc(metadata, relationship)
 
+    metadata.create_all()
+
     # Create ORM relationships
     base = automap_metadata(metadata)
     return base
@@ -40,12 +42,18 @@ def create_all_tables_from_schemas(table_schemas: list) -> "Metadata":
 
         metadata = storage._Storage__metadata
 
+        # Override create all so tableschema-sql won't handle table creation
+        original_create_all = metadata.create_all
+        metadata.create_all = lambda: None
+
         storage.create(table_names, descriptors)
+
+        metadata.create_all = original_create_all  # Restore
 
         return metadata
 
-    except ValidationError as e:
-        print(e.errors)
+    except ValidationError:
+        logger.exception("Validation errors on tableschema.")
         raise
 
 

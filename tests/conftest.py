@@ -510,7 +510,18 @@ def generated_e2e(empty_database):
         # skip generation process -- inject the data dict
         start_data_resource_generator(DATA_DICTIONARY, api)
 
-    return app.test_client()
+    return app
+
+
+@pytest.fixture(scope="function")
+def generated_e2e_client(generated_e2e):
+    return generated_e2e.test_client()
+
+
+# @pytest.fixture(scope="function")
+# def inspect_generated_e2e_database(empty_database):
+#     """This will trigger a generated e2e app but return a database inspection tool client."""
+#     return inspect(app.config["engine"])
 
 
 @pytest.fixture(scope="function")

@@ -3,9 +3,9 @@ import json
 
 
 @pytest.mark.requiresdb
-def test_end_to_end(generated_e2e, empty_database):
+def test_end_to_end(generated_e2e_client, empty_database):
     # This test should assert on the entire body of the responses
-    api = generated_e2e
+    api = generated_e2e_client
 
     # Check for no data in DB
     response = api.get("/people", json={})

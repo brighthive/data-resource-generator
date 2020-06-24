@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "b852dc2453fb77f6824973a2ccbb717e4cca99c2b02cdc568d200079796dd123"
+            "sha256": "be7f56229e6b2dff9f4605a7a9041485e0bcc877680ea9aaa2d23738ef467667"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -38,17 +38,17 @@
         },
         "boto3": {
             "hashes": [
-                "sha256:cd2b8eb13a10ccf9e019be437928d691424b02ebd59849be33bdcf0516d71443",
-                "sha256:d5a5e65d54904845964b789450b826e3d0967fca4032b8cb677d3fb59ac6cf0a"
+                "sha256:a33e465831fb95af2e57576927f33746be620ba236252f8e1291c1c31cf63625",
+                "sha256:caa4fbb9de8d8c229a183a551cb314fe208ec264545d4d825022d863d33e9b7b"
             ],
-            "version": "==1.14.0"
+            "version": "==1.14.2"
         },
         "botocore": {
             "hashes": [
-                "sha256:22fbb2745f72e8da011d7d358844adf76c12acb9360b1418b876caa589c973bd",
-                "sha256:381601ad6e49c8ee87c5e4358657278f740b91bb926464c74dc57d3effbea63b"
+                "sha256:01788bfa280397ba96991cd74e706628620310c7d8b8b43b0818df3bad3daaeb",
+                "sha256:4e347b77e17c5a619afd59a5209b251107c3d7d5f842ec169694492f3820f75b"
             ],
-            "version": "==1.17.0"
+            "version": "==1.17.2"
         },
         "brighthive-authlib": {
             "hashes": [
@@ -106,7 +106,7 @@
         "convert-descriptor-to-swagger": {
             "editable": true,
             "git": "https://github.com/brighthive/convert_descriptor_to_swagger.git",
-            "ref": "c51acb1c4e0ac675319372ae1dad81e1072faf5b"
+            "ref": "7b7504d939cbb75040f917a20735bbaa9ce358a2"
         },
         "docutils": {
             "hashes": [
@@ -459,10 +459,10 @@
         },
         "rsa": {
             "hashes": [
-                "sha256:2c7c8624ef9b55bacc3be8bdcec5cefc381ddc156e968d6437fe0fd08af00eb0",
-                "sha256:6fa6a54eb72bfc0abca7f27880b978b14a643ba2a6ad9f4a56a95be82129ca1b"
+                "sha256:109ea5a66744dd859bf16fe904b8d8b627adafb9408753161e766a92e7d681fa",
+                "sha256:23778f5523461cf86ae075f9482a99317f362bca752ae57cb118044066f4026f"
             ],
-            "version": "==4.1"
+            "version": "==4.6"
         },
         "s3transfer": {
             "hashes": [
@@ -914,10 +914,10 @@
         },
         "virtualenv": {
             "hashes": [
-                "sha256:a116629d4e7f4d03433b8afa27f43deba09d48bc48f5ecefa4f015a178efb6cf",
-                "sha256:a730548b27366c5e6cbdf6f97406d861cccece2e22275e8e1a757aeff5e00c70"
+                "sha256:5102fbf1ec57e80671ef40ed98a84e980a71194cedf30c87c2b25c3a9e0b0107",
+                "sha256:ccfb8e1e05a1174f7bd4c163700277ba730496094fe1a58bea9d4ac140a207c8"
             ],
-            "version": "==20.0.21"
+            "version": "==20.0.23"
         },
         "wcwidth": {
             "hashes": [

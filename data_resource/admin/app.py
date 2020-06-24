@@ -26,6 +26,7 @@ def start(actually_run=True):
 
     app = Flask(__name__, static_url_path="", static_folder=static_folder)
     app.config.from_object(ConfigurationFactory.from_env())
+    app.config["engine"] = engine
 
     app.register_error_handler(Exception, handle_errors)
 

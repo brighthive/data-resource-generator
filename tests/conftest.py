@@ -1,5 +1,6 @@
 import pytest
 from sqlalchemy.exc import OperationalError
+from sqlalchemy import inspect
 from data_resource import start
 from data_resource.db import db_session
 from data_resource.generator.app import start_data_resource_generator
@@ -518,10 +519,11 @@ def generated_e2e_client(generated_e2e):
     return generated_e2e.test_client()
 
 
-# @pytest.fixture(scope="function")
-# def inspect_generated_e2e_database(empty_database):
-#     """This will trigger a generated e2e app but return a database inspection tool client."""
-#     return inspect(app.config["engine"])
+@pytest.fixture(scope="function")
+def generated_e2e_database_inspector(generated_e2e):
+    """This will trigger a generated e2e app but return a database inspection
+    tool client."""
+    return inspect(generated_e2e.config["engine"])
 
 
 @pytest.fixture(scope="function")

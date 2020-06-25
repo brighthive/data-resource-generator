@@ -391,6 +391,8 @@ api_dict = {
             },
         },
         "/people/query": {"get": {}, "post": {}},
+        "/people/{id}/team": {"get": {}, "post": {}},
+        "/team/{id}/people": {"get": {}, "post": {}},
     },
 }
 
@@ -481,6 +483,11 @@ def valid_base(VALID_DATA_DICTIONARY, empty_database):
 @pytest.fixture
 def valid_people_orm(valid_base):
     return getattr(valid_base.classes, "people")
+
+
+@pytest.fixture
+def valid_team_orm(valid_base):
+    return getattr(valid_base.classes, "team")
 
 
 @pytest.fixture

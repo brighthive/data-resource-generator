@@ -25,12 +25,17 @@ def save_swagger(swagger):
 
 def start_data_resource_generator(data_catalog, api):
     data_dict = data_catalog["data"]
+    try:
+        relationships = data_catalog["data"]["relationships"]["manyToMany"]
+    except KeyError:
+        relationships = []
+
     swagger = data_catalog["api"]["apiSpec"]
 
     # Generate ORM
     base = create_models(data_dict)
 
     # Generate APIs
-    generate_api(base=base, swagger=swagger, api=api)
+    generate_api(base=base, swagger=swagger, api=api, relationships=relationships)
 
     save_swagger(swagger)

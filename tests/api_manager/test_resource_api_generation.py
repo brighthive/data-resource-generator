@@ -94,7 +94,9 @@ def test_generate_serves_swagger_ui(valid_base, empty_api, mocker):
     start_data_resource_generator({"data": {}, "api": {"apiSpec": {}}}, {})
 
     create_models.assert_called_once_with({})
-    generate_api.assert_called_once_with(api={}, base=None, swagger={})
+    generate_api.assert_called_once_with(
+        api={}, base=None, swagger={}, relationships=[]
+    )
     save_swagger.assert_called_once_with({})
 
 

@@ -1,4 +1,4 @@
-from data_resource.generator.api_manager import VersionedResource
+from data_resource.generator.api_manager import VersionedResource, VersionedResourceMany
 from flask_restful import Api
 from sqlalchemy.ext.declarative import DeclarativeMeta
 from data_resource.logging import LogFactory
@@ -53,10 +53,11 @@ def generate_relationship_based_routes(
         generate_relationship_rest_api_routes(api, enabled_routes, reverse_relationship)
 
 
-def generate_api(base=None, swagger: dict = None, api=None) -> None:
+def generate_api(
+    base=None, swagger: dict = None, api: Api = None, relationships: list = []
+) -> None:
     """Generates all routes."""
     enabled_routes = get_enabled_routes_for_orm(swagger)
-    relationships = []
 
     generate_resource_based_routes(base, api, enabled_routes)
     generate_relationship_based_routes(base, api, relationships, enabled_routes)
@@ -101,7 +102,9 @@ def generate_relationship_rest_api_routes(
     """Adds relationship based routes to API."""
     first_orm = relationship[0]
     second_orm = relationship[1]
-    first_orm_name = first_orm.__table__.name
+    first_orm_name = (
+        first_orm.__table__.name
+    )  # TODO make class for handling this common base operations
     second_orm_name = second_orm.__table__.name
 
     resource_name = f"{first_orm_name}_{second_orm_name}"
@@ -110,11 +113,11 @@ def generate_relationship_rest_api_routes(
 
     resource_api = type(
         resource_name,
-        (VersionedResource,),
+        (VersionedResourceMany,),
         {"name": resource_name, "parent_orm": first_orm, "child_orm": second_orm},
     )
 
-    for idx, route in enumerate(resource):
+    for idx, route in enumerate(resource):  # TODO refactor into a fn?
         try:
             methods = enabled_routes[route]
         except KeyError:
@@ -130,14 +133,15 @@ def generate_relationship_rest_api_routes(
     return
 
 
+# util
 def generate_orm_relationship_list(base, relationships: list) -> list:
     result = []
 
     for relationship in relationships:
         try:
-            first_orm = getattr(base.classes, relationship[0])
-            second_orm = getattr(base.classes, relationship[1])
-        except:
+            first_orm = getattr(base.classes, relationship[0].lower())
+            second_orm = getattr(base.classes, relationship[1].lower())
+        except:  # TODO check for error somewhere?
             logger.exception(
                 "A referenced ORM within a relationship does not exist in base."
             )
@@ -147,5 +151,6 @@ def generate_orm_relationship_list(base, relationships: list) -> list:
     return result
 
 
+# util
 def reverse_relationship_orm_list(relationship: list) -> list:
     return sorted(relationship, key=lambda orm: str(orm.__table__.name), reverse=True)

@@ -8,8 +8,9 @@ def test_many_to_many_end_to_end(generated_e2e_client, empty_database):
     api = generated_e2e_client
 
     # Assosication list should be empty
-    api.put("/people/1", json={"name": "person1"})
-    api.put("/team/1", json={"name": "team1"})
+    assert api.put("/people/1", json={"name": "person1"}).status_code == 201
+    assert api.put("/team/1", json={"name": "team1"}).status_code == 201
+
     response = api.get("/people/1/team", json={})
     body = json.loads(response.data)
 
@@ -17,7 +18,7 @@ def test_many_to_many_end_to_end(generated_e2e_client, empty_database):
     assert body == []
 
     # Generate
-    response = api.put("/people/1/team", json={"data": [1]})
+    response = api.put("/people/1/team", json=[1])
     body = json.loads(response.data)
 
     assert response.status_code == 200

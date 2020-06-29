@@ -391,6 +391,8 @@ api_dict = {
             },
         },
         "/people/query": {"get": {}, "post": {}},
+        "/team": {"get": {}},
+        "/team/{id}": {"get": {}, "put": {}},
         "/people/{id}/team": {"get": {}, "put": {}},
         "/team/{id}/people": {"get": {}, "put": {}},
     },

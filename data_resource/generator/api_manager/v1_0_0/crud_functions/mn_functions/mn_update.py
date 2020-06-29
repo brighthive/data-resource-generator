@@ -24,24 +24,47 @@ class MnUpdate:
             return {}, 200
 
         # try:
-        # primary_key = "id"
-        # result = (
-        #     db_session.query(parent_orm)
-        #     .filter(getattr(parent_orm, primary_key) == id)
-        #     .first()
-        # )
-        # # except Exception:
-        # #     db_session.rollback()
-        # #     raise InternalServerError()
-
-        # if result is None:
+        primary_key = "id"
+        parent = (
+            db_session.query(parent_orm)
+            .filter(getattr(parent_orm, primary_key) == id)
+            .first()
+        )
+        # except Exception:
         #     db_session.rollback()
-        #     raise ApiError(f"Resource with id '{id}' not found.", 404)
+        #     raise InternalServerError()
 
-        # mn_list = getattr(result, f"{child_orm.__table__.name}_collection")
-        # response = [item.id for item in mn_list]
+        if parent is None:
+            db_session.rollback()
+            raise ApiError(f"Resource with id '{id}' not found.", 404)
 
-        # # response = build_json_from_object(result)
-        # return response, 200
+        # TODO: check if all put body values exist?
 
-        return [1], 200
+        if type(body) is not list:
+            body = [body]
+
+        # Remove all items from parent
+        mn_list = getattr(parent, f"{child_orm.__table__.name}_collection")
+        for child in mn_list:
+            parent.children.remove(child)
+
+        # Add items to parent
+        for child_id in body:
+            child = (
+                db_session.query(child_orm)
+                .filter(getattr(child_orm, primary_key) == child_id)
+                .first()
+            )
+
+            if child is None:
+                raise ApiError(f"Child with id '{child_id}' does not exist.")
+
+            parent.team_collection.append(child)
+
+        db_session.commit()
+
+        mn_list = getattr(parent, f"{child_orm.__table__.name}_collection")
+        response = [item.id for item in mn_list]
+
+        # response = build_json_from_object(parent)
+        return response, 200

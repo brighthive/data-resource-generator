@@ -12,7 +12,14 @@ logger = LogFactory.get_console_logger("generator:mn-update")
 
 
 class MnUpdate:
-    def put_mn_one(self, id: int, body: list, parent_orm: object, child_orm: object):
+    def put_mn_one(
+        self,
+        id: int,
+        body: list,
+        parent_orm: object,
+        child_orm: object,
+        patch: bool = False,
+    ):
         # """Retrieve the many to many relationship data of a parent and child.
 
         # Args:
@@ -43,9 +50,10 @@ class MnUpdate:
         if type(body) is not list:
             body = [body]
 
-        # Remove all items from parent
-        mn_list = getattr(parent, f"{child_orm.__table__.name}_collection")
-        mn_list.clear()
+        if not patch:
+            # Remove all items from parent
+            mn_list = getattr(parent, f"{child_orm.__table__.name}_collection")
+            mn_list.clear()
 
         # Add items to parent
         for child_id in body:

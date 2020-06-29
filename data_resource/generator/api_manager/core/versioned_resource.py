@@ -244,23 +244,24 @@ class VersionedResourceMany(VersionedResourceParent):
             id, body, self.parent_orm, self.child_orm
         )
 
-    # def patch(self, id=None):
-    #     # Adds data
-    #     paths = request.path.split("/")
-    #     parent, child = paths[1], paths[3]
+    def patch(self, id=None):
+        #     paths = request.path.split("/")
+        #     parent, child = paths[1], paths[3]
 
-    #     resource = f"/{parent}/{child}"
-    #     self.error_if_resource_is_disabled("patch", resource, self.api_schema)
+        #     resource = f"/{parent}/{child}"
+        #     self.error_if_resource_is_disabled("patch", resource, self.api_schema)
 
-    #     value = request.json[child]
-    #     if self.is_secured("put", resource, self.api_schema):
-    #         return self.get_resource_handler(request.headers).patch_many_one_secure(
-    #             id, parent, child, value
-    #         )
-    #     else:
-    #         return self.get_resource_handler(request.headers).patch_many_one(
-    #             id, parent, child, value
-    #         )
+        #     value = request.json[child]
+        #     if self.is_secured("put", resource, self.api_schema):
+        #         return self.get_resource_handler(request.headers).patch_many_one_secure(
+        #             id, parent, child, value
+        #         )
+        #     else:
+        body = request.json
+
+        return self.get_resource_handler(request.headers).put_mn_one(
+            id, body, self.parent_orm, self.child_orm, patch=True
+        )
 
     # def delete(self, id=None):
     #     paths = request.path.split("/")

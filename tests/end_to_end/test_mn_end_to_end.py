@@ -8,6 +8,7 @@ def test_many_to_many_end_to_end(generated_e2e_client, empty_database):
     api = generated_e2e_client
     assert api.put("/people/1", json={"name": "person1"}).status_code == 201
     assert api.put("/team/1", json={"name": "team1"}).status_code == 201
+    assert api.put("/team/2", json={"name": "team2"}).status_code == 201
 
     # GET
     response = api.get("/people/1/team", json={})
@@ -22,3 +23,10 @@ def test_many_to_many_end_to_end(generated_e2e_client, empty_database):
 
     assert response.status_code == 200
     assert body == [1]
+
+    # PATCH
+    response = api.patch("/people/1/team", json=[2])
+    body = json.loads(response.data)
+
+    assert response.status_code == 200
+    assert body == [1, 2]

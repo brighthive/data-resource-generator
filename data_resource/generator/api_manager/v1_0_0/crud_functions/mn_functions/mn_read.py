@@ -8,7 +8,7 @@ from data_resource.logging.api_exceptions import InternalServerError, ApiError
 from data_resource.logging import LogFactory
 
 
-logger = LogFactory.get_console_logger("generator:resource-read")
+logger = LogFactory.get_console_logger("generator:mn-read")
 
 
 class MnRead:

@@ -15,3 +15,6 @@ def test_all_routes_exist(generated_e2e_client):
 
     assert api.get("/people/0/team", json={}).status_code == 200
     assert api.get("/team/0/people", json={}).status_code == 200
+
+    assert api.put("/people/0/team", json={}).status_code == 200
+    assert api.put("/team/0/people", json={}).status_code == 200

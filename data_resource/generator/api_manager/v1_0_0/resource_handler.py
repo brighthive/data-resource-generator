@@ -5,11 +5,16 @@ from data_resource.generator.api_manager.v1_0_0.crud_functions import (
     ResourceUpdate,
     ResourceQuery,
 )
+from data_resource.generator.api_manager.v1_0_0.crud_functions.mn_functions import (
+    MnRead,
+)
 
 # from data_resource.config import ConfigurationFactory
 
 
-class ResourceHandler(ResourceRead, ResourceCreate, ResourceUpdate, ResourceQuery):
+class ResourceHandler(
+    ResourceRead, ResourceCreate, ResourceUpdate, ResourceQuery, MnRead
+):
 
     # def process_many_query(
     #     self,

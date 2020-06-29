@@ -1,5 +1,6 @@
 import pytest
 from sqlalchemy.exc import OperationalError
+from sqlalchemy import inspect
 from data_resource import start
 from data_resource.db import db_session
 from data_resource.generator.app import start_data_resource_generator
@@ -390,6 +391,8 @@ api_dict = {
             },
         },
         "/people/query": {"get": {}, "post": {}},
+        "/people/{id}/team": {"get": {}, "post": {}},
+        "/team/{id}/people": {"get": {}, "post": {}},
     },
 }
 
@@ -483,6 +486,11 @@ def valid_people_orm(valid_base):
 
 
 @pytest.fixture
+def valid_team_orm(valid_base):
+    return getattr(valid_base.classes, "team")
+
+
+@pytest.fixture
 def valid_orm_with_required_field(valid_base):
     return getattr(valid_base.classes, "required")
 
@@ -510,7 +518,19 @@ def generated_e2e(empty_database):
         # skip generation process -- inject the data dict
         start_data_resource_generator(DATA_DICTIONARY, api)
 
-    return app.test_client()
+    return app
+
+
+@pytest.fixture(scope="function")
+def generated_e2e_client(generated_e2e):
+    return generated_e2e.test_client()
+
+
+@pytest.fixture(scope="function")
+def generated_e2e_database_inspector(generated_e2e):
+    """This will trigger a generated e2e app but return a database inspection
+    tool client."""
+    return inspect(generated_e2e.config["engine"])
 
 
 @pytest.fixture(scope="function")

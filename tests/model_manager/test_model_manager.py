@@ -8,6 +8,19 @@ from data_resource.generator.model_manager.model_manager import (
 from data_resource.db.base import db_session
 
 
+@pytest.mark.requiresdb
+def test_creates_all_required_tables(generated_e2e_database_inspector):
+    tables = generated_e2e_database_inspector.get_table_names()
+    tables.sort()
+    expected = ["required", "people", "order", "assoc_people_team", "team"]
+    expected.sort()
+
+    # Tables are correct
+    assert tables == expected
+
+    # TODO assert on fields?
+
+
 @pytest.mark.unit  # Does this requiredb tho?
 def test_create_models_creates_all_required_orm(VALID_DATA_DICTIONARY, empty_database):
     table_descriptors = VALID_DATA_DICTIONARY["data"]

@@ -13,7 +13,7 @@ from sqlalchemy import Column, Integer, Table, MetaData
 # use declarative base/table for ease instead of DeclarativeMeta
 # TODO test the e2e case where the top level routes are not present in swagger.
 @pytest.mark.unit
-def test_generate_rest_api_routes(valid_base, empty_api):
+def test_generate_rest_api_routes(empty_api):
     test_base = declarative_base()
     enabled_routes = {
         "/team": ["DELETE", "GET", "PATCH", "POST", "PUT"],
@@ -94,28 +94,32 @@ def test_generate_serves_swagger_ui(valid_base, empty_api, mocker):
     start_data_resource_generator({"data": {}, "api": {"apiSpec": {}}}, {})
 
     create_models.assert_called_once_with({})
-    generate_api.assert_called_once_with(api={}, base=None, swagger={})
+    generate_api.assert_called_once_with(
+        api={}, base=None, swagger={}, relationships=[]
+    )
     save_swagger.assert_called_once_with({})
 
 
 @pytest.mark.unit
 def test_get_enabled_routes_for_orm():
-    metadata = MetaData()
-    test_orm = Table("test", metadata, Column("id", Integer, primary_key=True))
     fake_swagger = {
         "paths": {
             "/test": {"GET": {}, "POST": {}, "PUT": {}, "PATCH": {}, "DELETE": {}},
             "/test/{id}": {"GET": {}, "POST": {}, "PUT": {}, "PATCH": {}},
             "/test/query": {"GET": {}, "POST": {}, "PUT": {}},
+            "/people/{id}/test": {"GET": {}, "POST": {}},
+            "/test/{id}/people": {"GET": {}, "POST": {}},
         }
     }
     expected_result = {
         "/test": ["DELETE", "GET", "PATCH", "POST", "PUT"],
         "/test/<int:id>": ["GET", "PATCH", "POST", "PUT"],
         "/test/query": ["GET", "POST", "PUT"],
+        "/people/<int:id>/test": ["GET", "POST"],
+        "/test/<int:id>/people": ["GET", "POST"],
     }
 
-    result = get_enabled_routes_for_orm(test_orm, fake_swagger)
+    result = get_enabled_routes_for_orm(fake_swagger)
 
     assert result == expected_result
 

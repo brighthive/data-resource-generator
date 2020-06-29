@@ -45,8 +45,7 @@ class MnUpdate:
 
         # Remove all items from parent
         mn_list = getattr(parent, f"{child_orm.__table__.name}_collection")
-        for child in mn_list:
-            parent.children.remove(child)
+        mn_list.clear()
 
         # Add items to parent
         for child_id in body:
@@ -57,12 +56,14 @@ class MnUpdate:
             )
 
             if child is None:
+                db_session.rollback()
                 raise ApiError(f"Child with id '{child_id}' does not exist.")
 
             parent.team_collection.append(child)
 
         db_session.commit()
 
+        # TODO this can be moved to a model class as its reused in GET
         mn_list = getattr(parent, f"{child_orm.__table__.name}_collection")
         response = [item.id for item in mn_list]
 

@@ -8,11 +8,17 @@ from data_resource.generator.model_manager.model_manager import create_models
 from flask_restful import Api
 from flask import Flask
 from tests.testing_schemas.default import DATA_DICTIONARY
+from tests.testing_schemas.all_types import ALL_TYPES_DATA_DICTIONARY
 
 
 @pytest.fixture
 def VALID_DATA_DICTIONARY():
     return DATA_DICTIONARY
+
+
+@pytest.fixture
+def ALL_TYPES():
+    return ALL_TYPES_DATA_DICTIONARY
 
 
 class Database:
@@ -92,8 +98,27 @@ def generated_e2e(empty_database):
 
 
 @pytest.fixture(scope="function")
+def all_types_generated_e2e(empty_database):
+    # start the app
+    app = start(actually_run=False)
+
+    api = app.config["api"]
+
+    with app.app_context():
+        # skip generation process -- inject the data dict
+        start_data_resource_generator(ALL_TYPES_DATA_DICTIONARY, api)
+
+    return app
+
+
+@pytest.fixture(scope="function")
 def generated_e2e_client(generated_e2e):
     return generated_e2e.test_client()
+
+
+@pytest.fixture(scope="function")
+def all_types_generated_e2e_client(all_types_generated_e2e):
+    return all_types_generated_e2e.test_client()
 
 
 @pytest.fixture(scope="function")

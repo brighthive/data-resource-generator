@@ -74,7 +74,7 @@ docker-compose -f test-database-docker-compose.yml down && docker-compose -f tes
 1. To run the application,
 
 ```bash
-pipenv run python run.py
+pipenv run python wsgi.py
 ```
 
 ### Generate Data Resources

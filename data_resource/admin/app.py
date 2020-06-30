@@ -16,8 +16,7 @@ from data_resource.config import ConfigurationFactory
 
 logger = LogFactory.get_console_logger("admin:app")
 
-
-def start(actually_run=True):
+def create_app(actually_run=True):
     # TODO: this or env var
     dirname, _ = os.path.split(os.path.abspath(__file__))
     static_folder = os.path.abspath(

@@ -1,0 +1,11 @@
+version: "3"
+services:
+  postgres:
+    image: postgres:11.2
+    container_name: data_resource_test_database
+    ports:
+      - 5433:5432
+    environment:
+      - POSTGRES_USER=test_user
+      - POSTGRES_PASSWORD=test_password
+      - POSTGRES_DB=data_resource_dev

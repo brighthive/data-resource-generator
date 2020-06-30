@@ -24,3 +24,4 @@ services:
       - APM_HOSTNAME=
     ports:
       - 8081:8081
+    command: ["./wait-for-it.sh", "data-resource-database:5432"]

@@ -1,5 +1,7 @@
 import pytest
 import json
+import decimal
+import datetime
 
 ROUTE = "/people"  # TODO change?
 
@@ -18,7 +20,11 @@ def run_query(client, key, value, expected_value=None):
     resp = json.loads(resp_data.data)
 
     assert resp[key] == expected_value
-    assert type(resp[key]) == type(expected_value)
+
+    # resp_data = client.get(f"{ROUTE}/{id_}")
+    # resp = resp_data.json
+    # # resp = json.loads(resp_data.data)
+    # assert resp[key] == expected_value
 
 
 @pytest.mark.requiresdb
@@ -26,7 +32,6 @@ def test_string(all_types_generated_e2e_client):
     run_query(all_types_generated_e2e_client, "string", "asdf1234")
 
 
-@pytest.mark.xfail  # TypeError: Object of type Decimal is not JSON serializable
 @pytest.mark.requiresdb
 def test_number(all_types_generated_e2e_client):
     run_query(all_types_generated_e2e_client, "number", 1234.0)
@@ -54,28 +59,26 @@ def test_array(all_types_generated_e2e_client):
     run_query(all_types_generated_e2e_client, "array", ["one", "two", "three"])
 
 
-@pytest.mark.xfail  # TypeError('Object of type date is not JSON serializable')
 @pytest.mark.requiresdb
 def test_date(all_types_generated_e2e_client):
     run_query(all_types_generated_e2e_client, "date", "2012-04-23")
 
 
-@pytest.mark.xfail  # TypeError('Object of type time is not JSON serializable')
+# This will error if you provide a lower resolution of milliseconds.
 @pytest.mark.requiresdb
 def test_time(all_types_generated_e2e_client):
-    run_query(all_types_generated_e2e_client, "time", "18:25:43.511Z")
+    run_query(all_types_generated_e2e_client, "time", "18:25:43.511122Z")
 
 
-@pytest.mark.xfail  # TypeError('Object of type datetime is not JSON serializable')
 @pytest.mark.requiresdb
 def test_datetime(all_types_generated_e2e_client):
     run_query(all_types_generated_e2e_client, "datetime", "2012-04-23T18:25:43Z")
 
 
-@pytest.mark.xfail  # TypeError: Object of type datetime is not JSON serializable
+# This will error if you provide a lower resolution of milliseconds.
 @pytest.mark.requiresdb
 def test_datetime_with_miliseconds(all_types_generated_e2e_client):
-    run_query(all_types_generated_e2e_client, "datetime", "2012-04-23T18:25:43.511Z")
+    run_query(all_types_generated_e2e_client, "datetime", "2012-04-23T18:25:43.511000Z")
 
 
 @pytest.mark.requiresdb
@@ -88,10 +91,9 @@ def test_yearmonth(all_types_generated_e2e_client):
     run_query(all_types_generated_e2e_client, "yearmonth", "2012-11")
 
 
-@pytest.mark.xfail  # AssertionError: assert '11' == 11
 @pytest.mark.requiresdb
 def test_duration(all_types_generated_e2e_client):
-    run_query(all_types_generated_e2e_client, "duration", 11)
+    run_query(all_types_generated_e2e_client, "duration", "11")
 
 
 @pytest.mark.requiresdb

@@ -5,13 +5,14 @@ from data_resource.admin.routes import (
     generator_bp,
 )
 from data_resource.db import db_session, admin_base, engine
-from flask import Flask
+from flask import Flask, make_response
 from flask_restful import Api
 from data_resource.logging.api_exceptions import handle_errors
 from flask_swagger_ui import get_swaggerui_blueprint
 from data_resource.logging import LogFactory
 import os
 from data_resource.config import ConfigurationFactory
+from data_resource.admin.safe_json_output import safe_json_dumps
 
 
 logger = LogFactory.get_console_logger("admin:app")
@@ -40,6 +41,13 @@ def start(actually_run=True):
 
     # Flask RESTFUL
     api = Api(app)
+
+    # Properly output all types
+    @api.representation("application/json")
+    def output_json(data, code, headers=None):
+        resp = make_response(safe_json_dumps(data), code)
+        resp.headers.extend(headers or {})
+        return resp
 
     # Register admin routes
     app.register_blueprint(tableschema_bp)

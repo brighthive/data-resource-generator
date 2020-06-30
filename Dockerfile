@@ -6,9 +6,9 @@ ADD Pipfile Pipfile
 ADD Pipfile.lock Pipfile.lock
 ADD wsgi.py wsgi.py
 EXPOSE 8081
-RUN pipenv install --system && apt-get remove -y python3-dev build-essential
+RUN pipenv install && apt-get remove -y python3-dev build-essential
 RUN mkdir static
 RUN touch static/swagger.json
 ADD cmd.sh cmd.sh
 RUN chmod +x cmd.sh
-ENTRYPOINT [ "/data-resource-generator/cmd.sh" ]
+CMD ["pipenv","run","python","wsgi.py"]

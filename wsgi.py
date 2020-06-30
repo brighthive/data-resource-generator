@@ -6,7 +6,7 @@ environment = os.getenv('APP_ENV', None)
 
 isprod = environment == 'PRODUCTION'
 
-app = application = create_app(actually_run=not isprod)
+app = application = create_app(actually_run=True)
 
 if isprod:
     app = ProxyFix(app)

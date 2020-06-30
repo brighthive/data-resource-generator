@@ -51,7 +51,7 @@ def create_app(actually_run=True):
     app.config["static_folder"] = static_folder  # TODO: this or env var
 
     # Create the models
-    import data_resource.admin.models  # noqa: F401
+    import data_resource.admin.models  # noqa: F401 
 
     admin_base.metadata.create_all(engine)
 

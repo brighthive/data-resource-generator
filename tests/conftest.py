@@ -7,7 +7,7 @@ from data_resource.generator.app import start_data_resource_generator
 from data_resource.generator.model_manager.model_manager import create_models
 from flask_restful import Api
 from flask import Flask
-from tests.schemas import DATA_DICTIONARY
+from tests.testing_schemas.default import DATA_DICTIONARY
 
 
 @pytest.fixture

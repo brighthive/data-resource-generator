@@ -152,6 +152,21 @@ For developers to run the test suite,
     pipenv run pytest
     ```
 
+## Docker
+
+To run via docker, first build image:
+
+```bash
+docker build -t brighthive/data-resource-generator .
+```
+
+then run:
+
+```bash
+docker-compose up
+```
+
+
 ## Team
 
 - Logan Ripplinger (Software Engineer)

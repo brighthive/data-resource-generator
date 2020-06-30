@@ -146,7 +146,7 @@ DATA_DICTIONARY = {
                 },
             },
             {
-                "@id": "https://mydatatrust.brighthive.io/dr1/Order",
+                "@id": "https://mydatatrust.brighthive.io/dr1/Required",
                 "@type": "bh:table",
                 "name": "required",
                 "tableSchema": {

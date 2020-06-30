@@ -1,0 +1,26 @@
+version: "3"
+services:
+  data-resource-database:
+    image: postgres:11.2
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=data_resource
+  data-resource:
+    image: brighthive/data-resource-generator:latest
+    depends_on:
+        - data-resource-database
+    environment:
+      - APP_ENV=PRODUCTION
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOSTNAME=data-resource-database
+      - POSTGRES_DATABASE=data_resource
+      - POSTGRES_PORT=5432
+      - APM_ENABLED=0
+      - APM_TOKEN=
+      - APM_HOSTNAME=
+    ports:
+      - 8081:8081

@@ -62,6 +62,6 @@ def start(actually_run=True):
         db_session.remove()
 
     if actually_run:
-        app.run(port=8081, use_reloader=False, threaded=False)
+        app.run(host='0.0.0.0', port=8081, use_reloader=False, threaded=False)
     else:
         return app

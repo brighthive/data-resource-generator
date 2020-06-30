@@ -147,11 +147,26 @@ class TestConfig(Config):
 #     )
 
 
-# class ProductionConfig(Config):
-#     """Production deployment configuration class."""
+class ProductionConfig(Config):
+     """Production deployment configuration class."""
 
-#     def __init__(self):
-#         super().__init__()
+     def __init__(self):
+         super().__init__()
+
+     SQLALCHEMY_TRACK_MODIFICATIONS = False
+     PROPAGATE_EXCEPTIONS = True
+     POSTGRES_USER = os.getenv("POSTGRES_USER")
+     POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
+     POSTGRES_DATABASE = os.getenv("POSTGRES_DATABASE")
+     POSTGRES_HOSTNAME = os.getenv("POSTGRES_HOSTNAME", "localhost")
+     POSTGRES_PORT = os.getenv("POSTGRES_PORT", 5432)
+     SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{}:{}@{}:{}/{}".format(
+        POSTGRES_USER,
+        POSTGRES_PASSWORD,
+        POSTGRES_HOSTNAME,
+        POSTGRES_PORT,
+        POSTGRES_DATABASE,
+     )
 
 
 class ConfigurationFactory:
@@ -176,14 +191,8 @@ class ConfigurationFactory:
         config_type = config_type.upper()
         if config_type == "TEST":
             return TestConfig()
-        # elif config_type == "INTEGRATION":
-        #     return IntegrationTestConfig()
-        # elif config_type == "DEVELOPMENT":
-        #     return DevelopmentConfig()
-        # elif config_type == "SANDBOX":
-        #     return SandboxConfig()
-        # elif config_type == "PRODUCTION":
-        #     return ProductionConfig()
+        elif config_type == "PRODUCTION":
+             return ProductionConfig()
         else:
             raise InvalidConfigurationError(
                 "Invalid configuration type `{}` specified.".format(config_type)

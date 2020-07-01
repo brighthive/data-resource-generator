@@ -65,6 +65,24 @@ Data Resource Schema: BrightHive specification. JSONLD document. Please see [spe
 
 ### Start the application
 
+There are two ways to run the application. Using docker is highly preferred.
+
+#### Using Docker
+
+To run via docker, first build image:
+
+```bash
+docker build -t brighthive/data-resource-generator .
+```
+
+then run:
+
+```###bash
+docker-compose up
+```
+
+#### Using python
+
 1. Restart the database to clear the data.
 
 ```bash
@@ -112,6 +130,8 @@ Please see https://data-resource-generator.readthedocs.io/en/latest/ for docs.
 
 > We welcome code contributions, suggestions, and reports! Please report bugs and make suggestions using Github issues. The BrightHive team will triage and prioritize your issue as soon as possible.
 
+[For development this application uses pre-commit hooks](https://pre-commit.com/). When you make a commit the modified files will be put through a series of tests. If all tests pass then you will be able to make a commit, otherwise corrections will either automatically be made or need to be manually corrected. [Please see pre-commit hooks website for instructions](https://pre-commit.com/) and [reference the pre-commit yaml file to see the tests that are run](.pre-commit-config.yaml).
+
 1. Install pipenv.
 1. Install docker and docker-compose.
 1. Clone the repo.
@@ -127,7 +147,15 @@ Please see https://data-resource-generator.readthedocs.io/en/latest/ for docs.
     pipenv run pre-commit install
     ```
 
-## Testing
+### Quick note about pre-commit hooks
+
+In the event that you want to run pre-commit hooks over the entire application use the following,
+
+```bash
+pipenv run pre-commit run --all-files
+```
+
+### Testing
 
 Some tests require that a database (Postgres) is running. We use docker to handle this for us. We have included a docker-compose file that allows you to easily run Postgres.
 
@@ -151,21 +179,6 @@ For developers to run the test suite,
     ```bash
     pipenv run pytest
     ```
-
-## Docker
-
-To run via docker, first build image:
-
-```bash
-docker build -t brighthive/data-resource-generator .
-```
-
-then run:
-
-```bash
-docker-compose up
-```
-
 
 ## Team
 

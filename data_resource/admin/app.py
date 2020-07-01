@@ -16,6 +16,7 @@ from data_resource.config import ConfigurationFactory
 
 logger = LogFactory.get_console_logger("admin:app")
 
+
 def create_app(actually_run=True):
     # TODO: this or env var
     dirname, _ = os.path.split(os.path.abspath(__file__))
@@ -51,7 +52,7 @@ def create_app(actually_run=True):
     app.config["static_folder"] = static_folder  # TODO: this or env var
 
     # Create the models
-    import data_resource.admin.models  # noqa: F401 
+    import data_resource.admin.models  # noqa: F401
 
     admin_base.metadata.create_all(engine)
 
@@ -61,6 +62,6 @@ def create_app(actually_run=True):
         db_session.remove()
 
     if actually_run:
-        app.run(host='0.0.0.0', port=8081, use_reloader=False, threaded=False)
+        app.run(host="0.0.0.0", port=8081, use_reloader=False, threaded=False)  # nosec
     else:
         return app

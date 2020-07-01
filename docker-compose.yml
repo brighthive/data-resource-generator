@@ -19,9 +19,10 @@ services:
       - POSTGRES_HOSTNAME=data-resource-database
       - POSTGRES_DATABASE=data_resource
       - POSTGRES_PORT=5432
-      - APM_ENABLED=0
-      - APM_TOKEN=
-      - APM_HOSTNAME=
+      - AWS_SM_ENABLED=0
+      - AWS_SM_NAME=
+      - AWS_SM_REGION=
+      - AWS_SM_DBNAME=
     ports:
       - 8081:8081
     command: ["./wait-for-it.sh", "data-resource-database:5432"]

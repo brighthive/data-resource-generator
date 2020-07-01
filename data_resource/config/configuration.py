@@ -2,6 +2,10 @@
 
 import os
 from brighthive_authlib import AuthLibConfiguration, OAuth2ProviderFactory
+import json
+import boto3
+import base64
+from botocore.exceptions import ClientError
 
 
 class InvalidConfigurationError(Exception):
@@ -148,25 +152,63 @@ class TestConfig(Config):
 
 
 class ProductionConfig(Config):
-     """Production deployment configuration class."""
+    """Production deployment configuration class."""
 
-     def __init__(self):
-         super().__init__()
+    def __init__(self):
+        super().__init__()
 
-     SQLALCHEMY_TRACK_MODIFICATIONS = False
-     PROPAGATE_EXCEPTIONS = True
-     POSTGRES_USER = os.getenv("POSTGRES_USER")
-     POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
-     POSTGRES_DATABASE = os.getenv("POSTGRES_DATABASE")
-     POSTGRES_HOSTNAME = os.getenv("POSTGRES_HOSTNAME", "localhost")
-     POSTGRES_PORT = os.getenv("POSTGRES_PORT", 5432)
-     SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{}:{}@{}:{}/{}".format(
-        POSTGRES_USER,
-        POSTGRES_PASSWORD,
-        POSTGRES_HOSTNAME,
-        POSTGRES_PORT,
-        POSTGRES_DATABASE,
-     )
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    PROPAGATE_EXCEPTIONS = True
+
+    is_aws_sm = bool(int(os.getenv("AWS_SM_ENABLED", "0")))
+    if is_aws_sm:
+        secret_name = os.getenv("AWS_SM_NAME", "")
+        region_name = os.getenv("AWS_SM_REGION", "us-west-1")
+
+        session = boto3.session.Session()
+        client = session.client(service_name="secretsmanager", region_name=region_name)
+        try:
+            get_secret_value_response = client.get_secret_value(SecretId=secret_name)
+        except ClientError as e:
+            if e.response["Error"]["Code"] == "DecryptionFailureException":
+                raise e
+            elif e.response["Error"]["Code"] == "InternalServiceErrorException":
+                raise e
+            elif e.response["Error"]["Code"] == "InvalidParameterException":
+                raise e
+            elif e.response["Error"]["Code"] == "InvalidRequestException":
+                raise e
+            elif e.response["Error"]["Code"] == "ResourceNotFoundException":
+                raise e
+        else:
+            if "SecretString" in get_secret_value_response:
+                secret = get_secret_value_response["SecretString"]
+                creds = json.loads(secret)
+                POSTGRES_USER = creds["username"]
+                POSTGRES_PASSWORD = creds["password"]
+                POSTGRES_DATABASE = os.getenv("AWS_SM_DBNAME")
+                POSTGRES_HOSTNAME = creds["host"]
+                POSTGRES_PORT = int(creds["port"])
+                SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{}:{}@{}:{}/{}".format(
+                    POSTGRES_USER,
+                    POSTGRES_PASSWORD,
+                    POSTGRES_HOSTNAME,
+                    POSTGRES_PORT,
+                    POSTGRES_DATABASE,
+                )
+    else:
+        POSTGRES_USER = os.getenv("POSTGRES_USER")
+        POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
+        POSTGRES_DATABASE = os.getenv("POSTGRES_DATABASE")
+        POSTGRES_HOSTNAME = os.getenv("POSTGRES_HOSTNAME", "localhost")
+        POSTGRES_PORT = os.getenv("POSTGRES_PORT", 5432)
+        SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{}:{}@{}:{}/{}".format(
+            POSTGRES_USER,
+            POSTGRES_PASSWORD,
+            POSTGRES_HOSTNAME,
+            POSTGRES_PORT,
+            POSTGRES_DATABASE,
+        )
 
 
 class ConfigurationFactory:
@@ -192,7 +234,7 @@ class ConfigurationFactory:
         if config_type == "TEST":
             return TestConfig()
         elif config_type == "PRODUCTION":
-             return ProductionConfig()
+            return ProductionConfig()
         else:
             raise InvalidConfigurationError(
                 "Invalid configuration type `{}` specified.".format(config_type)

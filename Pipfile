@@ -24,6 +24,7 @@ convert-descriptor-to-swagger = {editable = true,git = "https://github.com/brigh
 rsa = "*"
 gunicorn = "*"
 gevent = "*"
+botocore = "*"
 
 [requires]
 python_version = "3.7"

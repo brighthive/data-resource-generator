@@ -6,7 +6,9 @@ ADD Pipfile Pipfile
 ADD Pipfile.lock Pipfile.lock
 ADD wsgi.py wsgi.py
 EXPOSE 8081
-RUN pipenv install && apt-get remove -y python3-dev build-essential
+RUN pip install --upgrade pip
+RUN pip install pipenv && pipenv install --system && pipenv install --dev --system
+RUN apt-get remove -y python3-dev build-essential
 RUN mkdir static
 RUN touch static/swagger.json
 ADD cmd.sh cmd.sh

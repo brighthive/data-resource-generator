@@ -7,25 +7,24 @@ The following was written for v1.2.0 of `tableschema-sql-py`.
 
 Follow this link to see the code that does that -- https://github.com/frictionlessdata/tableschema-sql-py/blob/0a4b600561c28b15661bea59254bd6c38f1b8787/tableschema_sql/mapper.py#L143-L168
 
-```
-'any': sa.Text,
-'array': JSONB,
-'boolean': sa.Boolean,
-'date': sa.Date,
-'datetime': sa.DateTime,
-'duration': None,
-'geojson': JSONB,
-'geopoint': None,
-'integer': sa.Integer,
-'number': sa.Numeric,
-'object': JSONB,
-'string': sa.Text,
-'time': sa.Time,
-'year': sa.Integer,
-'yearmonth': None,
-```
+(sa refers to sqlalchemy types)
 
-Any of the items notated as None should be stored as String.
+- 'any': sa.Text
+- 'array': JSONB
+- 'boolean': sa.Boolean
+- 'date': sa.Date
+- 'datetime': sa.DateTime
+- 'duration': sa.Text
+- 'geojson': JSONB
+- 'geopoint': sa.Text
+- 'integer': sa.Integer
+- 'number': sa.Numeric
+- 'object': JSONB
+- 'string': sa.Text
+- 'time': sa.Time
+- 'year': sa.Integer
+- 'yearmonth': sa.Text
+
 
 Known bug
 ---------

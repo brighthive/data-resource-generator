@@ -7,6 +7,7 @@ Welcome to Data Resource Generator's documentation!
 
    routes
    configuration
+   datatypes
 
 
 

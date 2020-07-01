@@ -1,7 +1,7 @@
 import pytest
 from sqlalchemy.exc import OperationalError
 from sqlalchemy import inspect
-from data_resource import start
+from data_resource import create_app
 from data_resource.db import db_session
 from data_resource.generator.app import start_data_resource_generator
 from data_resource.generator.model_manager.model_manager import create_models
@@ -505,14 +505,14 @@ def database():
 
 @pytest.fixture(scope="function")
 def admin_e2e(empty_database):
-    app = start(actually_run=False)
+    app = create_app(actually_run=False)
     return app.test_client()
 
 
 @pytest.fixture(scope="function")
 def generated_e2e(empty_database):
     # start the app
-    app = start(actually_run=False)
+    app = create_app(actually_run=False)
 
     api = app.config["api"]
 

@@ -74,7 +74,7 @@ docker-compose -f test-database-docker-compose.yml down && docker-compose -f tes
 1. To run the application,
 
 ```bash
-pipenv run python run.py
+pipenv run python wsgi.py
 ```
 
 ### Generate Data Resources
@@ -151,6 +151,21 @@ For developers to run the test suite,
     ```bash
     pipenv run pytest
     ```
+
+## Docker
+
+To run via docker, first build image:
+
+```bash
+docker build -t brighthive/data-resource-generator .
+```
+
+then run:
+
+```bash
+docker-compose up
+```
+
 
 ## Team
 

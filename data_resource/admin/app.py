@@ -18,7 +18,7 @@ from data_resource.admin.safe_json_output import safe_json_dumps
 logger = LogFactory.get_console_logger("admin:app")
 
 
-def start(actually_run=True):
+def create_app(actually_run=True):
     # TODO: this or env var
     dirname, _ = os.path.split(os.path.abspath(__file__))
     static_folder = os.path.abspath(
@@ -70,6 +70,6 @@ def start(actually_run=True):
         db_session.remove()
 
     if actually_run:
-        app.run(port=8081, use_reloader=False, threaded=False)
+        app.run(host="0.0.0.0", port=8081, use_reloader=False, threaded=False)  # nosec
     else:
         return app

@@ -1,13 +1,11 @@
 import pytest
 import json
-import decimal
-import datetime
 
 ROUTE = "/people"  # TODO change?
 
 
 def run_query(client, key, value, expected_value=None):
-    # If no expected_value is provided, assert it returns as itself
+    # If no expected_value is provided, assert it returns the given value
     if not expected_value:
         expected_value = value
 
@@ -20,11 +18,6 @@ def run_query(client, key, value, expected_value=None):
     resp = json.loads(resp_data.data)
 
     assert resp[key] == expected_value
-
-    # resp_data = client.get(f"{ROUTE}/{id_}")
-    # resp = resp_data.json
-    # # resp = json.loads(resp_data.data)
-    # assert resp[key] == expected_value
 
 
 @pytest.mark.requiresdb

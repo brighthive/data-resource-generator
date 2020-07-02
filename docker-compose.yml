@@ -23,6 +23,8 @@ services:
       - AWS_SM_NAME=
       - AWS_SM_REGION=
       - AWS_SM_DBNAME=
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
     ports:
       - 8081:8081
     command: ["./wait-for-it.sh", "data-resource-database:5432"]

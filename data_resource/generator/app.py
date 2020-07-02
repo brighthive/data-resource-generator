@@ -23,14 +23,19 @@ def save_swagger(swagger):
         _file.write(json.dumps(swagger))
 
 
-def start_data_resource_generator(data_catalog, api):
-    data_dict = data_catalog["data"]
+def start_data_resource_generator(data_resource_schema, api):
+    # save the data resource schema
+    # TODO if testing env then dont do this?
+    with open("./static/data_resource_schema.json", "w") as outfile:
+        json.dump(data_resource_schema, outfile)
+
+    data_dict = data_resource_schema["data"]
     try:
-        relationships = data_catalog["data"]["relationships"]["manyToMany"]
+        relationships = data_resource_schema["data"]["relationships"]["manyToMany"]
     except KeyError:
         relationships = []
 
-    swagger = data_catalog["api"]["apiSpec"]
+    swagger = data_resource_schema["api"]["apiSpec"]
 
     # Generate ORM
     base = create_models(data_dict)

@@ -1,4 +1,5 @@
 import pytest
+import os
 from sqlalchemy.exc import OperationalError
 from sqlalchemy import inspect
 from data_resource import create_app
@@ -47,6 +48,11 @@ class Database:
 def empty_database():
     db = Database()
     db.destory_db()
+    yield
+    try:
+        os.remove("./static/data_resource_schema.json")
+    except:
+        pass
 
 
 @pytest.fixture

@@ -81,6 +81,18 @@ then run:
 docker-compose up
 ```
 
+To use AWS Secret Manager set environment variable `AWS_SM_ENABLED` to `1` (default 0). This will enabled the feature but will require the following environment variables to initialize correctly:
+
+```bash
+export AWS_SM_ENABLED=1
+export AWS_SM_NAME=<aws-secet-name> ex. my-data-secrets
+export AWS_SM_REGION=<aws-region> ex. us-west-1
+export AWS_SM_DBNAME=<rds-database-name> ex. postgres
+export AWS_ACCESS_KEY_ID=<aws-key-id>
+export AWS_SECRET_ACCESS_KEY=<aws-secret>
+```
+For more information about AWS SM and how to setup on AWS console please visit: <a href="https://aws.amazon.com/secrets-manager/">AWS SM Docs</a>
+
 #### Using python
 
 1. Restart the database to clear the data.
@@ -184,6 +196,7 @@ For developers to run the test suite,
 
 - Logan Ripplinger (Software Engineer)
 - Gregory Mundy (VP of Engineering)
+- John O'Sullivan (Software Engineer)
 
 ## License
 

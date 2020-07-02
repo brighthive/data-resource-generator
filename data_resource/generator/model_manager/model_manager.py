@@ -10,7 +10,7 @@ logger = LogFactory.get_console_logger("generator:model-manager")
 
 
 # main
-def create_models(data_catalog: list) -> None:
+def create_models(data_catalog: list, touch_database: bool = True) -> None:
     """Given the data portion of a data catalog, Produce all the SQLAlchemy
     ORM."""
     # Create base items
@@ -24,7 +24,11 @@ def create_models(data_catalog: list) -> None:
     for relationship in relationships["manyToMany"]:
         _ = construct_many_to_many_assoc(metadata, relationship)
 
-    metadata.create_all()
+    if touch_database:
+        try:
+            metadata.create_all()
+        except:
+            logger.exception("Failed to create all models in database.")
 
     # Create ORM relationships
     base = automap_metadata(metadata)
@@ -68,9 +72,10 @@ def automap_metadata(metadata) -> "Base":
     base.prepare()
 
     # For testing
-    if base.metadata.is_bound() is True:
-        base.metadata.drop_all()
-        base.metadata.create_all()
+    # This probably needs to be removed -- idk why its here
+    # if base.metadata.is_bound() is True:
+    #     base.metadata.drop_all()
+    #     base.metadata.create_all()
 
     return base
 

@@ -1,3 +1,5 @@
+import os
+import json
 from data_resource.admin.routes import (
     tableschema_bp,
     tableschema_id_bp,
@@ -5,14 +7,14 @@ from data_resource.admin.routes import (
     generator_bp,
 )
 from data_resource.db import db_session, admin_base, engine
-from flask import Flask, make_response
-from flask_restful import Api
 from data_resource.logging.api_exceptions import handle_errors
-from flask_swagger_ui import get_swaggerui_blueprint
 from data_resource.logging import LogFactory
-import os
 from data_resource.config import ConfigurationFactory
 from data_resource.admin.safe_json_output import safe_json_dumps
+from data_resource.generator.app import start_data_resource_generator
+from flask_swagger_ui import get_swaggerui_blueprint
+from flask import Flask, make_response
+from flask_restful import Api
 
 
 logger = LogFactory.get_console_logger("admin:app")
@@ -69,7 +71,27 @@ def create_app(actually_run=True):
         db_session.rollback()
         db_session.remove()
 
+    # # Check if we need to turn on API/model already
+    # @app.before_first_request
+    handle_existing_data_resource_schema(api)
+
     if actually_run:
         app.run(host="0.0.0.0", port=8081, use_reloader=False, threaded=False)  # nosec
+
     else:
         return app
+
+
+def handle_existing_data_resource_schema(api: Api):
+    if not os.path.exists("./static/data_resource_schema.json"):
+        return
+
+    logger.info("Found an existing data resource schema. Attempting to load it...")
+
+    # TODO check for invalid doc
+    with open("./static/data_resource_schema.json") as json_file:
+        data_resource_schema = json.load(json_file)
+
+    start_data_resource_generator(data_resource_schema, api)
+
+    logger.info("Loaded existing data resource schema.")

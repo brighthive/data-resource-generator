@@ -12,7 +12,6 @@ from flask_restful import Resource
 from data_resource.logging import LogFactory
 from data_resource.config import ConfigurationFactory
 from brighthive_authlib import token_required
-import os
 
 
 logger = LogFactory.get_console_logger("generator:versioned-resource")
@@ -40,8 +39,7 @@ class VersionedResourceParent(Resource):
 
     def check_auth(self):
         """Raises authlib error if not authorized."""
-
-        if os.environ["FLASK_ENV"] != "testing":
+        if not ConfigurationFactory.from_env().SKIP_AUTH_CHECK:
             # provider.validate_token()
             token_required(provider)(lambda: None)()
 
@@ -208,6 +206,7 @@ class VersionedResourceMany(VersionedResourceParent):
     #         return True
 
     def get(self, id=None):
+        self.check_auth()
         # route should be parent/<id>/child
         # paths = request.path.split("/")
         # parent, child = paths[1], paths[3]
@@ -225,6 +224,7 @@ class VersionedResourceMany(VersionedResourceParent):
         )
 
     def put(self, id=None):
+        self.check_auth()
         #     # Replaces all data
         #     paths = request.path.split("/")
         #     parent, child = paths[1], paths[3]
@@ -245,6 +245,7 @@ class VersionedResourceMany(VersionedResourceParent):
         )
 
     def patch(self, id=None):
+        self.check_auth()
         #     paths = request.path.split("/")
         #     parent, child = paths[1], paths[3]
 

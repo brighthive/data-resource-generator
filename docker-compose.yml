@@ -11,7 +11,7 @@ services:
   data-resource:
     image: brighthive/data-resource-generator:latest
     depends_on:
-        - data-resource-database
+      - data-resource-database
     environment:
       - APP_ENV=PRODUCTION
       - POSTGRES_USER=postgres
@@ -27,4 +27,4 @@ services:
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
     ports:
       - 8081:8081
-    command: ["./wait-for-it.sh", "data-resource-database:5432"]
+    restart: always

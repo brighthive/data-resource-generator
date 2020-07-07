@@ -4,9 +4,15 @@ from sqlalchemy import create_engine, MetaData
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 from data_resource.config import ConfigurationFactory
+from data_resource.logging import LogFactory
+
+logger = LogFactory.get_console_logger("database")
 
 
 data_resource_config = ConfigurationFactory.from_env()
+
+logger.info(f"Connecting to DB at '{data_resource_config.SQLALCHEMY_DATABASE_URI}'...")
+
 engine = create_engine(
     data_resource_config.SQLALCHEMY_DATABASE_URI, pool_size=40, max_overflow=0
 )  # TODO tests max the pool size out for some reason

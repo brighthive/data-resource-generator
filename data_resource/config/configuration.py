@@ -4,8 +4,10 @@ import os
 from brighthive_authlib import AuthLibConfiguration, OAuth2ProviderFactory
 import json
 import boto3
-import base64
 from botocore.exceptions import ClientError
+from data_resource.logging import LogFactory
+
+logger = LogFactory.get_console_logger("configuration-factory")
 
 
 class InvalidConfigurationError(Exception):
@@ -25,6 +27,8 @@ class Config:
     (int): The number of seconds to sleep between checking the status of
     data resources.
     """
+
+    SKIP_AUTH_CHECK = False
 
     RELATIVE_PATH = os.path.dirname(os.path.relpath(__file__))
     ABSOLUTE_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -99,7 +103,7 @@ class TestConfig(Config):
     #     POSTGRES_DATABASE,
     # )
 
-    os.environ["FLASK_ENV"] = "testing"
+    SKIP_AUTH_CHECK = True
     POSTGRES_USER = "test_user"
     POSTGRES_PASSWORD = "test_password"  # nosec
     POSTGRES_DATABASE = "data_resource_dev"

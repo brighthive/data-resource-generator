@@ -2,11 +2,10 @@ import os
 from data_resource import create_app
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-environment = os.getenv("APP_ENV", None)
+env = os.getenv("APP_ENV", "")
 
-isprod = environment == "PRODUCTION"
+if env.upper() != "PRODUCTION":
+    raise RuntimeError("Must run WSGI with APP_ENV=PRODUCTION")
 
-app = application = create_app(actually_run=True)
-
-if isprod:
-    app = ProxyFix(app)
+app = application = create_app(actually_run=False)
+app = ProxyFix(app)

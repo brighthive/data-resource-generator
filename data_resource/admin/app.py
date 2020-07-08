@@ -68,8 +68,7 @@ def create_app(actually_run=True):
         db_session.rollback()
         db_session.remove()
 
-    # # Check if we need to turn on API/model already
-    # @app.before_first_request
+    # Check if we need to turn on API/model already
     handle_existing_data_resource_schema(api)
 
     if actually_run:

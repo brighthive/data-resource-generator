@@ -75,12 +75,6 @@ def automap_metadata(metadata) -> "Base":
     # calling prepare() just sets up mapped classes and relationships.
     base.prepare()
 
-    # For testing
-    # This probably needs to be removed -- idk why its here
-    # if base.metadata.is_bound() is True:
-    #     base.metadata.drop_all()
-    #     base.metadata.create_all()
-
     return base
 
 

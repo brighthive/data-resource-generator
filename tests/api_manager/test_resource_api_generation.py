@@ -70,11 +70,6 @@ def test_generate_rest_api_routes(empty_api):
 
 @pytest.mark.unit
 def test_generate_saves_swagger_file(valid_base, empty_api, mocker):
-    mocker.patch("data_resource.generator.app.current_app")
-    static_folder = mocker.patch(
-        "data_resource.generator.app.get_static_folder_from_app"
-    )
-    static_folder.return_value = ""
     mocked_file = mocker.patch("data_resource.generator.app.open", mocker.mock_open())
     mocker.patch("os.path.join").return_value = "test"
 
@@ -93,7 +88,7 @@ def test_generate_serves_swagger_ui(valid_base, empty_api, mocker):
 
     start_data_resource_generator({"data": {}, "api": {"apiSpec": {}}}, {})
 
-    create_models.assert_called_once_with({})
+    create_models.assert_called_once_with({}, touch_database=True)
     generate_api.assert_called_once_with(
         api={}, base=None, swagger={}, relationships=[]
     )

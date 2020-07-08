@@ -4,6 +4,7 @@ from sqlalchemy import Table, Integer, ForeignKey, Column
 from data_resource.db import engine
 from sqlalchemy.ext.automap import automap_base
 from data_resource.logging import LogFactory
+from sqlalchemy import MetaData
 
 
 logger = LogFactory.get_console_logger("generator:model-manager")
@@ -44,7 +45,10 @@ def create_all_tables_from_schemas(table_schemas: list) -> "Metadata":
     try:
         storage = Storage(engine=engine)
 
-        metadata = storage._Storage__metadata
+        # Override the reflection and capture reference to orm
+        metadata = storage._Storage__metadata = MetaData(
+            bind=engine
+        )  # , schema="generated"
 
         # Override create all so tableschema-sql won't handle table creation
         original_create_all = metadata.create_all

@@ -6,7 +6,7 @@ from data_resource.generator.api_manager.api_generator import (
 from data_resource.generator.app import start_data_resource_generator, save_swagger
 import pytest
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, Table, MetaData
+from sqlalchemy import Column, Integer
 
 
 # Given a tableschema assert the correct flask restful routes are generated

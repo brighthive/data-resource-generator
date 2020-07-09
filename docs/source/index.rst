@@ -5,6 +5,7 @@ Welcome to Data Resource Generator's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   running
    routes
    configuration
    datatypes

@@ -5,8 +5,10 @@ import data_resource.admin.models as orm
 from tableschema import Schema
 import json
 from convert_descriptor_to_swagger import convert_descriptor_to_swagger
-from data_resource.logging.api_exceptions import ApiError
-from data_resource.logging import LogFactory
+from data_resource.shared_utils.api_exceptions import ApiError
+from data_resource.shared_utils.log_factory import LogFactory
+from data_resource.shared_utils.auth_util import check_auth
+
 
 tableschema_id_bp = Blueprint("tableschema_id_bp", __name__)
 api = Api(tableschema_id_bp)
@@ -20,6 +22,7 @@ def generate_swagger(descriptor):
 
 
 class TableSchemaID(Resource):
+    @check_auth
     def get(self, _id):
         pet = (
             db_session.query(orm.TableSchema)
@@ -28,6 +31,7 @@ class TableSchemaID(Resource):
         )
         return pet.dump() if pet is not None else ("Not found", 404)
 
+    @check_auth
     def put(self, _id):
         pet = request.json
         try:
@@ -68,6 +72,7 @@ class TableSchemaID(Resource):
             (200 if entry is not None else 201),
         )
 
+    @check_auth
     def delete(self, _id):
         pet = (
             db_session.query(orm.TableSchema)

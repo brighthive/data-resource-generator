@@ -3,7 +3,8 @@ from flask import Blueprint
 from data_resource.db import db_session
 import data_resource.admin.models as orm
 from convert_descriptor_to_swagger import convert_descriptor_to_swagger
-from data_resource.logging import LogFactory
+from data_resource.shared_utils.log_factory import LogFactory
+from data_resource.shared_utils.auth_util import check_auth
 
 
 def generate_all_swagger(descriptors):
@@ -17,6 +18,7 @@ logger = LogFactory.get_console_logger("admin:route-swagger")
 
 
 class Swagger(Resource):
+    @check_auth
     def get(self):
         q = db_session.query(orm.TableSchema)
         all_tableschema = [p.tableschema for p in q]

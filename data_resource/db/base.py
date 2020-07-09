@@ -4,7 +4,7 @@ from sqlalchemy import create_engine, MetaData
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 from data_resource.config import ConfigurationFactory
-from data_resource.logging import LogFactory
+from data_resource.shared_utils.log_factory import LogFactory
 
 logger = LogFactory.get_console_logger("database")
 

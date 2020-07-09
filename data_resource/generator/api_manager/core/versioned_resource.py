@@ -9,13 +9,11 @@ from data_resource.generator.api_manager.v1_0_0 import (
 )
 from flask import request
 from flask_restful import Resource
-from data_resource.logging import LogFactory
-from data_resource.config import ConfigurationFactory
-from brighthive_authlib import token_required
+from data_resource.shared_utils.log_factory import LogFactory
+from data_resource.shared_utils.auth_util import check_auth
 
 
 logger = LogFactory.get_console_logger("generator:versioned-resource")
-provider = ConfigurationFactory.from_env().get_oauth2_provider()
 
 
 class VersionedResourceParent(Resource):
@@ -37,19 +35,13 @@ class VersionedResourceParent(Resource):
         else:
             return V1_0_0_ResourceHandler()
 
-    def check_auth(self):
-        """Raises authlib error if not authorized."""
-        if not ConfigurationFactory.from_env().SKIP_AUTH_CHECK:
-            # provider.validate_token()
-            token_required(provider)(lambda: None)()
-
 
 class VersionedResource(VersionedResourceParent):
     _query_route = "/query"
 
+    @check_auth
     def get(self, id=None):
         # if self.api_schema["get"]["secured"]:
-        self.check_auth()
 
         # if not self.api_schema["get"]["enabled"]:
         #     raise MethodNotAllowed()
@@ -86,9 +78,9 @@ class VersionedResource(VersionedResourceParent):
                 id=id, resource_name=self.name, resource_orm=self.resource_orm
             )
 
+    @check_auth
     def post(self):
         # if self.api_schema["get"]["secured"]:
-        self.check_auth()
 
         # if not self.api_schema["post"]["enabled"]:
         #     raise MethodNotAllowed()
@@ -103,9 +95,9 @@ class VersionedResource(VersionedResourceParent):
             resource_orm=self.resource_orm, request=request
         )
 
+    @check_auth
     def put(self, id):
         # if self.api_schema["get"]["secured"]:
-        self.check_auth()
         # if not self.api_schema["put"]["enabled"]:
         #     raise MethodNotAllowed()
         # if request.path.endswith("/query"):
@@ -130,9 +122,9 @@ class VersionedResource(VersionedResourceParent):
             mode="PUT",
         )
 
+    @check_auth
     def patch(self, id):
         # if self.api_schema["get"]["secured"]:
-        self.check_auth()
         # if not self.api_schema["patch"]["enabled"]:
         #     raise MethodNotAllowed()
         # if request.path.endswith("/query"):
@@ -157,9 +149,9 @@ class VersionedResource(VersionedResourceParent):
             mode="PATCH",
         )
 
+    @check_auth
     def delete(self, id):
         # if self.api_schema["get"]["secured"]:
-        self.check_auth()
         # if self.api_schema["delete"]["enabled"]:
         #     raise MethodNotAllowed()
 
@@ -205,8 +197,8 @@ class VersionedResourceMany(VersionedResourceParent):
     #     except KeyError:
     #         return True
 
+    @check_auth
     def get(self, id=None):
-        self.check_auth()
         # route should be parent/<id>/child
         # paths = request.path.split("/")
         # parent, child = paths[1], paths[3]
@@ -223,8 +215,8 @@ class VersionedResourceMany(VersionedResourceParent):
             id, self.parent_orm, self.child_orm
         )
 
+    @check_auth
     def put(self, id=None):
-        self.check_auth()
         #     # Replaces all data
         #     paths = request.path.split("/")
         #     parent, child = paths[1], paths[3]
@@ -244,8 +236,8 @@ class VersionedResourceMany(VersionedResourceParent):
             id, body, self.parent_orm, self.child_orm
         )
 
+    @check_auth
     def patch(self, id=None):
-        self.check_auth()
         #     paths = request.path.split("/")
         #     parent, child = paths[1], paths[3]
 

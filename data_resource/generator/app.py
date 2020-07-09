@@ -1,7 +1,7 @@
 from data_resource.config import ConfigurationFactory
 from data_resource.generator.api_manager import generate_api
 from data_resource.generator.model_manager import create_models
-from data_resource.logging import LogFactory
+from data_resource.shared_utils.log_factory import LogFactory
 import json
 import os
 

@@ -3,7 +3,7 @@ from tableschema.exceptions import ValidationError
 from sqlalchemy import Table, Integer, ForeignKey, Column
 from data_resource.db import engine
 from sqlalchemy.ext.automap import automap_base
-from data_resource.logging import LogFactory
+from data_resource.shared_utils.log_factory import LogFactory
 from sqlalchemy import MetaData
 
 

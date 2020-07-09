@@ -3,8 +3,8 @@ from data_resource.db.base import db_session
 from data_resource.generator.api_manager.v1_0_0.crud_functions.resource_create import (
     ResourceCreate,
 )
-from data_resource.logging.api_exceptions import ApiError, ApiUnhandledError
-from data_resource.logging import LogFactory
+from data_resource.shared_utils.api_exceptions import ApiError, ApiUnhandledError
+from data_resource.shared_utils.log_factory import LogFactory
 
 
 logger = LogFactory.get_console_logger("generator:resource-update")

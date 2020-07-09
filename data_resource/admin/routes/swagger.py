@@ -4,7 +4,7 @@ from data_resource.db import db_session
 import data_resource.admin.models as orm
 from convert_descriptor_to_swagger import convert_descriptor_to_swagger
 from data_resource.shared_utils import LogFactory
-from data_resource.admin.routes.auth_util import check_auth
+from data_resource.shared_utils.auth_util import check_auth
 
 
 def generate_all_swagger(descriptors):

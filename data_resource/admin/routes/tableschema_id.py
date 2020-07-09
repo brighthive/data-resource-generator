@@ -7,7 +7,7 @@ import json
 from convert_descriptor_to_swagger import convert_descriptor_to_swagger
 from data_resource.shared_utils.api_exceptions import ApiError
 from data_resource.shared_utils import LogFactory
-from data_resource.admin.routes.auth_util import check_auth
+from data_resource.shared_utils.auth_util import check_auth
 
 
 tableschema_id_bp = Blueprint("tableschema_id_bp", __name__)

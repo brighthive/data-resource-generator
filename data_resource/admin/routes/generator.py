@@ -2,7 +2,7 @@ from flask_restful import Api, Resource
 from flask import Blueprint, current_app, request
 from data_resource.generator.app import start_data_resource_generator
 from data_resource.shared_utils import LogFactory
-from data_resource.admin.routes.auth_util import check_auth
+from data_resource.shared_utils.auth_util import check_auth
 
 generator_bp = Blueprint("generator_bp", __name__)
 api = Api(generator_bp)

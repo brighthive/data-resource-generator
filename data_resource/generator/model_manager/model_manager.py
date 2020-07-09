@@ -4,13 +4,14 @@ from sqlalchemy import Table, Integer, ForeignKey, Column
 from data_resource.db import engine
 from sqlalchemy.ext.automap import automap_base
 from data_resource.logging import LogFactory
+from sqlalchemy import MetaData
 
 
 logger = LogFactory.get_console_logger("generator:model-manager")
 
 
 # main
-def create_models(data_catalog: list) -> None:
+def create_models(data_catalog: list, touch_database: bool = True) -> None:
     """Given the data portion of a data catalog, Produce all the SQLAlchemy
     ORM."""
     # Create base items
@@ -24,7 +25,11 @@ def create_models(data_catalog: list) -> None:
     for relationship in relationships["manyToMany"]:
         _ = construct_many_to_many_assoc(metadata, relationship)
 
-    metadata.create_all()
+    if touch_database:
+        try:
+            metadata.create_all()
+        except:
+            logger.exception("Failed to create all models in database.")
 
     # Create ORM relationships
     base = automap_metadata(metadata)
@@ -40,7 +45,10 @@ def create_all_tables_from_schemas(table_schemas: list) -> "Metadata":
     try:
         storage = Storage(engine=engine)
 
-        metadata = storage._Storage__metadata
+        # Override the reflection and capture reference to orm
+        metadata = storage._Storage__metadata = MetaData(
+            bind=engine
+        )  # , schema="generated"
 
         # Override create all so tableschema-sql won't handle table creation
         original_create_all = metadata.create_all
@@ -66,11 +74,6 @@ def automap_metadata(metadata) -> "Base":
 
     # calling prepare() just sets up mapped classes and relationships.
     base.prepare()
-
-    # For testing
-    if base.metadata.is_bound() is True:
-        base.metadata.drop_all()
-        base.metadata.create_all()
 
     return base
 

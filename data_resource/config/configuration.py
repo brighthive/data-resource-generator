@@ -28,6 +28,8 @@ class Config:
     data resources.
     """
 
+    dirname, _ = os.path.split(os.path.abspath(__file__))
+    STATIC_FOLDER = os.path.abspath(os.path.join(dirname, "../../"))
     SKIP_AUTH_CHECK = False
 
     RELATIVE_PATH = os.path.dirname(os.path.relpath(__file__))

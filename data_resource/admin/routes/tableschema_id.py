@@ -7,6 +7,8 @@ import json
 from convert_descriptor_to_swagger import convert_descriptor_to_swagger
 from data_resource.logging.api_exceptions import ApiError
 from data_resource.logging import LogFactory
+from data_resource.admin.routes.auth_util import check_auth
+
 
 tableschema_id_bp = Blueprint("tableschema_id_bp", __name__)
 api = Api(tableschema_id_bp)
@@ -21,6 +23,8 @@ def generate_swagger(descriptor):
 
 class TableSchemaID(Resource):
     def get(self, _id):
+        check_auth()
+
         pet = (
             db_session.query(orm.TableSchema)
             .filter(orm.TableSchema.id == _id)
@@ -29,6 +33,8 @@ class TableSchemaID(Resource):
         return pet.dump() if pet is not None else ("Not found", 404)
 
     def put(self, _id):
+        check_auth()
+
         pet = request.json
         try:
             delattr(pet, "swagger")
@@ -69,6 +75,8 @@ class TableSchemaID(Resource):
         )
 
     def delete(self, _id):
+        check_auth()
+
         pet = (
             db_session.query(orm.TableSchema)
             .filter(orm.TableSchema.id == _id)

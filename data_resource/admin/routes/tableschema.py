@@ -12,9 +12,8 @@ logger = LogFactory.get_console_logger("admin:route-tableschema")
 
 
 class TableSchema(Resource):
+    @check_auth
     def get(self, limit=100):
-        check_auth()
-
         q = db_session.query(orm.TableSchema)
 
         # TODO logging?

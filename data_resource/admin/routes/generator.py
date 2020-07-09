@@ -10,9 +10,8 @@ logger = LogFactory.get_console_logger("admin:route-generator")
 
 
 class Generator(Resource):
+    @check_auth
     def post(self):
-        check_auth()
-
         data_catalog = request.json["data_catalog"]
 
         api = current_app.config["api"]

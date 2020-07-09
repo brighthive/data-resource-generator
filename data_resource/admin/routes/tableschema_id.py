@@ -22,9 +22,8 @@ def generate_swagger(descriptor):
 
 
 class TableSchemaID(Resource):
+    @check_auth
     def get(self, _id):
-        check_auth()
-
         pet = (
             db_session.query(orm.TableSchema)
             .filter(orm.TableSchema.id == _id)
@@ -32,9 +31,8 @@ class TableSchemaID(Resource):
         )
         return pet.dump() if pet is not None else ("Not found", 404)
 
+    @check_auth
     def put(self, _id):
-        check_auth()
-
         pet = request.json
         try:
             delattr(pet, "swagger")
@@ -74,9 +72,8 @@ class TableSchemaID(Resource):
             (200 if entry is not None else 201),
         )
 
+    @check_auth
     def delete(self, _id):
-        check_auth()
-
         pet = (
             db_session.query(orm.TableSchema)
             .filter(orm.TableSchema.id == _id)

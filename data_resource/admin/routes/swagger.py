@@ -18,9 +18,8 @@ logger = LogFactory.get_console_logger("admin:route-swagger")
 
 
 class Swagger(Resource):
+    @check_auth
     def get(self):
-        check_auth()
-
         q = db_session.query(orm.TableSchema)
         all_tableschema = [p.tableschema for p in q]
 

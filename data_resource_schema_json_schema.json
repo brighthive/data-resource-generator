@@ -1,0 +1,121 @@
+{
+    "definitions": {
+        "superTableSchema": {
+            "required": [
+                "name",
+                "tableSchema"
+            ],
+            "properties": {
+                "@id": {
+                    "type": "string"
+                },
+                "@type": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "tableSchema": {
+                    "$ref": "https://specs.frictionlessdata.io/schemas/table-schema.json"
+                },
+                "relationships": {
+                    "type": "object",
+                    "properties": {
+                        "oneToMany": {
+                            "type": "array"
+                        },
+                        "manyToMany": {
+                            "type": "array"
+                        }
+                    }
+                },
+                "databaseSchema": {
+                    "type": "string"
+                },
+                "databaseType": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "title": "Table Schema",
+    "description": "A Data Resource Schema for use with BrightHive Data Resource Generator",
+    "type": "object",
+    "required": [
+        "data",
+        "api"
+    ],
+    "properties": {
+        "@id": {
+            "type": "string"
+        },
+        "@type": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "owner": {
+            "type": "string"
+        },
+        "pointOfContact": {
+            "type": "string"
+        },
+        "published": {
+            "type": "boolean"
+        },
+        "dateCreated": {
+            "type": "string"
+        },
+        "dateUpdated": {
+            "type": "string"
+        },
+        "privacyRegulations": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+        },
+        "category": {
+            "type": "string"
+        },
+        "url": {
+            "type": "string"
+        },
+        "data": {
+            "type": "object",
+            "required": [
+                "dataDictionary"
+            ],
+            "properties": {
+                "dataDictionary": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/superTableSchema"
+                    }
+                }
+            }
+        },
+        "api": {
+            "type": "object",
+            "required": [
+                "apiSpec"
+            ],
+            "properties": {
+                "apiType": {
+                    "type": "string"
+                },
+                "apiSpec": {
+                    "$ref": "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/schemas/v3.0/schema.json",
+                    "description": "OpenAPI Spec 3.0 Document"
+                }
+            }
+        }
+    }
+}

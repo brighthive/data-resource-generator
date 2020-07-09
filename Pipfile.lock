@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "4888c31bd87bf762a187fbc5741ae22d044ce809ddf25ee1731ee8196b062418"
+            "sha256": "92be290a38bfa064ed43f8ef68558d882447e1241e9c678cb5abfebfea0de83d"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -38,17 +38,18 @@
         },
         "boto3": {
             "hashes": [
-                "sha256:00369459682e1d0f21d1143437b1f6d212f5f31b3f58fe69fc9c909c1218b05a",
-                "sha256:72cb54d2d4b9ac0edd5c256d25c28ec26bc4779fd7f540fc1ebef33376855842"
+                "sha256:e6ab26155b2f83798218106580ab2b3cd47691e25aba912e0351502eda8d86e0",
+                "sha256:f7aa33b382cc9e73ef7f590b885e72732ad2bd9628c5e312c9aeb8ba011c6820"
             ],
-            "version": "==1.14.18"
+            "version": "==1.14.20"
         },
         "botocore": {
             "hashes": [
-                "sha256:11c9da2afc3a7abb09fff3ab73b8f0dac5a9e5396102f88768ad2ad4b3854e61",
-                "sha256:30a9d64eedbf02471b56673394f100cb6d3237d6725e5a35ca24988adf166125"
+                "sha256:d1bf8c2085719221683edf54913c6155c68705f26ab4a72c45e4de5176a8cf7b",
+                "sha256:e7fee600092b51ca8016c541d5c50a8b39179d5c184ec3fd430400d99ba0c55a"
             ],
-            "version": "==1.17.18"
+            "index": "pypi",
+            "version": "==1.17.20"
         },
         "brighthive-authlib": {
             "hashes": [

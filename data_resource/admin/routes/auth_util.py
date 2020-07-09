@@ -3,7 +3,7 @@ generator.api_manager.core.versioned_resource code.
 
 This allows the application to ignore auth if its running in test mode.
 """
-from data_resource.logging import LogFactory
+from data_resource.shared_utils import LogFactory
 from data_resource.config import ConfigurationFactory
 from brighthive_authlib import token_required
 

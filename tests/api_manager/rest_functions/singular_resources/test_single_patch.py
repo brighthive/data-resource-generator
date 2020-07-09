@@ -1,7 +1,7 @@
 from data_resource.generator.api_manager.v1_0_0.resource_handler import ResourceHandler
 from data_resource.db.base import db_session
 import pytest
-from data_resource.logging.api_exceptions import ApiError
+from data_resource.shared_utils.api_exceptions import ApiError
 
 
 @pytest.mark.requiresdb

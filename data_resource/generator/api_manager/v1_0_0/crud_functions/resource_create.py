@@ -1,8 +1,8 @@
 # from tableschema import Schema, validate
 from data_resource.db.base import db_session
 from flask import Request
-from data_resource.logging.api_exceptions import ApiError
-from data_resource.logging import LogFactory
+from data_resource.shared_utils.api_exceptions import ApiError
+from data_resource.shared_utils import LogFactory
 
 logger = LogFactory.get_console_logger("generator:resource-create")
 

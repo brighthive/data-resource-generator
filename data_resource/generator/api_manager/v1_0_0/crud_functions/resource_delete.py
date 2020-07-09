@@ -1,4 +1,4 @@
-from data_resource.logging import LogFactory
+from data_resource.shared_utils import LogFactory
 
 
 logger = LogFactory.get_console_logger("generator:resource-delete")

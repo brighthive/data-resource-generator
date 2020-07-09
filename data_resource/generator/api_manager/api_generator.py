@@ -1,7 +1,7 @@
 from data_resource.generator.api_manager import VersionedResource, VersionedResourceMany
 from flask_restful import Api
 from sqlalchemy.ext.declarative import DeclarativeMeta
-from data_resource.logging import LogFactory
+from data_resource.shared_utils import LogFactory
 import re
 
 

@@ -5,7 +5,7 @@ from brighthive_authlib import AuthLibConfiguration, OAuth2ProviderFactory
 import json
 import boto3
 from botocore.exceptions import ClientError
-from data_resource.logging import LogFactory
+from data_resource.shared_utils import LogFactory
 
 logger = LogFactory.get_console_logger("configuration-factory")
 

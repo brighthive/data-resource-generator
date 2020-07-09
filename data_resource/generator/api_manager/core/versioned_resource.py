@@ -9,7 +9,7 @@ from data_resource.generator.api_manager.v1_0_0 import (
 )
 from flask import request
 from flask_restful import Resource
-from data_resource.logging import LogFactory
+from data_resource.shared_utils import LogFactory
 from data_resource.config import ConfigurationFactory
 from brighthive_authlib import token_required
 

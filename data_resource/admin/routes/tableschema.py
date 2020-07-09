@@ -2,7 +2,7 @@ from flask_restful import Api, Resource
 from flask import Blueprint
 from data_resource.db import db_session
 import data_resource.admin.models as orm
-from data_resource.logging import LogFactory
+from data_resource.shared_utils import LogFactory
 from data_resource.admin.routes.auth_util import check_auth
 
 

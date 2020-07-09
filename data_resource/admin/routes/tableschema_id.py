@@ -5,8 +5,8 @@ import data_resource.admin.models as orm
 from tableschema import Schema
 import json
 from convert_descriptor_to_swagger import convert_descriptor_to_swagger
-from data_resource.logging.api_exceptions import ApiError
-from data_resource.logging import LogFactory
+from data_resource.shared_utils.api_exceptions import ApiError
+from data_resource.shared_utils import LogFactory
 from data_resource.admin.routes.auth_util import check_auth
 
 

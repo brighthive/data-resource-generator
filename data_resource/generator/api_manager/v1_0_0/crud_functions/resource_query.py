@@ -1,7 +1,7 @@
 from data_resource.db.base import db_session
 from flask import Request
-from data_resource.logging.api_exceptions import ApiError, InternalServerError
-from data_resource.logging import LogFactory
+from data_resource.shared_utils.api_exceptions import ApiError, InternalServerError
+from data_resource.shared_utils import LogFactory
 from collections import OrderedDict
 from data_resource.generator.api_manager.v1_0_0.resource_utils import (
     build_json_from_object,

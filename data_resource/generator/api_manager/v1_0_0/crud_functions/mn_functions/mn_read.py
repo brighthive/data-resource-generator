@@ -4,8 +4,8 @@ from data_resource.generator.api_manager.v1_0_0.resource_utils import (
 )
 from collections import OrderedDict
 from data_resource.db.base import db_session
-from data_resource.logging.api_exceptions import InternalServerError, ApiError
-from data_resource.logging import LogFactory
+from data_resource.shared_utils.api_exceptions import InternalServerError, ApiError
+from data_resource.shared_utils import LogFactory
 
 
 logger = LogFactory.get_console_logger("generator:mn-read")

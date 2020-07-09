@@ -9,7 +9,7 @@ from flask import Flask, make_response
 from flask_restful import Api
 from data_resource.shared_utils.api_exceptions import handle_errors
 from flask_swagger_ui import get_swaggerui_blueprint
-from data_resource.shared_utils import LogFactory
+from data_resource.shared_utils.log_factory import LogFactory
 import os
 from data_resource.config import ConfigurationFactory
 from data_resource.admin.safe_json_output import safe_json_dumps

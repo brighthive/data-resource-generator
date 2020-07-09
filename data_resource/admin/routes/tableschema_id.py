@@ -6,7 +6,7 @@ from tableschema import Schema
 import json
 from convert_descriptor_to_swagger import convert_descriptor_to_swagger
 from data_resource.shared_utils.api_exceptions import ApiError
-from data_resource.shared_utils import LogFactory
+from data_resource.shared_utils.log_factory import LogFactory
 from data_resource.shared_utils.auth_util import check_auth
 
 

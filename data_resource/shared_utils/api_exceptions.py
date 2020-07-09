@@ -1,6 +1,6 @@
 from flask import jsonify
 from werkzeug.exceptions import NotFound
-from data_resource.shared_utils import LogFactory
+from data_resource.shared_utils.log_factory import LogFactory
 from brighthive_authlib import OAuth2ProviderError
 
 logger = LogFactory.get_console_logger("errors")

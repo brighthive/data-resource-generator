@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer
 from data_resource.db import admin_base
 from sqlalchemy.dialects.postgresql import JSONB
-from data_resource.shared_utils import LogFactory
+from data_resource.shared_utils.log_factory import LogFactory
 
 
 logger = LogFactory.get_console_logger("admin:model-tableschema")

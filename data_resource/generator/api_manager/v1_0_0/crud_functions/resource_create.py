@@ -2,7 +2,7 @@
 from data_resource.db.base import db_session
 from flask import Request
 from data_resource.shared_utils.api_exceptions import ApiError
-from data_resource.shared_utils import LogFactory
+from data_resource.shared_utils.log_factory import LogFactory
 
 logger = LogFactory.get_console_logger("generator:resource-create")
 

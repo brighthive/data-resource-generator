@@ -9,7 +9,7 @@ from data_resource.generator.api_manager.v1_0_0 import (
 )
 from flask import request
 from flask_restful import Resource
-from data_resource.shared_utils import LogFactory
+from data_resource.shared_utils.log_factory import LogFactory
 from data_resource.shared_utils.auth_util import check_auth
 
 

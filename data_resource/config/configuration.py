@@ -65,6 +65,9 @@ class Config:
     # Secret Manager
     SECRET_MANAGER = None
 
+    # AWS S3 Schema Store
+    SCHEMA_STORAGE_TYPE = "LOCAL"
+
     @staticmethod
     def get_oauth2_provider():
         """Retrieve the OAuth 2.0 Provider.

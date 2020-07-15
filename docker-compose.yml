@@ -19,6 +19,7 @@ services:
       - POSTGRES_HOSTNAME=data-resource-database
       - POSTGRES_DATABASE=data_resource
       - POSTGRES_PORT=5432
+      - SCHEMA_STORAGE_TYPE=LOCAL
       - AWS_SM_ENABLED=0
       - AWS_SM_NAME=
       - AWS_SM_REGION=

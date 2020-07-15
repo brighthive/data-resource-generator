@@ -65,8 +65,13 @@ class Config:
     # Secret Manager
     SECRET_MANAGER = None
 
-    # AWS S3 Schema Store
+    # Schema Store (LOCAL = LOCAL IO, S3 = AWS S3 Object)
     SCHEMA_STORAGE_TYPE = "LOCAL"
+    DEFAULT_LOCAL_SCHEMA_PATH = "./static/data_resource_schema.json"
+
+    # Requires SCHEMA_STORAGE_TYPE to be "S3"
+    AWS_S3_STORAGE_BUCKET_NAME = None
+    AWS_S3_STORAGE_OBJECT_NAME = None
 
     @staticmethod
     def get_oauth2_provider():
@@ -219,6 +224,10 @@ class ProductionConfig(Config):
             POSTGRES_DATABASE,
         )
 
+        SCHEMA_STORAGE_TYPE = os.getenv("SCHEMA_STORAGE_TYPE", "LOCAL")
+        AWS_S3_STORAGE_BUCKET_NAME = os.getenv("AWS_S3_STORAGE_BUCKET_NAME", None)
+        AWS_S3_STORAGE_OBJECT_NAME = os.getenv("AWS_S3_STORAGE_OBJECT_NAME", None)
+
 
 class ConfigurationFactory:
     """A factory for handling configuration object creation."""
@@ -241,6 +250,8 @@ class ConfigurationFactory:
 
         config_type = config_type.upper()
         if config_type == "TEST":
+            return TestConfig()
+        elif config_type == "LOCAL":
             return TestConfig()
         elif config_type == "PRODUCTION":
             return ProductionConfig()

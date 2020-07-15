@@ -1,49 +1,83 @@
+import os
 import logging
 import boto3
 import json
 from botocore.exceptions import ClientError
 
-# will upload a file from volume to a s3 bucket
-def aws_s3_upload_file(file_name, bucket, object_name=None):
-    if object_name is None:
-        object_name = file_name
 
-    s3_client = boto3.client("s3")
-    try:
-        response = s3_client.upload_file(file_name, bucket, object_name)
-    except ClientError as e:
-        logging.error(e)
-        return False
-    return True
+class S3Manager:
+    """S3Manager Manager Class."""
 
+    def __init__(self, config):
+        self.config = config
+        self.aws_access_key_id = os.getenv("AWS_ACCESS_KEY_ID", None)
+        self.aws_secret_access_key = os.getenv("AWS_SECRET_ACCESS_KEY", None)
+        self.region_name = os.getenv("AWS_S3_REGION", None)
 
-# will check if s3 object exist in s3
-def aws_s3_object_exists(bucket, object_name):
-    try:
-        s3_resource = boto3.resource("s3")
-        s3_resource.Object(bucket, object_name).load()
-    except ClientError as e:
-        return int(e.response["Error"]["Code"]) != 404
-    return True
+        if (
+            self.aws_access_key_id == None
+            or self.aws_secret_access_key == None
+            or self.region_name == None
+        ):
+            raise RuntimeError("Invalid AWS S3 Configuration")
 
+    def get_s3_client(self):
+        return boto3.client(
+            "s3",
+            aws_access_key_id=self.aws_access_key_id,
+            aws_secret_access_key=self.aws_secret_access_key,
+            region_name=self.region_name,
+        )
 
-# will get uploaded dat from s3 bucket object (utf-8 decoding)
-def aws_s3_get_data(bucket, object_name):
-    try:
-        s3 = boto3.resource("s3")
-        obj = s3.Object(bucket, object_name)
-        data = obj.get()["Body"].read().decode("UTF-8")
-        return data
-    except ClientError as e:
-        return None
+    def get_s3_resource(self):
+        return boto3.resource(
+            "s3",
+            aws_access_key_id=self.aws_access_key_id,
+            aws_secret_access_key=self.aws_secret_access_key,
+            region_name=self.region_name,
+        )
 
+    # will upload a file from volume to a s3 bucket
+    def aws_s3_upload_file(self, file_name, bucket, object_name=None):
+        if object_name is None:
+            object_name = file_name
 
-# will upload json_data to a bucket with object name (utf-8 encoding)
-def aws_s3_put_data(json_data, bucket, object_name):
-    try:
-        s3 = boto3.resource("s3")
-        obj = s3.Object(bucket, object_name)
-        obj.put(Body=(bytes(json.dumps(json_data).encode("UTF-8"))))
+        try:
+            s3_client = self.get_s3_client()
+            response = s3_client.upload_file(file_name, bucket, object_name)
+        except ClientError as e:
+            logging.error(e)
+            return False
         return True
-    except ClientError as e:
-        return False
+
+    # will check if s3 object exist in s3
+    def aws_s3_object_exists(self, bucket, object_name):
+        try:
+            s3_resource = self.get_s3_resource()
+            s3_resource.Object(bucket, object_name).load()
+        except ClientError as e:
+            logging.error(e)
+            return int(e.response["Error"]["Code"]) != 404
+        return True
+
+    # will get uploaded dat from s3 bucket object (utf-8 decoding)
+    def aws_s3_get_data(self, bucket, object_name):
+        try:
+            s3 = self.get_s3_resource()
+            obj = s3.Object(bucket, object_name)
+            data = obj.get()["Body"].read().decode("UTF-8")
+            return data
+        except ClientError as e:
+            logging.error(e)
+            return None
+
+    # will upload json_data to a bucket with object name (utf-8 encoding)
+    def aws_s3_put_data(self, json_data, bucket, object_name):
+        try:
+            s3 = self.get_s3_resource()
+            obj = s3.Object(bucket, object_name)
+            obj.put(Body=(bytes(json.dumps(json_data).encode("UTF-8"))))
+            return True
+        except ClientError as e:
+            logging.error(e)
+            return False

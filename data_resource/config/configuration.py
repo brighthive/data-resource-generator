@@ -66,12 +66,16 @@ class Config:
     SECRET_MANAGER = None
 
     # Schema Store (LOCAL = LOCAL IO, S3 = AWS S3 Object)
-    SCHEMA_STORAGE_TYPE = "LOCAL"
+    SCHEMA_STORAGE_TYPE = os.getenv("SCHEMA_STORAGE_TYPE", "LOCAL")
     DEFAULT_LOCAL_SCHEMA_PATH = "./static/data_resource_schema.json"
 
     # Requires SCHEMA_STORAGE_TYPE to be "S3"
-    AWS_S3_STORAGE_BUCKET_NAME = None
-    AWS_S3_STORAGE_OBJECT_NAME = None
+    AWS_S3_REGION = os.getenv("AWS_S3_REGION", None)
+    AWS_S3_STORAGE_BUCKET_NAME = os.getenv("AWS_S3_STORAGE_BUCKET_NAME", None)
+    AWS_S3_STORAGE_OBJECT_NAME = os.getenv("AWS_S3_STORAGE_OBJECT_NAME", None)
+
+    AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID", None)
+    AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY", None)
 
     @staticmethod
     def get_oauth2_provider():
@@ -112,7 +116,7 @@ class TestConfig(Config):
     #     POSTGRES_PORT,
     #     POSTGRES_DATABASE,
     # )
-
+    ENV = "TEST"
     SKIP_AUTH_CHECK = True
     POSTGRES_USER = "test_user"
     POSTGRES_PASSWORD = "test_password"  # nosec
@@ -171,6 +175,8 @@ class ProductionConfig(Config):
     def __init__(self):
         super().__init__()
 
+    ENV = "PRODUCTION"
+
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     PROPAGATE_EXCEPTIONS = True
 
@@ -223,10 +229,6 @@ class ProductionConfig(Config):
             POSTGRES_PORT,
             POSTGRES_DATABASE,
         )
-
-        SCHEMA_STORAGE_TYPE = os.getenv("SCHEMA_STORAGE_TYPE", "LOCAL")
-        AWS_S3_STORAGE_BUCKET_NAME = os.getenv("AWS_S3_STORAGE_BUCKET_NAME", None)
-        AWS_S3_STORAGE_OBJECT_NAME = os.getenv("AWS_S3_STORAGE_OBJECT_NAME", None)
 
 
 class ConfigurationFactory:

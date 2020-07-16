@@ -10,9 +10,9 @@ class S3Manager:
 
     def __init__(self, config):
         self.config = config
-        self.aws_access_key_id = os.getenv("AWS_ACCESS_KEY_ID", None)
-        self.aws_secret_access_key = os.getenv("AWS_SECRET_ACCESS_KEY", None)
-        self.region_name = os.getenv("AWS_S3_REGION", None)
+        self.aws_access_key_id = self.config.AWS_ACCESS_KEY_ID
+        self.aws_secret_access_key = self.config.AWS_SECRET_ACCESS_KEY
+        self.region_name = self.config.AWS_S3_REGION
 
         if (
             self.aws_access_key_id == None
@@ -21,7 +21,14 @@ class S3Manager:
         ):
             raise RuntimeError("Invalid AWS S3 Configuration")
 
+    def required_env_check(self):
+        if self.config.ENV != "PRODUCTION":
+            raise RuntimeError(
+                "AWS S3 storage manager are not allowed in testing environment"
+            )
+
     def get_s3_client(self):
+        self.required_env_check()
         return boto3.client(
             "s3",
             aws_access_key_id=self.aws_access_key_id,
@@ -30,6 +37,7 @@ class S3Manager:
         )
 
     def get_s3_resource(self):
+        self.required_env_check()
         return boto3.resource(
             "s3",
             aws_access_key_id=self.aws_access_key_id,

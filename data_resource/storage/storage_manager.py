@@ -16,7 +16,7 @@ class StorageManager:
         self.DEFAULT_LOCAL_SCHEMA_PATH = self.config.DEFAULT_LOCAL_SCHEMA_PATH
 
         if self.SCHEMA_STORAGE_TYPE == "S3":
-            self.s3manager = S3Manager(ConfigurationFactory.from_env())
+            self.s3manager = S3Manager(config)
             self.AWS_S3_STORAGE_BUCKET_NAME = self.config.AWS_S3_STORAGE_BUCKET_NAME
             self.AWS_S3_STORAGE_OBJECT_NAME = self.config.AWS_S3_STORAGE_OBJECT_NAME
 

@@ -21,14 +21,14 @@ class S3Manager:
         ):
             raise RuntimeError("Invalid AWS S3 Configuration")
 
-    def required_env_check(self):
+    def _required_env_check(self):
         if self.config.ENV != "PRODUCTION":
             raise RuntimeError(
                 "AWS S3 storage manager are not allowed in testing environment"
             )
 
     def get_s3_client(self):
-        self.required_env_check()
+        self._required_env_check()
         return boto3.client(
             "s3",
             aws_access_key_id=self.aws_access_key_id,
@@ -37,7 +37,7 @@ class S3Manager:
         )
 
     def get_s3_resource(self):
-        self.required_env_check()
+        self._required_env_check()
         return boto3.resource(
             "s3",
             aws_access_key_id=self.aws_access_key_id,

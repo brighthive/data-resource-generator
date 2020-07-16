@@ -85,7 +85,6 @@ def create_app(actually_run=True):
         return app
 
 
-# TODO REFACTOR
 def handle_existing_data_resource_schema(api: Api):
     if not storage.data_resource_schema_exists():
         return

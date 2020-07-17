@@ -2,10 +2,13 @@ from data_resource.config import ConfigurationFactory
 from data_resource.generator.api_manager import generate_api
 from data_resource.generator.model_manager import create_models
 from data_resource.shared_utils.log_factory import LogFactory
+from data_resource.storage.storage_manager import StorageManager
 import json
 import os
 
 logger = LogFactory.get_console_logger("generator:app")
+
+storage = StorageManager(ConfigurationFactory.from_env())
 
 
 def get_static_folder_from_app():
@@ -25,10 +28,7 @@ def save_swagger(swagger):
 def start_data_resource_generator(
     data_resource_schema, api, touch_database: bool = True
 ):
-    # save the data resource schema
-    # TODO if testing env then dont do this?
-    with open("./static/data_resource_schema.json", "w") as outfile:
-        json.dump(data_resource_schema, outfile)
+    storage.save_data_resource_schema_data(data_resource_schema)
 
     data_dict = data_resource_schema["data"]
     try:

@@ -20,8 +20,11 @@ from flask_swagger_ui import get_swaggerui_blueprint
 from flask import Flask, make_response
 from flask_restful import Api
 
+from data_resource.storage.storage_manager import StorageManager
 
 logger = LogFactory.get_console_logger("admin:app")
+
+storage = StorageManager(ConfigurationFactory.from_env())
 
 
 def create_app(actually_run=True):
@@ -83,14 +86,13 @@ def create_app(actually_run=True):
 
 
 def handle_existing_data_resource_schema(api: Api):
-    if not os.path.exists("./static/data_resource_schema.json"):
+    if not storage.data_resource_schema_exists():
         return
 
     logger.info("Found an existing data resource schema. Attempting to load it...")
 
     # TODO check for invalid doc
-    with open("./static/data_resource_schema.json") as json_file:
-        data_resource_schema = json.load(json_file)
+    data_resource_schema = storage.get_data_resource_schema_data()
 
     start_data_resource_generator(data_resource_schema, api, touch_database=False)
 

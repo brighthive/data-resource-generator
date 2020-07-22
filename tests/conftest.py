@@ -51,6 +51,7 @@ def empty_database():
     yield
     try:
         os.remove("./static/data_resource_schema.json")
+        os.remove("./static/swagger.json")
     except:
         pass
 

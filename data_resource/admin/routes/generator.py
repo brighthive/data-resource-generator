@@ -14,6 +14,8 @@ class Generator(Resource):
     def post(self):
         data_catalog = request.json["data_catalog"]
 
+        # TODO should run a check on the catalog, fail if invalid
+
         api = current_app.config["api"]
         start_data_resource_generator(
             data_catalog, api

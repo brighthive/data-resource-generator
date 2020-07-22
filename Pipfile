@@ -19,7 +19,7 @@ flask-restful = "*"
 tableschema = "*"
 brighthive-authlib = "*"
 flask-swagger-ui = "*"
-convert-descriptor-to-swagger = {editable = true,git = "https://github.com/brighthive/convert_descriptor_to_swagger.git",ref = "v0.0.3"}
+convert-descriptor-to-swagger = {editable = true,git = "https://github.com/brighthive/convert_descriptor_to_swagger.git",ref = "v0.0.5"}
 rsa = "*"
 gunicorn = "*"
 gevent = "*"

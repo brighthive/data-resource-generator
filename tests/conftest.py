@@ -10,6 +10,10 @@ from flask_restful import Api
 from flask import Flask
 from tests.testing_schemas.default import DATA_DICTIONARY
 from tests.testing_schemas.all_types import ALL_TYPES_DATA_DICTIONARY
+from tests.testing_schemas.foreign_key import (
+    _VALID_FOREIGN_KEY,
+    _MISSING_FOREIGN_KEY_TABLE,
+)
 
 
 @pytest.fixture
@@ -20,6 +24,16 @@ def VALID_DATA_DICTIONARY():
 @pytest.fixture
 def ALL_TYPES():
     return ALL_TYPES_DATA_DICTIONARY
+
+
+@pytest.fixture
+def MISSING_FOREIGN_KEY_TABLE():
+    return _MISSING_FOREIGN_KEY_TABLE
+
+
+@pytest.fixture
+def VALID_FOREIGN_KEY():
+    return _VALID_FOREIGN_KEY
 
 
 class Database:

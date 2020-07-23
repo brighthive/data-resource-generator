@@ -178,11 +178,7 @@ DATA_DICTIONARY = {
                 },
             },
         ],
-        "relationships": {
-            # "oneToOne": [["People", "haveA", "Passport"],
-            "oneToMany": [["People", "Order"]],
-            "manyToMany": [["People", "Team"]],
-        },
+        "relationships": {"manyToMany": [["People", "Team"]]},
         "databaseSchema": "url-to-something",
         "databaseType": "https://datatrust.org/databaseType/rdbms",
     },

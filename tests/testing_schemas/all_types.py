@@ -146,8 +146,7 @@ ALL_TYPES_DATA_DICTIONARY = {
         ],
         "relationships": {
             # "oneToOne": [["People", "haveA", "Passport"],
-            "oneToMany": [],
-            "manyToMany": [],
+            "manyToMany": []
         },
         "databaseSchema": "url-to-something",
         "databaseType": "https://datatrust.org/databaseType/rdbms",

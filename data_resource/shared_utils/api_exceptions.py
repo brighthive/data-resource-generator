@@ -2,6 +2,7 @@ from flask import jsonify
 from werkzeug.exceptions import NotFound
 from data_resource.shared_utils.log_factory import LogFactory
 from brighthive_authlib import OAuth2ProviderError
+import tableschema
 
 logger = LogFactory.get_console_logger("errors")
 
@@ -92,6 +93,17 @@ def handle_errors(e):
 
     if isinstance(e, ApiError):
         return e.get_message(), e.get_status_code()
+
+    if isinstance(e, tableschema.exceptions.ValidationError):
+        return (
+            jsonify(
+                {
+                    "message": "Tableschema validation failure.",
+                    "error": [str(error) for error in e.errors],
+                }
+            ),
+            400,
+        )
 
     # logger = LogFactory.get_console_logger("exception-handler")
     logger.exception("Encountered an unhandled error while processing a request.")

@@ -4,7 +4,6 @@ from data_resource.generator.model_manager.model_manager import (
     create_all_tables_from_schemas,
     get_table_names_and_descriptors,
     create_models,
-    get_relationships_from_data_dict,
 )
 
 

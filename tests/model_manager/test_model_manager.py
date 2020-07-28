@@ -3,7 +3,6 @@ from data_resource.generator.model_manager.model_manager import (
     create_all_tables_from_schemas,
     get_table_names_and_descriptors,
     create_models,
-    get_relationships_from_data_dict,
 )
 from data_resource.db.base import db_session
 
@@ -87,12 +86,3 @@ def test_get_table_names_and_descriptors(VALID_DATA_DICTIONARY):
     assert len(table_names) == 4
     assert table_names == ["people", "team", "order", "required"]
     assert len(descriptors) == 4
-
-
-@pytest.mark.unit
-def test_get_relationships_from_data_dict(VALID_DATA_DICTIONARY):
-    table_descriptors = VALID_DATA_DICTIONARY["data"]
-
-    result = get_relationships_from_data_dict(table_descriptors)
-
-    assert result == {"manyToMany": [["People", "Team"]]}

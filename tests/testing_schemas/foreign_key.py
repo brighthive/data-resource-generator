@@ -59,10 +59,6 @@ _MISSING_FOREIGN_KEY_TABLE = {
                 },
             }
         ],
-        "relationships": {
-            # "oneToOne": [["People", "haveA", "Passport"],
-            "manyToMany": []
-        },
         "databaseSchema": "url-to-something",
         "databaseType": "https://datatrust.org/databaseType/rdbms",
     },
@@ -154,10 +150,6 @@ _VALID_FOREIGN_KEY = {
                 },
             },
         ],
-        "relationships": {
-            # "oneToOne": [["People", "haveA", "Passport"],
-            "manyToMany": []
-        },
         "databaseSchema": "url-to-something",
         "databaseType": "https://datatrust.org/databaseType/rdbms",
     },

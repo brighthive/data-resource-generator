@@ -17,9 +17,8 @@ def create_models(data_catalog: list, touch_database: bool = True) -> None:
     # Create base items
     metadata = create_all_tables_from_schemas(data_catalog)
 
-    relationships = get_relationships_from_data_dict(data_catalog)
-
     try:
+        relationships = data_catalog["relationships"]
         for relationship in relationships["manyToMany"]:
             _ = construct_many_to_many_assoc(metadata, relationship)
     except KeyError:
@@ -91,14 +90,6 @@ def get_table_names_and_descriptors(data_dict: list) -> (list, list):
     descriptors = [schema["tableSchema"] for schema in data_dict]
 
     return table_names, descriptors
-
-
-# util
-def get_relationships_from_data_dict(data_dict: dict) -> list:
-    """Given a data catalog, this simply gets the SQL relationships."""
-    relationships = data_dict["relationships"]
-
-    return relationships
 
 
 # mn

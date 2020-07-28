@@ -4,7 +4,7 @@ from data_resource.shared_utils.log_factory import LogFactory
 from brighthive_authlib import OAuth2ProviderError
 import tableschema
 
-logger = LogFactory.get_console_logger("errors")
+logger = LogFactory.get_console_logger("api-exceptions")
 
 
 class DRApiError(Exception):
@@ -105,7 +105,6 @@ def handle_errors(e):
             400,
         )
 
-    # logger = LogFactory.get_console_logger("exception-handler")
     logger.exception("Encountered an unhandled error while processing a request.")
 
     if isinstance(e, ApiUnhandledError):

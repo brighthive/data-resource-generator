@@ -17,13 +17,12 @@ def create_models(data_catalog: list, touch_database: bool = True) -> None:
     # Create base items
     metadata = create_all_tables_from_schemas(data_catalog)
 
-    relationships = get_relationships_from_data_dict(data_catalog)
-
-    for relationship in relationships["oneToMany"]:
-        add_foreign_keys_to_one_to_many_parent(metadata, relationship)
-
-    for relationship in relationships["manyToMany"]:
-        _ = construct_many_to_many_assoc(metadata, relationship)
+    try:
+        relationships = data_catalog["relationships"]
+        for relationship in relationships["manyToMany"]:
+            _ = construct_many_to_many_assoc(metadata, relationship)
+    except KeyError:
+        pass
 
     if touch_database:
         try:
@@ -93,14 +92,6 @@ def get_table_names_and_descriptors(data_dict: list) -> (list, list):
     return table_names, descriptors
 
 
-# util
-def get_relationships_from_data_dict(data_dict: dict) -> list:
-    """Given a data catalog, this simply gets the SQL relationships."""
-    relationships = data_dict["relationships"]
-
-    return relationships
-
-
 # mn
 def construct_many_to_many_assoc(metadata: "MetaData", relationship: list) -> str:
     """Given a single many to many relationship, creates the required
@@ -126,22 +117,3 @@ def construct_many_to_many_assoc(metadata: "MetaData", relationship: list) -> st
     )
 
     return str(association)
-
-
-# one to many
-def add_foreign_keys_to_one_to_many_parent(metadata, one_to_many_relationships):
-    """Given a single one to many relationship, extends the existing child
-    table with the correct foreign key information."""
-    parent_table = one_to_many_relationships[0].lower()
-    child_table = one_to_many_relationships[1].lower()
-
-    Table(
-        f"{child_table}",
-        metadata,
-        Column(
-            f"om_reference_{parent_table}",
-            Integer,
-            ForeignKey(f"{parent_table}.id"),  # lookup their primary key? TODO?
-        ),
-        extend_existing=True,
-    )

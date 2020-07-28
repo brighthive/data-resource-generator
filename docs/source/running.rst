@@ -1,19 +1,22 @@
 Running
 =======
 
+Starting the application
+------------------------
+
 There are two ways to run the application. With an empty database or an already existing database.
 
 Empty database
---------------
+^^^^^^^^^^^^^^
 
 In the case you want to generate a database, you will run the application with an empty database.
 
 Making a call to the generate route will trigger the building of ORM, API, and modify the database.
 
 Non-empty database
-------------------
+^^^^^^^^^^^^^^^^^^
 
-This application was not designed to be run on top of a database that already has tables in it (in other words, you can only run the generation process once).
+This application was not designed to be run on top of a database that already has tables in it (in other words, you can only run the generation process once). If you run the application in this mode it is expected that you have already gone through the generation process and have or intend to modify the database and/or API.
 
 Restarting the application
 --------------------------
@@ -24,8 +27,8 @@ On startup the application will attempt to load the ORM and API based on the dat
 
 In otherwords, you cannot modify the data resource schema after running the generation and expect the application to handle the migrations.
 
-Making changes to your database
--------------------------------
+Making changes to your database and API
+---------------------------------------
 
 In the event you require modifications to your database and API, this is supported by ensuring the state of your database matches the state that the data resource schema expects.
 

@@ -1,8 +1,48 @@
 Routes
 ======
 
-This section will cover the generated routes for the Data Resources and how to interact with them.
---------------------------------------------------------------------------------------------------
+Support for relationships
+-------------------------
+
+Relationships must be explicitly defined in the Data Resource Schema document.
+
+Supported relationships
+^^^^^^^^^^^^^^^^^^^^^^^
+
+The following list of relationships are supported:
+
+- One to Many (not self join)
+- Many to Many
+
+The following are not currently supported:
+
+- One to Many (self join)
+
+One to Many support
+^^^^^^^^^^^^^^^^^^^
+
+You may define one to many relationships using tableschema foregin key in the Data Resource Schema document. Please see `tableschema's foreign key documentation <https://specs.frictionlessdata.io/table-schema/#foreign-keys>` for more information.
+
+Once defined you may access the relationship as a field on your resource.
+
+Standard relational database referential integrity still applies:
+
+- If you reference a resource it must already exist or else the application will return an error.
+
+Many to Many support
+^^^^^^^^^^^^^^^^^^^^
+
+There are limitations to many to many support:
+
+- Both tables must contain a single primary key that is an integer.
+
+The application will handle creating an association table.
+
+An error will return if either the primary key IDs provided for the parent and children fail to resolve to existing data in the database.
+
+
+Generated routes and how to interact with them
+----------------------------------------------
 
 For each table schema you provide the following routes will be generated. There are two types of API routes:
 - Resource routes
@@ -44,18 +84,12 @@ Deleting data
 
 `DELETE` is intentionally not implemented. There are a number of unanswered questions around what it means to actually "delete" data from the trust and what implications that may have from a legal or governance standpoint.
 
-- `DELETE resource/1`
+- `DELETE /resource/1`
 
 The delete route exists but will return an unimplemented error.
 
 Relationship Routing
 ^^^^^^^^^^^^^^^^^^^^
-
-Relationships must be explicitly defined in the Data Resource Schema document.
-
-Currently there are shortcuts being taken that limit the support of this many to many. Both tables must contain a single primary key that is an integer. The application will handle creating an association table.
-
-An error will return if either the primary key IDs provided for the parent and children fail to resolve to existing data in the database.
 
 Get Relationships
 """""""""""""""""
@@ -74,3 +108,10 @@ Performing a PUT will replace the entire many to many association with your prov
 - `PATCH /parent/id/child`
 
 Performing a PATCH will add the provided list of primary keys to the relationship.
+
+Enabling and disabiling routes
+------------------------------
+
+To enable a route, include the route in your swagger API document.
+
+To disable a route, do not include the route in your swagger API document.

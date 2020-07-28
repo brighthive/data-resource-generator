@@ -24,6 +24,7 @@
               "type": "array"
             }
           },
+          "required": false,
           "type": "object"
         },
         "tableSchema": {

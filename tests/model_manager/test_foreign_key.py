@@ -18,7 +18,7 @@ def test_fails_to_validate_when_a_fk_references_missing_descriptor_table(
         base = create_models(table_descriptors)
 
 
-@pytest.mark.unit  # Does this requiredb tho?
+@pytest.mark.unit
 def test_handles_fk_properly(VALID_FOREIGN_KEY):
     table_descriptors = VALID_FOREIGN_KEY["data"]
 
@@ -28,5 +28,3 @@ def test_handles_fk_properly(VALID_FOREIGN_KEY):
 
     assert "fk_relation" in metadata.tables
     assert "fk_table" in metadata.tables
-
-    # Given a foreign key, ensure the proper FK relationship is present on the parent ORM

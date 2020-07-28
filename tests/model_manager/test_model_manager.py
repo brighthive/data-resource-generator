@@ -15,13 +15,11 @@ def test_creates_all_required_tables(generated_e2e_database_inspector):
     expected = ["required", "people", "order", "assoc_people_team", "team"]
     expected.sort()
 
-    # Tables are correct
     assert tables == expected
+    # TODO assert on fields of tables
 
-    # TODO assert on fields?
 
-
-@pytest.mark.unit  # Does this requiredb tho?
+@pytest.mark.unit
 def test_create_models_creates_all_required_orm(VALID_DATA_DICTIONARY, empty_database):
     table_descriptors = VALID_DATA_DICTIONARY["data"]
 
@@ -34,13 +32,13 @@ def test_create_models_creates_all_required_orm(VALID_DATA_DICTIONARY, empty_dat
     assert "order" in metadata.tables
     assert "assoc_people_team" in metadata.tables
 
-    # Assert that the auto mapped python classes exist
+    # The auto mapped python classes exist
     assert base.classes.people
     people_orm = getattr(base.classes, "people")
 
-    # Assert that the relational fields exist on the orm instance
+    # The relational fields exist on the orm instance
     person1 = people_orm()
-    # assert person1.order_collection is not None # TODO
+    # TODO: assert that the one to many relationship with Order is correct?
     assert person1.team_collection is not None
 
     assert base.classes.team
@@ -54,13 +52,9 @@ def test_create_models_creates_all_required_orm(VALID_DATA_DICTIONARY, empty_dat
 
 @pytest.mark.requiresdb
 def test_create_models_can_add_data_with_orm(VALID_DATA_DICTIONARY, empty_database):
-    # Arrange
-    # create orm
     table_descriptors = VALID_DATA_DICTIONARY["data"]
     base = create_models(table_descriptors)
 
-    # Act
-    # add items to db via classes
     people_orm = getattr(base.classes, "people")
     team_orm = getattr(base.classes, "team")
 

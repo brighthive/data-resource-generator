@@ -101,10 +101,16 @@ For more information about AWS SM and how to setup on AWS console please visit: 
 docker-compose -f test-database-docker-compose.yml down && docker-compose -f test-database-docker-compose.yml up -d
 ```
 
-1. To run the application,
+1. To run the application in production mode,
 
 ```bash
 pipenv run python wsgi.py
+```
+
+Or to run in testing mode with flask,
+
+```bash
+pipenv run flask run
 ```
 
 ##### AWS Secret Manager Integration

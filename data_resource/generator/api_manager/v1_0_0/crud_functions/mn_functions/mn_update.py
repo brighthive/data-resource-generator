@@ -50,9 +50,10 @@ class MnUpdate:
         if type(body) is not list:
             body = [body]
 
+        mn_list = getattr(parent, f"{child_orm.__table__.name}_collection")
+
         if not patch:
             # Remove all items from parent
-            mn_list = getattr(parent, f"{child_orm.__table__.name}_collection")
             mn_list.clear()
 
         # Add items to parent
@@ -67,12 +68,11 @@ class MnUpdate:
                 db_session.rollback()
                 raise ApiError(f"Child with id '{child_id}' does not exist.")
 
-            parent.team_collection.append(child)
+            mn_list.append(child)
 
         db_session.commit()
 
         # TODO this can be moved to a model class as its reused in GET
-        mn_list = getattr(parent, f"{child_orm.__table__.name}_collection")
         response = [item.id for item in mn_list]
 
         # response = build_json_from_object(parent)

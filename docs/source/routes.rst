@@ -40,6 +40,7 @@ The application will handle creating an association table.
 
 An error will return if either the primary key IDs provided for the parent and children fail to resolve to existing data in the database.
 
+In order for many to many to work both primary keys of the tables in the relationship need to "id".
 
 Generated routes and how to interact with them
 ----------------------------------------------

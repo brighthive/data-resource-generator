@@ -103,13 +103,13 @@ def construct_many_to_many_assoc(metadata: "MetaData", relationship: list) -> st
         f"assoc_{relationship[0].lower()}_{relationship[1].lower()}",
         metadata,
         Column(
-            f"{relationship[0].lower()}",
+            f"{relationship[0].lower()}_id",
             Integer,
             ForeignKey(f"{relationship[0].lower()}.id"),
             primary_key=True,
         ),
         Column(
-            f"{relationship[1].lower()}",
+            f"{relationship[1].lower()}_id",
             Integer,
             ForeignKey(f"{relationship[1].lower()}.id"),
             primary_key=True,

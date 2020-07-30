@@ -34,14 +34,14 @@ def test_create_mn_association_table():
     # The field has the correct foreign key
     try:
         assert "{ForeignKey('people.id')}" == str(
-            metadata.tables["assoc_people_team"].columns["people"].foreign_keys
+            metadata.tables["assoc_people_team"].columns["people_id"].foreign_keys
         )
     except KeyError:
         pytest.fail("KeyError: Column was probably not found.")
 
     try:
         assert "{ForeignKey('team.id')}" == str(
-            metadata.tables["assoc_people_team"].columns["team"].foreign_keys
+            metadata.tables["assoc_people_team"].columns["team_id"].foreign_keys
         )
     except KeyError:
         pytest.fail("KeyError: Column was probably not found.")
@@ -53,8 +53,8 @@ def test_automap_metadata_for_mn():
     _ = Table(
         "assoc_people_team",
         metadata,
-        Column("people", Integer, ForeignKey("people.id"), primary_key=True),
-        Column("team", Integer, ForeignKey("team.id"), primary_key=True),
+        Column("people_id", Integer, ForeignKey("people.id"), primary_key=True),
+        Column("team_id", Integer, ForeignKey("team.id"), primary_key=True),
     )
     _ = Table(
         "people",

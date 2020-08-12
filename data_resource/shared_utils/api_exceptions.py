@@ -3,6 +3,7 @@ from werkzeug.exceptions import NotFound
 from data_resource.shared_utils.log_factory import LogFactory
 from brighthive_authlib import OAuth2ProviderError
 import tableschema
+import jsonschema
 
 logger = LogFactory.get_console_logger("api-exceptions")
 

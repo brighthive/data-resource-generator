@@ -3,6 +3,7 @@ from data_resource.generator.api_manager import generate_api
 from data_resource.generator.model_manager import create_models
 from data_resource.shared_utils.log_factory import LogFactory
 from data_resource.storage.storage_manager import StorageManager
+from data_resource.shared_utils.validator import validate_data_resource_schema
 import json
 import os
 
@@ -28,6 +29,9 @@ def save_swagger(swagger):
 def start_data_resource_generator(
     data_resource_schema, api, touch_database: bool = True
 ):
+    if "ignore_validation" not in data_resource_schema:
+        validate_data_resource_schema(data_resource_schema)
+
     storage.save_data_resource_schema_data(data_resource_schema)
 
     data_dict = data_resource_schema["data"]

@@ -24,6 +24,7 @@ rsa = "*"
 gunicorn = "*"
 gevent = "*"
 botocore = "*"
+jsonschema = "*"
 
 [requires]
 python_version = "3.7"

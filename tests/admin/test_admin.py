@@ -777,3 +777,30 @@ def test_swagger_ui_exists(admin_e2e):
 
     # Should get 308 redirect to data['location']
     assert response.status_code in [200, 308]
+
+
+@pytest.mark.requiresdb
+def test_drg_schema_no_key_failure(admin_e2e):
+    api = admin_e2e
+
+    response = api.post("/generator", json={"this is invalid": {1: 2}})
+
+    assert response.json == {
+        "error": "Data Resource Schema should be placed inside root key 'data_resource_schema'."
+    }
+    assert response.status_code == 400
+
+
+@pytest.mark.requiresdb
+def test_drg_schema_failure(admin_e2e):
+    api = admin_e2e
+
+    response = api.post(
+        "/generator", json={"data_resource_schema": {"this is invalid": {1: 2}}}
+    )
+
+    assert response.json == {
+        "error": "Data Resource Schema validation failure",
+        "errors": ["'data' is a required property", "'api' is a required property"],
+    }
+    assert response.status_code == 400

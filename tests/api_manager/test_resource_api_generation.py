@@ -86,7 +86,9 @@ def test_generate_serves_swagger_ui(valid_base, empty_api, mocker):
     generate_api = mocker.patch("data_resource.generator.app.generate_api")
     save_swagger = mocker.patch("data_resource.generator.app.save_swagger")
 
-    start_data_resource_generator({"data": {}, "api": {"apiSpec": {}}}, {})
+    start_data_resource_generator(
+        {"ignore_validation": 1, "data": {}, "api": {"apiSpec": {}}}, {}
+    )
 
     create_models.assert_called_once_with({}, touch_database=True)
     generate_api.assert_called_once_with(

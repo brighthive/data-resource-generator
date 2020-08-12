@@ -100,7 +100,7 @@ def construct_many_to_many_assoc(metadata: "MetaData", relationship: list) -> st
     relationship.sort()
 
     association = Table(
-        f"assoc_{relationship[0].lower()}_{relationship[1].lower()}",
+        f"{relationship[0].lower()}/{relationship[1].lower()}",
         metadata,
         Column(
             f"{relationship[0].lower()}_id",

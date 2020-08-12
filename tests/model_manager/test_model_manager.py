@@ -11,7 +11,7 @@ from data_resource.db.base import db_session
 def test_creates_all_required_tables(generated_e2e_database_inspector):
     tables = generated_e2e_database_inspector.get_table_names()
     tables.sort()
-    expected = ["required", "people", "order", "assoc_people_team", "team"]
+    expected = ["required", "people", "order", "people/team", "team"]
     expected.sort()
 
     assert tables == expected
@@ -29,7 +29,7 @@ def test_create_models_creates_all_required_orm(VALID_DATA_DICTIONARY, empty_dat
     assert "people" in metadata.tables
     assert "team" in metadata.tables
     assert "order" in metadata.tables
-    assert "assoc_people_team" in metadata.tables
+    assert "people/team" in metadata.tables
 
     # The auto mapped python classes exist
     assert base.classes.people

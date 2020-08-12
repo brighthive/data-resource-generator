@@ -1,0 +1,30 @@
+{
+    "data_resource_schema": {
+        "@id": "https://mydatatrust.brighthive.io/uri",
+        "@type": "dataResource",
+        "name": "...",
+        "description": "...",
+        "owner": "org",
+        "pointOfContact": "...",
+        "published": true,
+        "dateCreated": "date",
+        "dateUpdated": "date",
+        "privacyRegulations": [
+            "https://datatrust.org/privacyregulations/HIPAA"
+        ],
+        "category": "https://datatrust.org/catagory/external",
+        "url": "https://mydatatrust.brighthive.io/uri",
+        "data": {
+            "dataDictionary": [],
+            "relationships": {
+                "manyToMany": []
+            },
+            "databaseSchema": "url-to-something",
+            "databaseType": "https://datatrust.org/databaseType/rdbms"
+        },
+        "api": {
+            "apiType": "https://datatrust.org/apiType/rest",
+            "apiSpec": {}
+        }
+    }
+}

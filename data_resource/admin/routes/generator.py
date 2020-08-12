@@ -17,7 +17,7 @@ class Generator(Resource):
         except KeyError:
             touch_database = True
 
-        data_resource_schema = request.json["data_catalog"]
+        data_resource_schema = request.json["data_resource_schema"]
 
         # TODO should run a check on the catalog, fail if invalid
 

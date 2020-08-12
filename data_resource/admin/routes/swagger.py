@@ -1,5 +1,5 @@
 from flask_restful import Api, Resource
-from flask import Blueprint
+from flask import Blueprint, request
 from data_resource.db import db_session
 import data_resource.admin.models as orm
 from convert_descriptor_to_swagger import convert_descriptor_to_swagger
@@ -20,7 +20,8 @@ logger = LogFactory.get_console_logger("admin:route-swagger")
 class Swagger(Resource):
     @check_auth
     def get(self):
-        # TODO: grab relationships from body
+        # relationship = request.json or []
+
         q = db_session.query(orm.TableSchema)
         all_tableschema = [p.tableschema for p in q]
 

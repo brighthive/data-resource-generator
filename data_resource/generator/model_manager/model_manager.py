@@ -11,14 +11,14 @@ logger = LogFactory.get_console_logger("generator:model-manager")
 
 
 # main
-def create_models(data_catalog: list, touch_database: bool = True) -> None:
+def create_models(data_resource_schema: list, touch_database: bool = True) -> None:
     """Given the data portion of a data catalog, Produce all the SQLAlchemy
     ORM."""
     # Create base items
-    metadata = create_all_tables_from_schemas(data_catalog)
+    metadata = create_all_tables_from_schemas(data_resource_schema)
 
     try:
-        relationships = data_catalog["relationships"]
+        relationships = data_resource_schema["relationships"]
         for relationship in relationships["manyToMany"]:
             _ = construct_many_to_many_assoc(metadata, relationship)
     except KeyError:

@@ -12,18 +12,23 @@ logger = LogFactory.get_console_logger("admin:route-generator")
 class Generator(Resource):
     @check_auth
     def post(self):
-        data_catalog = request.json["data_catalog"]
+        try:
+            touch_database = request.json["touch_database"]
+        except KeyError:
+            touch_database = True
+
+        data_resource_schema = request.json["data_resource_schema"]
 
         # TODO should run a check on the catalog, fail if invalid
 
         api = current_app.config["api"]
-        start_data_resource_generator(
-            data_catalog, api
-        )  # TODO generator should generate to a subroute?
 
+        start_data_resource_generator(
+            data_resource_schema, api, touch_database=touch_database
+        )
         # TODO should log?
 
-        return "", 204
+        return "OK", 204
 
 
 api.add_resource(Generator, "/generator")

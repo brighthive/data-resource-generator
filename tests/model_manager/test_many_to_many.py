@@ -29,19 +29,19 @@ def test_create_mn_association_table():
     result = construct_many_to_many_assoc(metadata, many_to_many_relationships)
 
     # Returns the table name
-    assert result == "assoc_people_team"
-    assert "assoc_people_team" in metadata.tables
+    assert result == "people/team"
+    assert "people/team" in metadata.tables
     # The field has the correct foreign key
     try:
         assert "{ForeignKey('people.id')}" == str(
-            metadata.tables["assoc_people_team"].columns["people_id"].foreign_keys
+            metadata.tables["people/team"].columns["people_id"].foreign_keys
         )
     except KeyError:
         pytest.fail("KeyError: Column was probably not found.")
 
     try:
         assert "{ForeignKey('team.id')}" == str(
-            metadata.tables["assoc_people_team"].columns["team_id"].foreign_keys
+            metadata.tables["people/team"].columns["team_id"].foreign_keys
         )
     except KeyError:
         pytest.fail("KeyError: Column was probably not found.")
@@ -51,7 +51,7 @@ def test_create_mn_association_table():
 def test_automap_metadata_for_mn():
     metadata = MetaData()
     _ = Table(
-        "assoc_people_team",
+        "people/team",
         metadata,
         Column("people_id", Integer, ForeignKey("people.id"), primary_key=True),
         Column("team_id", Integer, ForeignKey("team.id"), primary_key=True),

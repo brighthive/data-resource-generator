@@ -94,10 +94,16 @@ def handle_existing_data_resource_schema(api: Api):
     # TODO check for invalid doc
     data_resource_schema = storage.get_data_resource_schema_data()
 
-    try:
+    # Older versions used 'data_catalog'
+    if "data_catalog" in data_resource_schema:
         data_resource_schema = data_resource_schema["data_catalog"]
-    except KeyError:
-        pass
+    elif "data_resource_schema" in data_resource_schema:
+        data_resource_schema = data_resource_schema["data_resource_schema"]
+
+    else:
+        # TODO: If doc was validated this should not be reached
+        logger.warning("Failed to load existing data resource schema.")
+        return
 
     start_data_resource_generator(data_resource_schema, api, touch_database=False)
 

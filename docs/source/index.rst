@@ -10,6 +10,7 @@ Welcome to Data Resource Generator's documentation!
    configuration
    datatypes
    migrating
+   unsupported_features
 
 
 

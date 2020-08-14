@@ -16,8 +16,6 @@ class TableSchema(Resource):
     def get(self, limit=100):
         q = db_session.query(orm.TableSchema)
 
-        # TODO logging?
-
         return [p.dump() for p in q][:limit]
 
 

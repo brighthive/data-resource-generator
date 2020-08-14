@@ -15,7 +15,7 @@ logger.info(f"Connecting to DB at '{data_resource_config.SQLALCHEMY_DATABASE_URI
 
 engine = create_engine(
     data_resource_config.SQLALCHEMY_DATABASE_URI, pool_size=40, max_overflow=0
-)  # TODO tests max the pool size out for some reason
+)  # FIXME test suite maxes the pool size out for some reason
 
 from sqlalchemy.schema import CreateSchema  # noqa: E402
 

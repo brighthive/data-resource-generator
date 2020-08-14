@@ -12,19 +12,6 @@ logger = LogFactory.get_console_logger("generator:resource-read")
 
 
 class ResourceRead:
-    # # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
-    # def get_all_secure(
-    #     self, *args, **kwargs
-    # ):
-    #     # """Wrapper method for get_all method.
-
-    #     # Return:
-    #     #     function: The wrapped method.
-    #     # """
-    #     return self.get_all(
-    #         *args, **kwargs
-    #     )
-
     def get_all(
         self,
         resource_name: str = "resource",
@@ -45,7 +32,7 @@ class ResourceRead:
         """
         response = OrderedDict()
         response[resource_name] = []
-        restricted_fields = {}  # TODO
+        restricted_fields = {}
         response["links"] = []
         links = []
 
@@ -64,15 +51,6 @@ class ResourceRead:
             raise InternalServerError()
 
         return response, 200
-
-    # # @token_required(ConfigurationFactory.get_config().get_oauth2_provider())
-    # def get_one_secure(self, *args, **kwargs):
-    #     # """Wrapper method for get one method.
-
-    #     # Return:
-    #     #     function: The wrapped method.
-    #     # """
-    #     return self.get_one(*args, **kwargs)
 
     def get_one(
         self,
@@ -93,7 +71,6 @@ class ResourceRead:
             dict, int: The response object and the HTTP status code.
         """
         try:
-            # primary_key = table_schema["primaryKey"] # TODO
             primary_key = "id"
             result = (
                 db_session.query(resource_orm)

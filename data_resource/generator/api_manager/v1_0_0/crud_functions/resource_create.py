@@ -57,9 +57,7 @@ class ResourceCreate:
             # Can we get primary key(s) from sqlalchemy model?
             # https://stackoverflow.com/questions/6745189/how-do-i-get-the-name-of-an-sqlalchemy-objects-primary-key
             # id_value = getattr(new_object, table_schema["primaryKey"])
-            id_value = new_object.id  # TODO
-
-            # if there are many to many items they need to be built in orm and processed here # TODO FIX
+            id_value = new_object.id
 
             return {"message": "Successfully added new resource.", "id": id_value}, 201
         except Exception:

@@ -17,7 +17,7 @@ def test_get_one_errors_when_it_does_not_exist(
             id=1, parent_orm=valid_people_orm, child_orm=valid_team_orm
         )
 
-    # assert result == ({"error": "Resource with id '1' not found."}, 404)  # TODO assert on message
+    # assert result == ({"error": "Resource with id '1' not found."}, 404)
 
 
 @pytest.mark.requiresdb

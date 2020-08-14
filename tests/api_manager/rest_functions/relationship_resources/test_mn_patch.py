@@ -48,7 +48,7 @@ def test_put_errors_when_parent_does_not_exist(
             patch=True,
         )
 
-    # assert result == ({"error": "Resource with id '1' not found."}, 404)  # TODO assert on message
+    # assert result == ({"error": "Resource with id '1' not found."}, 404)
 
 
 @pytest.mark.requiresdb
@@ -76,4 +76,4 @@ def test_put_errors_when_a_child_does_not_exist(
             patch=True,
         )
 
-    # assert result == ({"error": "Resource with id '1' not found."}, 404)  # TODO assert on message
+    # assert result == ({"error": "Resource with id '1' not found."}, 404)

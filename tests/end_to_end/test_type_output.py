@@ -1,7 +1,7 @@
 import pytest
 import json
 
-ROUTE = "/people"  # TODO change?
+ROUTE = "/people"
 
 
 def run_query(client, key, value, expected_value=None):

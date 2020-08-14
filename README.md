@@ -2,18 +2,18 @@
 
 ![Maintenance](https://img.shields.io/maintenance/yes/2020)
 
-<!-- ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/brighthive/data-resource) -->
-<!-- ![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/brighthive/data-resource-api/v1.1.1) -->
+<!-- ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/brighthive/data-resource-generator) -->
+<!-- ![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/brighthive/data-resource-generator/v1.1.1) -->
 
-<!-- ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/brighthive/data-resource) -->
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/brighthive/data-resource-generator)
 
-<!-- ![GitHub Pipenv locked Python version](https://img.shields.io/github/pipenv/locked/python-version/brighthive/data-resource) -->
+![GitHub Pipenv locked Python version](https://img.shields.io/github/pipenv/locked/python-version/brighthive/data-resource-generator)
 
-<!-- ![CircleCI](https://img.shields.io/circleci/build/github/brighthive/data-resource) -->
+<!-- ![CircleCI](https://img.shields.io/circleci/build/github/brighthive/data-resource-generator) -->
 
-<!-- ![GitHub](https://img.shields.io/github/license/brighthive/data-resource) -->
+![GitHub](https://img.shields.io/github/license/brighthive/data-resource-generator)
 
-<!-- ![Coveralls github](https://img.shields.io/coveralls/github/brighthive/data-resource) -->
+<!-- ![Coveralls github](https://img.shields.io/coveralls/github/brighthive/data-resource-generator) -->
 
 ![Twitter Follow](https://img.shields.io/twitter/follow/brighthiveio?style=social)
 

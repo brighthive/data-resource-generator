@@ -30,7 +30,6 @@ class ResourceCreate:
 
             db_session.add(new_object)
             db_session.commit()
-
             # Can we get primary key(s) from sqlalchemy model?
             # https://stackoverflow.com/questions/6745189/how-do-i-get-the-name-of-an-sqlalchemy-objects-primary-key
             # id_value = getattr(new_object, table_schema["primaryKey"])

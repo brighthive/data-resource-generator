@@ -47,7 +47,6 @@ class ResourceRead:
                 links = build_links(resource_name, offset, limit, row_count)
             response["links"] = links
         except Exception:
-            db_session.rollback()
             raise InternalServerError()
 
         return response, 200
@@ -64,25 +63,19 @@ class ResourceRead:
         Args:
             resource_name (str): Name of the data resource.
             resource_orm (object): SQLAlchemy ORM model.
-            offset (int): Pagination offset.
-            limit (int): Result limit.
+            id (int): PK ID of resource
 
         Return:
             dict, int: The response object and the HTTP status code.
         """
-        try:
-            primary_key = "id"
-            result = (
-                db_session.query(resource_orm)
-                .filter(getattr(resource_orm, primary_key) == id)
-                .first()
-            )
-        except Exception:
-            db_session.rollback()
-            raise InternalServerError()
+        primary_key = "id"
+        result = (
+            db_session.query(resource_orm)
+            .filter(getattr(resource_orm, primary_key) == id)
+            .first()
+        )
 
         if result is None:
-            db_session.rollback()
             raise ApiError(f"Resource with id '{id}' not found.", 404)
 
         response = build_json_from_object(result)

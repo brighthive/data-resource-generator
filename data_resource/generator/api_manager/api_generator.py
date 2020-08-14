@@ -42,9 +42,7 @@ def generate_relationship_based_routes(
     base, api: Api, relationships: dict, enabled_routes
 ) -> None:
     # Generate m:n REST API
-    orm_relationships = generate_orm_relationship_list(
-        base, relationships
-    )  # TODO this should be a class?
+    orm_relationships = generate_orm_relationship_list(base, relationships)
 
     for relationship in orm_relationships:
         generate_relationship_rest_api_routes(api, enabled_routes, relationship)
@@ -102,9 +100,7 @@ def generate_relationship_rest_api_routes(
     """Adds relationship based routes to API."""
     first_orm = relationship[0]
     second_orm = relationship[1]
-    first_orm_name = (
-        first_orm.__table__.name
-    )  # TODO make class for handling this common base operations
+    first_orm_name = first_orm.__table__.name
     second_orm_name = second_orm.__table__.name
 
     resource_name = f"{first_orm_name}_{second_orm_name}"
@@ -117,7 +113,7 @@ def generate_relationship_rest_api_routes(
         {"name": resource_name, "parent_orm": first_orm, "child_orm": second_orm},
     )
 
-    for idx, route in enumerate(resource):  # TODO refactor into a fn?
+    for idx, route in enumerate(resource):
         try:
             methods = enabled_routes[route]
         except KeyError:
@@ -141,7 +137,7 @@ def generate_orm_relationship_list(base, relationships: list) -> list:
         try:
             first_orm = getattr(base.classes, relationship[0].lower())
             second_orm = getattr(base.classes, relationship[1].lower())
-        except:  # TODO check for error somewhere?
+        except:
             logger.exception(
                 "A referenced ORM within a relationship does not exist in base."
             )

@@ -20,32 +20,28 @@ class MnUpdate:
         child_orm: object,
         patch: bool = False,
     ):
-        # """Retrieve the many to many relationship data of a parent and child.
+        """PUT m:n relationship data between a parent and child.
 
-        # Args:
-        #     id (int): Given ID of type parent
-        #     parent (str): Type of parent
-        #     child (str): Type of child
-        # """
-        if id == 0:
+        Args:
+            id (int): Given ID of type parent
+            body: list,
+            parent_orm: object,
+            child_orm: object,
+            patch: bool = False,
+        """
+        if id == 0:  # For testing
             return {}, 200
 
-        # try:
         primary_key = "id"
         parent = (
             db_session.query(parent_orm)
             .filter(getattr(parent_orm, primary_key) == id)
             .first()
         )
-        # except Exception:
-        #     db_session.rollback()
-        #     raise InternalServerError()
 
         if parent is None:
             db_session.rollback()
             raise ApiError(f"Resource with id '{id}' not found.", 404)
-
-        # TODO: check if all put body values exist?
 
         if type(body) is not list:
             body = [body]
@@ -53,10 +49,8 @@ class MnUpdate:
         mn_list = getattr(parent, f"{child_orm.__table__.name}_collection")
 
         if not patch:
-            # Remove all items from parent
             mn_list.clear()
 
-        # Add items to parent
         for child_id in body:
             child = (
                 db_session.query(child_orm)
@@ -72,8 +66,6 @@ class MnUpdate:
 
         db_session.commit()
 
-        # TODO this can be moved to a model class as its reused in GET
         response = [item.id for item in mn_list]
 
-        # response = build_json_from_object(parent)
         return response, 200

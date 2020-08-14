@@ -15,7 +15,6 @@ def test_creates_all_required_tables(generated_e2e_database_inspector):
     expected.sort()
 
     assert tables == expected
-    # TODO assert on fields of tables
 
 
 @pytest.mark.unit
@@ -37,7 +36,6 @@ def test_create_models_creates_all_required_orm(VALID_DATA_DICTIONARY, empty_dat
 
     # The relational fields exist on the orm instance
     person1 = people_orm()
-    # TODO: assert that the one to many relationship with Order is correct?
     assert person1.team_collection is not None
 
     assert base.classes.team

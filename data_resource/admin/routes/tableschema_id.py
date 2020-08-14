@@ -24,46 +24,48 @@ def generate_swagger(descriptor):
 class TableSchemaID(Resource):
     @check_auth
     def get(self, _id):
-        pet = (
+        item = (
             db_session.query(orm.TableSchema)
             .filter(orm.TableSchema.id == _id)
             .one_or_none()
         )
-        return pet.dump() if pet is not None else ("Not found", 404)
+        return item.dump() if item is not None else ("Not found", 404)
 
     @check_auth
     def put(self, _id):
-        pet = request.json
+        item = request.json
         try:
-            delattr(pet, "swagger")
+            delattr(item, "swagger")  # ??
         except AttributeError:
             pass
 
         try:
-            json.dumps(pet["tableschema"]["datastore"]["schema"])
+            json.dumps(item["tableschema"]["datastore"]["schema"])  # ??
         except KeyError:
             raise ApiError("Invalid JSON", 400)
 
-        schema = Schema(descriptor=pet["tableschema"]["datastore"]["schema"])
+        schema = Schema(descriptor=item["tableschema"]["datastore"]["schema"])
 
         if not schema.valid:
-            raise ApiError([str(e) for e in schema.errors], 400)  # TODO unit test
+            raise ApiError(
+                "Tableschema validation error.",
+                errors=[str(e) for e in schema.errors],
+                status_code=400,
+            )
 
         p = (
             db_session.query(orm.TableSchema)
             .filter(orm.TableSchema.id == _id)
             .one_or_none()
         )
-        pet["id"] = _id
-        pet["swagger"] = generate_swagger(pet["tableschema"])
+        item["id"] = _id
+        item["swagger"] = generate_swagger(item["tableschema"])
         if p is not None:
-            logger.info("Updating resource %s..", _id)  # TODO Needed?
-            p.update(**pet)
+            p.update(**item)
             entry = p
         else:
-            logger.info("Creating resource %s..", _id)  # TODO Needed?
-            # pet['created'] = datetime.datetime.utcnow()
-            entry = orm.TableSchema(**pet)
+            # item['created'] = datetime.datetime.utcnow()
+            entry = orm.TableSchema(**item)
             db_session.add(entry)
         db_session.commit()
 
@@ -74,13 +76,12 @@ class TableSchemaID(Resource):
 
     @check_auth
     def delete(self, _id):
-        pet = (
+        item = (
             db_session.query(orm.TableSchema)
             .filter(orm.TableSchema.id == _id)
             .one_or_none()
         )
-        if pet is not None:
-            logger.info("Deleting resource %s..", _id)  # TODO Needed?
+        if item is not None:
             db_session.query(orm.TableSchema).filter(orm.TableSchema.id == _id).delete()
             db_session.commit()
             return "", 204

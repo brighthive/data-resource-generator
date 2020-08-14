@@ -23,7 +23,6 @@ def test_patch_error_when_empty(empty_database, valid_people_orm):
             mode="PATCH",
         )
 
-    # TODO assert on actual message -- cant get it working
     # assert result == ({"error": "Resource with id '1' not found."}, 404)
 
 

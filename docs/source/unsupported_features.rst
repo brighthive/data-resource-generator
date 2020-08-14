@@ -17,3 +17,4 @@ Features that are known not to be supported
 -------------------------------------------
 
 - Many to many relationships where either of the tables have a primary key named something other than 'id'.
+- Tables with a primary key that is something other than 'id'.

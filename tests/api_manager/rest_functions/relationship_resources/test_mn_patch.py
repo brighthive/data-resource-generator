@@ -8,13 +8,17 @@ import pytest
 def test_put_mn_one_works_when_items_exist(
     empty_database, valid_people_orm, valid_team_orm
 ):
-    resource_handler = ResourceHandler()
-    people_orm = valid_people_orm
-    team_orm = valid_team_orm
+    """Ideally we would be able to also assert on the error message that
+    returns.
 
-    person = people_orm(name="tester")
-    team1 = team_orm(name="team")
-    team2 = team_orm(name="team2")
+    # assert result == ({"error": "Resource with id '1' not found."},
+    404)
+    """
+    resource_handler = ResourceHandler()
+
+    person = valid_people_orm(name="tester")
+    team1 = valid_team_orm(name="team")
+    team2 = valid_team_orm(name="team2")
     person.team_collection.append(team1)
 
     db_session.add(person)
@@ -37,6 +41,12 @@ def test_put_mn_one_works_when_items_exist(
 def test_put_errors_when_parent_does_not_exist(
     empty_database, valid_people_orm, valid_team_orm
 ):
+    """Ideally we would be able to also assert on the error message that
+    returns.
+
+    # assert result == ({"error": "Resource with id '1' not found."},
+    404)
+    """
     resource_handler = ResourceHandler()
 
     with pytest.raises(ApiError):
@@ -48,19 +58,21 @@ def test_put_errors_when_parent_does_not_exist(
             patch=True,
         )
 
-    # assert result == ({"error": "Resource with id '1' not found."}, 404)
-
 
 @pytest.mark.requiresdb
 def test_put_errors_when_a_child_does_not_exist(
     empty_database, valid_people_orm, valid_team_orm
 ):
-    resource_handler = ResourceHandler()
-    people_orm = valid_people_orm
-    team_orm = valid_team_orm
+    """Ideally we would be able to also assert on the error message that
+    returns.
 
-    person = people_orm(id=1, name="tester")
-    team = team_orm(id=1, name="team")
+    # assert result == ({"error": "Resource with id '1' not found."},
+    404)
+    """
+    resource_handler = ResourceHandler()
+
+    person = valid_people_orm(id=1, name="tester")
+    team = valid_team_orm(id=1, name="team")
     person.team_collection.append(team)
 
     db_session.add(person)
@@ -75,5 +87,3 @@ def test_put_errors_when_a_child_does_not_exist(
             child_orm=valid_team_orm,
             patch=True,
         )
-
-    # assert result == ({"error": "Resource with id '1' not found."}, 404)

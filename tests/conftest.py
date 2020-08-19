@@ -17,32 +17,24 @@ from tests.testing_schemas.foreign_key import (
 
 
 @pytest.fixture
-def VALID_DATA_DICTIONARY():
+def valid_data_dictionary():
     return DATA_DICTIONARY
 
 
 @pytest.fixture
-def ALL_TYPES():
-    return ALL_TYPES_DATA_DICTIONARY
-
-
-@pytest.fixture
-def MISSING_FOREIGN_KEY_TABLE():
+def missing_foreign_key_table():
     return _MISSING_FOREIGN_KEY_TABLE
 
 
 @pytest.fixture
-def VALID_FOREIGN_KEY():
+def valid_foreign_key():
     return _VALID_FOREIGN_KEY
 
 
 class Database:
     def ping(self):
-        try:
-            db_session.query("1").all()
-            return True
-        except OperationalError:
-            raise
+        db_session.query("1").all()
+        return True
 
     def destory_db(self):
         try:
@@ -66,13 +58,13 @@ def empty_database():
     try:
         os.remove("./static/data_resource_schema.json")
         os.remove("./static/swagger.json")
-    except:
+    except (OSError, FileNotFoundError):
         pass
 
 
 @pytest.fixture
-def valid_base(VALID_DATA_DICTIONARY, empty_database):
-    table_descriptors = VALID_DATA_DICTIONARY["data"]
+def valid_base(valid_data_dictionary, empty_database):
+    table_descriptors = valid_data_dictionary["data"]
     base = create_models(table_descriptors)
     return base
 

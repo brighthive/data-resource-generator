@@ -1,4 +1,3 @@
-# from tableschema import Schema, validate
 from data_resource.db.base import db_session
 from flask import Request
 from data_resource.shared_utils.api_exceptions import ApiError

@@ -52,7 +52,7 @@ def build_links(endpoint: str, offset: int, limit: int, rows: int) -> OrderedDic
     current = OrderedDict()
     first = OrderedDict()
     prev = OrderedDict()
-    next = OrderedDict()
+    _next = OrderedDict()
     last = OrderedDict()
     links = []
 
@@ -72,11 +72,11 @@ def build_links(endpoint: str, offset: int, limit: int, rows: int) -> OrderedDic
         links.append(prev)
 
     if current_page < total_pages:
-        next["rel"] = "next"
-        next["href"] = url_link.format(
+        _next["rel"] = "next"
+        _next["href"] = url_link.format(
             endpoint, _compute_offset(current_page + 1, limit), limit
         )
-        links.append(next)
+        links.append(_next)
 
     last["rel"] = "last"
     last["href"] = url_link.format(endpoint, _compute_offset(total_pages, limit), limit)
@@ -115,20 +115,3 @@ def build_json_from_object(
     }
 
     return resp
-
-
-# def validate_email(email_address):
-#     """Rudimentary email address validator. Not used yet.
-
-#     Args:
-#         email_address (str): Email address string to validate.
-#     Return:
-#         bool: True if the email address is valid, False if not.
-#     """
-#     email_regex = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
-#     is_valid = False
-
-#     if email_regex.match(email_address):
-#         is_valid = True
-
-#     return is_valid

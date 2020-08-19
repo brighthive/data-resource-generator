@@ -18,8 +18,8 @@ def test_creates_all_required_tables(generated_e2e_database_inspector):
 
 
 @pytest.mark.unit
-def test_create_models_creates_all_required_orm(VALID_DATA_DICTIONARY, empty_database):
-    table_descriptors = VALID_DATA_DICTIONARY["data"]
+def test_create_models_creates_all_required_orm(valid_data_dictionary, empty_database):
+    table_descriptors = valid_data_dictionary["data"]
 
     base = create_models(table_descriptors)
 
@@ -48,8 +48,8 @@ def test_create_models_creates_all_required_orm(VALID_DATA_DICTIONARY, empty_dat
 
 
 @pytest.mark.requiresdb
-def test_create_models_can_add_data_with_orm(VALID_DATA_DICTIONARY, empty_database):
-    table_descriptors = VALID_DATA_DICTIONARY["data"]
+def test_create_models_can_add_data_with_orm(valid_data_dictionary, empty_database):
+    table_descriptors = valid_data_dictionary["data"]
     base = create_models(table_descriptors)
 
     people_orm = getattr(base.classes, "people")
@@ -67,8 +67,8 @@ def test_create_models_can_add_data_with_orm(VALID_DATA_DICTIONARY, empty_databa
 
 
 @pytest.mark.requiresdb
-def test_valid_descriptor_creates_base(VALID_DATA_DICTIONARY, empty_database):
-    table_descriptors = VALID_DATA_DICTIONARY["data"]
+def test_valid_descriptor_creates_base(valid_data_dictionary, empty_database):
+    table_descriptors = valid_data_dictionary["data"]
 
     metadata = create_all_tables_from_schemas(table_descriptors)
 
@@ -76,8 +76,8 @@ def test_valid_descriptor_creates_base(VALID_DATA_DICTIONARY, empty_database):
 
 
 @pytest.mark.unit
-def test_get_table_names_and_descriptors(VALID_DATA_DICTIONARY):
-    table_descriptors = VALID_DATA_DICTIONARY["data"]
+def test_get_table_names_and_descriptors(valid_data_dictionary):
+    table_descriptors = valid_data_dictionary["data"]
 
     table_names, descriptors = get_table_names_and_descriptors(table_descriptors)
 

@@ -1,4 +1,4 @@
-# from tableschema import Schema, validate
+from sqlalchemy import exc
 from data_resource.db.base import db_session
 from data_resource.generator.api_manager.v1_0_0.crud_functions.resource_create import (
     ResourceCreate,
@@ -51,7 +51,7 @@ class ResourceUpdate:
             for key, value in request_obj.items():
                 setattr(data_obj, key, value)
             db_session.commit()
-        except:
+        except (exc.SQLAlchemyError, AttributeError):
             raise ApiError("Failed to modify resource.")
 
         id_value = data_obj.id

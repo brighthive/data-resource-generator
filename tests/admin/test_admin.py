@@ -771,6 +771,7 @@ def test_admin_api(admin_e2e, mocker):
 
 @pytest.mark.skip
 def test_put_validates_bad_tableschema():
+    """Have not filled out yet."""
     pass
 
 

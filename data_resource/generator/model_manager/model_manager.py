@@ -1,3 +1,4 @@
+from sqlalchemy import exc
 from tableschema_sql import Storage
 from tableschema.exceptions import ValidationError
 from sqlalchemy import Table, Integer, ForeignKey, Column
@@ -27,7 +28,7 @@ def create_models(data_resource_schema: list, touch_database: bool = True) -> No
     if touch_database:
         try:
             metadata.create_all()
-        except:
+        except exc.SQLAlchemyError:
             logger.exception("Failed to create all models in database.")
 
     # Create ORM relationships

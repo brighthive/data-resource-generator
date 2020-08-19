@@ -18,11 +18,11 @@ def test_generate_rest_api_routes(empty_api):
         "/team/query": ["GET", "POST", "PUT"],
     }
 
-    class team(test_base):
+    class Team(test_base):
         __tablename__ = "it reads class name not tablename"
         id = Column(Integer, primary_key=True)
 
-    generate_rest_api_routes(empty_api, team, enabled_routes)
+    generate_rest_api_routes(empty_api, Team, enabled_routes)
 
     def convert_methods_to_test_format(item: dict) -> list:
         item.remove("OPTIONS")

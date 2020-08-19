@@ -47,12 +47,14 @@ class StorageManager:
             if not os.getenv("APP_ENV", "TEST") == "TEST":
                 with open(self.DEFAULT_LOCAL_SCHEMA_PATH, "w") as outfile:
                     json.dump(data_resource_schema, outfile)
-        elif self.SCHEMA_STORAGE_TYPE == "S3":
-            if not self.s3manager.aws_s3_object_exists(
+        elif (
+            self.SCHEMA_STORAGE_TYPE == "S3"
+            and not self.s3manager.aws_s3_object_exists(
                 self.AWS_S3_STORAGE_BUCKET_NAME, self.AWS_S3_STORAGE_OBJECT_NAME
-            ):
-                self.s3manager.aws_s3_put_data(
-                    data_resource_schema,
-                    self.AWS_S3_STORAGE_BUCKET_NAME,
-                    self.AWS_S3_STORAGE_OBJECT_NAME,
-                )
+            )
+        ):
+            self.s3manager.aws_s3_put_data(
+                data_resource_schema,
+                self.AWS_S3_STORAGE_BUCKET_NAME,
+                self.AWS_S3_STORAGE_OBJECT_NAME,
+            )

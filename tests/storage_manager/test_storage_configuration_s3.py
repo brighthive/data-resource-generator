@@ -58,7 +58,7 @@ def test_s3_manager_config_check_failure():
     """Ensure that the s3 manager will throw a RuntimeError when AWS configs
     not found."""
     with pytest.raises(RuntimeError):
-        s3manager = S3Manager(ConfigurationFactory.get_config("TEST"))
+        _ = S3Manager(ConfigurationFactory.get_config("TEST"))
 
 
 @pytest.mark.unit
@@ -71,7 +71,7 @@ def test_s3_manager_config_check_success():
     """
     configs = base_s3_test_configs()
 
-    s3manager = S3Manager(configs)
+    _ = S3Manager(configs)
 
 
 @pytest.mark.unit

@@ -8,6 +8,7 @@ from botocore.exceptions import ClientError
 from data_resource.shared_utils.log_factory import LogFactory
 
 logger = LogFactory.get_console_logger("configuration-factory")
+SQLALCHEMY_DATABASE_URI_FILLOUT = "postgresql+psycopg2://{}:{}@{}:{}/{}"
 
 
 class InvalidConfigurationError(Exception):
@@ -47,7 +48,7 @@ class Config:
     POSTGRES_DATABASE = "data_resource_dev"
     POSTGRES_HOSTNAME = "localhost"
     POSTGRES_PORT = 5432
-    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{}:{}@{}:{}/{}".format(
+    SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI_FILLOUT.format(
         POSTGRES_USER,
         POSTGRES_PASSWORD,
         POSTGRES_HOSTNAME,
@@ -103,19 +104,6 @@ class TestConfig(Config):
     def __init__(self):
         super().__init__()
 
-    # os.environ["FLASK_ENV"] = "testing"
-    # POSTGRES_PORT = 5433
-    # CONTAINER_NAME = "postgres-test"
-    # IMAGE_NAME = "postgres"
-    # IMAGE_VERSION = "11.1"
-    # POSTGRES_DATABASE = "data_resource_test"
-    # SQLALCHEMY_DATABASE_URI = "postgresql://{}:{}@{}:{}/{}".format(
-    #     Config.POSTGRES_USER,
-    #     Config.POSTGRES_PASSWORD,
-    #     Config.POSTGRES_HOSTNAME,
-    #     POSTGRES_PORT,
-    #     POSTGRES_DATABASE,
-    # )
     ENV = "TEST"
     SKIP_AUTH_CHECK = True
     POSTGRES_USER = "test_user"
@@ -123,50 +111,13 @@ class TestConfig(Config):
     POSTGRES_DATABASE = "data_resource_dev"
     POSTGRES_HOSTNAME = "localhost"
     POSTGRES_PORT = 5433
-    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{}:{}@{}:{}/{}".format(
+    SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI_FILLOUT.format(
         POSTGRES_USER,
         POSTGRES_PASSWORD,
         POSTGRES_HOSTNAME,
         POSTGRES_PORT,
         POSTGRES_DATABASE,
     )
-
-
-# class IntegrationTestConfig(Config):
-#     """Integration testing configuration class."""
-
-#     def __init__(self):
-#         super().__init__()
-
-
-# class DevelopmentConfig(Config):
-#     """Development configuration class."""
-
-#     def __init__(self):
-#         super().__init__()
-
-
-# class SandboxConfig(Config):
-#     """Sandbox deployment configuration class."""
-
-#     def __init__(self):
-#         super().__init__()
-
-#     # Database Settings
-#     SQLALCHEMY_TRACK_MODIFICATIONS = False
-#     PROPAGATE_EXCEPTIONS = True
-#     POSTGRES_USER = os.getenv("POSTGRES_USER")
-#     POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
-#     POSTGRES_DATABASE = os.getenv("POSTGRES_DATABASE")
-#     POSTGRES_HOSTNAME = os.getenv("POSTGRES_HOSTNAME", "localhost")
-#     POSTGRES_PORT = os.getenv("POSTGRES_PORT", 5432)
-#     SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{}:{}@{}:{}/{}".format(
-#         POSTGRES_USER,
-#         POSTGRES_PASSWORD,
-#         POSTGRES_HOSTNAME,
-#         POSTGRES_PORT,
-#         POSTGRES_DATABASE,
-#     )
 
 
 class ProductionConfig(Config):
@@ -190,15 +141,14 @@ class ProductionConfig(Config):
         try:
             get_secret_value_response = client.get_secret_value(SecretId=secret_name)
         except ClientError as e:
-            if e.response["Error"]["Code"] == "DecryptionFailureException":
-                raise e
-            elif e.response["Error"]["Code"] == "InternalServiceErrorException":
-                raise e
-            elif e.response["Error"]["Code"] == "InvalidParameterException":
-                raise e
-            elif e.response["Error"]["Code"] == "InvalidRequestException":
-                raise e
-            elif e.response["Error"]["Code"] == "ResourceNotFoundException":
+            errors = [
+                "DecryptionFailureException",
+                "InternalServiceErrorException",
+                "InvalidParameterException",
+                "InvalidRequestException",
+                "ResourceNotFoundException",
+            ]
+            if e.response["Error"]["Code"] in errors:
                 raise e
         else:
             if "SecretString" in get_secret_value_response:
@@ -209,7 +159,7 @@ class ProductionConfig(Config):
                 POSTGRES_DATABASE = os.getenv("AWS_SM_DBNAME")
                 POSTGRES_HOSTNAME = creds["host"]
                 POSTGRES_PORT = int(creds["port"])
-                SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{}:{}@{}:{}/{}".format(
+                SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI_FILLOUT.format(
                     POSTGRES_USER,
                     POSTGRES_PASSWORD,
                     POSTGRES_HOSTNAME,
@@ -222,7 +172,7 @@ class ProductionConfig(Config):
         POSTGRES_DATABASE = os.getenv("POSTGRES_DATABASE")
         POSTGRES_HOSTNAME = os.getenv("POSTGRES_HOSTNAME", "localhost")
         POSTGRES_PORT = os.getenv("POSTGRES_PORT", 5432)
-        SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{}:{}@{}:{}/{}".format(
+        SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI_FILLOUT.format(
             POSTGRES_USER,
             POSTGRES_PASSWORD,
             POSTGRES_HOSTNAME,

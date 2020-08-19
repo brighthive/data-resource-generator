@@ -13,13 +13,13 @@ from sqlalchemy.orm.attributes import InstrumentedAttribute
 def test_create_mn_association_table():
     many_to_many_relationships = ["people", "team"]
     metadata = MetaData()
-    People = Table(
+    Table(
         "people",
         metadata,
         Column("id", Integer, primary_key=True),
         Column("name", String(50)),
     )
-    Team = Table(
+    Table(
         "team",
         metadata,
         Column("id", Integer, primary_key=True),

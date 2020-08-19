@@ -41,13 +41,6 @@ class VersionedResource(VersionedResourceParent):
 
     @check_auth
     def get(self, id=None):
-        # if self.api_schema["get"]["secured"]:
-
-        # if not self.api_schema["get"]["enabled"]:
-        #     raise MethodNotAllowed()
-        # if request.path.endswith("/query"):
-        #     raise MethodNotAllowed()
-
         offset = 0
         limit = 20
         try:
@@ -69,23 +62,12 @@ class VersionedResource(VersionedResourceParent):
             )
 
         else:
-            #     if self.api_schema["get"]["secured"]:
-            #         return self.get_resource_handler(request.headers).get_one_secure(
-            #             id, self.data_model, self.data_resource_name, self.table_schema
-            #         )
-            #     else:
             return self.get_resource_handler(request.headers).get_one(
                 id=id, resource_name=self.name, resource_orm=self.resource_orm
             )
 
     @check_auth
     def post(self):
-        # if self.api_schema["get"]["secured"]:
-
-        # if not self.api_schema["post"]["enabled"]:
-        #     raise MethodNotAllowed()
-
-        # if self.api_schema["post"]["secured"]:
         if request.path.endswith("/query"):
             return self.get_resource_handler(request.headers).query_one(
                 resource_orm=self.resource_orm, request=request
@@ -97,23 +79,6 @@ class VersionedResource(VersionedResourceParent):
 
     @check_auth
     def put(self, id):
-        # if self.api_schema["get"]["secured"]:
-        # if not self.api_schema["put"]["enabled"]:
-        #     raise MethodNotAllowed()
-        # if request.path.endswith("/query"):
-        #     raise MethodNotAllowed()
-
-        # if self.api_schema["put"]["secured"]:
-        #     return self.get_resource_handler(request.headers).update_one_secure(
-        #         id,
-        #         self.data_model,
-        #         self.data_resource_name,
-        #         self.table_schema,
-        #         self.restricted_fields,
-        #         request,
-        #         mode="PUT",
-        #     )
-        # else:
         return self.get_resource_handler(request.headers).update_one(
             id=id,
             resource_name=self.name,
@@ -124,23 +89,6 @@ class VersionedResource(VersionedResourceParent):
 
     @check_auth
     def patch(self, id):
-        # if self.api_schema["get"]["secured"]:
-        # if not self.api_schema["patch"]["enabled"]:
-        #     raise MethodNotAllowed()
-        # if request.path.endswith("/query"):
-        #     raise MethodNotAllowed()
-
-        # if self.api_schema["patch"]["secured"]:
-        #     return self.get_resource_handler(request.headers).update_one_secure(
-        #         id,
-        #         self.data_model,
-        #         self.data_resource_name,
-        #         self.table_schema,
-        #         self.restricted_fields,
-        #         request,
-        #         mode="PATCH",
-        #     )
-        # else:
         return self.get_resource_handler(request.headers).update_one(
             id=id,
             resource_name=self.name,
@@ -151,85 +99,18 @@ class VersionedResource(VersionedResourceParent):
 
     @check_auth
     def delete(self, id):
-        # if self.api_schema["get"]["secured"]:
-        # if self.api_schema["delete"]["enabled"]:
-        #     raise MethodNotAllowed()
-
-        # if self.api_schema["delete"]["secured"]:
-        # return {"message": "Unimplemented secure delete"}, 405
-        # else:
         return {"message": "Unimplemented unsecure delete"}, 405
 
 
 class VersionedResourceMany(VersionedResourceParent):
-    # def error_if_resource_is_disabled(self, verb: str, resource: str, api_schema: dict):
-    #     """This will raise an exception that will return an error to the client
-    #     if they attempt to access a disabled resource.
-
-    #     Returns nothing.
-    #     """
-    #     enabled = False
-    #     try:
-    #         for custom_resource in api_schema["custom"]:
-    #             if custom_resource["resource"] == resource:
-    #                 for method in custom_resource["methods"]:
-    #                     enabled = method[verb]["enabled"]
-    #                     if not enabled:
-    #                         raise MethodNotAllowed()
-
-    #                     return
-
-    #     except KeyError:
-    #         raise MethodNotAllowed()
-
-    # def is_secured(self, verb: str, resource: str, api_schema: dict):
-    #     """Defaults to secured for security."""
-    #     try:
-    #         secured = False
-    #         for custom_resource in api_schema["custom"]:
-    #             if custom_resource["resource"] == resource:
-    #                 # assert is bool?
-    #                 for method in custom_resource["methods"]:
-    #                     secured = method[verb]["secured"]
-
-    #         return secured
-
-    #     except KeyError:
-    #         return True
-
     @check_auth
     def get(self, id=None):
-        # route should be parent/<id>/child
-        # paths = request.path.split("/")
-        # parent, child = paths[1], paths[3]
-
-        # resource = f"/{parent}/{child}"
-        # self.error_if_resource_is_disabled("get", resource, self.api_schema)
-
-        # if self.is_secured("get", resource, self.api_schema):
-        #     return self.get_resource_handler(request.headers).get_many_one_secure(
-        #         id, parent, child
-        #     )
-        # else:
         return self.get_resource_handler(request.headers).get_mn_one(
             id, self.parent_orm, self.child_orm
         )
 
     @check_auth
     def put(self, id=None):
-        #     # Replaces all data
-        #     paths = request.path.split("/")
-        #     parent, child = paths[1], paths[3]
-
-        #     resource = f"/{parent}/{child}"
-        #     self.error_if_resource_is_disabled("put", resource, self.api_schema)
-
-        #     value =
-        #     if self.is_secured("put", resource, self.api_schema):
-        #         return self.get_resource_handler(request.headers).put_many_one_secure(
-        #             id, parent, child, value
-        #         )
-        #     else:
         body = request.json
 
         return self.get_resource_handler(request.headers).put_mn_one(
@@ -238,37 +119,8 @@ class VersionedResourceMany(VersionedResourceParent):
 
     @check_auth
     def patch(self, id=None):
-        #     paths = request.path.split("/")
-        #     parent, child = paths[1], paths[3]
-
-        #     resource = f"/{parent}/{child}"
-        #     self.error_if_resource_is_disabled("patch", resource, self.api_schema)
-
-        #     value = request.json[child]
-        #     if self.is_secured("put", resource, self.api_schema):
-        #         return self.get_resource_handler(request.headers).patch_many_one_secure(
-        #             id, parent, child, value
-        #         )
-        #     else:
         body = request.json
 
         return self.get_resource_handler(request.headers).put_mn_one(
             id, body, self.parent_orm, self.child_orm, patch=True
         )
-
-    # def delete(self, id=None):
-    #     paths = request.path.split("/")
-    #     parent, child = paths[1], paths[3]
-
-    #     resource = f"/{parent}/{child}"
-    #     self.error_if_resource_is_disabled("delete", resource, self.api_schema)
-
-    #     value = request.json[child]  # Needs an except KeyError
-    #     if self.is_secured("delete", resource, self.api_schema):
-    #         return self.get_resource_handler(request.headers).delete_many_one_secure(
-    #             id, parent, child, value
-    #         )
-    #     else:
-    #         return self.get_resource_handler(request.headers).delete_many_one(
-    #             id, parent, child, value
-    #         )

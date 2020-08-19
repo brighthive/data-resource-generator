@@ -91,8 +91,6 @@ def generate_rest_api_routes(
             resource_api, route, endpoint=f"{resource_name}_ep_{idx}", methods=methods
         )
 
-    return
-
 
 def generate_relationship_rest_api_routes(
     api: Api, enabled_routes: dict, relationship: list
@@ -126,8 +124,6 @@ def generate_relationship_rest_api_routes(
             resource_api, route, endpoint=f"{resource_name}_ep_{idx}", methods=methods
         )
 
-    return
-
 
 # util
 def generate_orm_relationship_list(base, relationships: list) -> list:
@@ -137,7 +133,7 @@ def generate_orm_relationship_list(base, relationships: list) -> list:
         try:
             first_orm = getattr(base.classes, relationship[0].lower())
             second_orm = getattr(base.classes, relationship[1].lower())
-        except:
+        except AttributeError:
             logger.exception(
                 "A referenced ORM within a relationship does not exist in base."
             )

@@ -52,7 +52,7 @@ class S3Manager:
 
         try:
             s3_client = self.get_s3_client()
-            response = s3_client.upload_file(file_name, bucket, object_name)
+            _ = s3_client.upload_file(file_name, bucket, object_name)
         except ClientError as e:
             logging.error(e)
             return False

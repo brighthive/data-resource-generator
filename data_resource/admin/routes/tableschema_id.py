@@ -64,7 +64,6 @@ class TableSchemaID(Resource):
             p.update(**item)
             entry = p
         else:
-            # item['created'] = datetime.datetime.utcnow()
             entry = orm.TableSchema(**item)
             db_session.add(entry)
         db_session.commit()

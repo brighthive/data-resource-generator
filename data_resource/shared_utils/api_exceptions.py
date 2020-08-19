@@ -9,11 +9,13 @@ logger = LogFactory.get_console_logger("api-exceptions")
 
 
 class DRApiError(Exception):
-    def __init__(self, message, status_code=400, errors=[]):
+    def __init__(self, message, status_code=400, errors=None):
         Exception.__init__(self)
         self.message = message
-        self.errors = errors
         self.status_code = status_code
+        if errors is None:
+            errors = []
+        self.errors = errors
 
     def get_message(self):
         resp = {}

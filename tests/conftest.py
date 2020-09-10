@@ -105,7 +105,9 @@ def generated_e2e(empty_database):
 
     with app.app_context():
         # skip generation process -- inject the data dict
-        start_data_resource_generator(DATA_DICTIONARY, api)
+        start_data_resource_generator(
+            {"data_resource_schema": DATA_DICTIONARY, "ignore_validation": 1}, api
+        )
 
     return app
 
@@ -119,7 +121,10 @@ def all_types_generated_e2e(empty_database):
 
     with app.app_context():
         # skip generation process -- inject the data dict
-        start_data_resource_generator(ALL_TYPES_DATA_DICTIONARY, api)
+        start_data_resource_generator(
+            {"data_resource_schema": ALL_TYPES_DATA_DICTIONARY, "ignore_validation": 1},
+            api,
+        )
 
     return app
 

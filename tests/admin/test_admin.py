@@ -792,7 +792,7 @@ def test_drg_schema_no_key_failure(admin_e2e):
     response = api.post("/generator", json={"this is invalid": {1: 2}})
 
     assert response.json == {
-        "error": "Data Resource Schema should be placed inside root key 'data_resource_schema'."
+        "error": "Failed to load existing data resource schema. 'data_catalog' nor 'data_resource_schema' found at root."
     }
     assert response.status_code == 400
 

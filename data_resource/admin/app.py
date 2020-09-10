@@ -93,18 +93,6 @@ def handle_existing_data_resource_schema(api: Api):
 
     data_resource_schema = storage.get_data_resource_schema_data()
 
-    # Older versions used 'data_catalog'
-    if "data_catalog" in data_resource_schema:
-        data_resource_schema = data_resource_schema["data_catalog"]
-    elif "data_resource_schema" in data_resource_schema:
-        data_resource_schema = data_resource_schema["data_resource_schema"]
-
-    else:
-        logger.warning(
-            "Failed to load existing data resource schema. 'data_catalog' nor 'data_resource_schema' found at root."
-        )
-        return
-
     start_data_resource_generator(data_resource_schema, api, touch_database=False)
 
     logger.info("Loaded existing data resource schema.")

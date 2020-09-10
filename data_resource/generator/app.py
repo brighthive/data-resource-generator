@@ -35,9 +35,6 @@ def start_data_resource_generator(full_schema, api, touch_database: bool = True)
     elif "data_resource_schema" in full_schema:
         data_resource_schema = full_schema["data_resource_schema"]
     else:
-        # logger.warning(
-        #     "Failed to load existing data resource schema. 'data_catalog' nor 'data_resource_schema' found at root."
-        # )
         raise ApiError(
             "Failed to load existing data resource schema. 'data_catalog' nor 'data_resource_schema' found at root."
         )

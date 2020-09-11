@@ -57,6 +57,10 @@ def empty_database():
     yield
     try:
         os.remove("./static/data_resource_schema.json")
+    except (OSError, FileNotFoundError):
+        pass
+
+    try:
         os.remove("./static/swagger.json")
     except (OSError, FileNotFoundError):
         pass

@@ -21,7 +21,7 @@ This application was not designed to be run on top of a database that already ha
 Restarting the application
 --------------------------
 
-Restarting of the application is supported. In the event that your application has applied migrations to the database you simply need to ensure you have a saved data_resource_schema.json file in the static folder.
+Restarting of the application is supported. In the event that your application has applied migrations to the database you simply need to ensure you have a saved data_resource_generation_payload.json file in the static folder.
 
 On startup the application will attempt to load the ORM and API based on the data resource schema file. In this mode, the application will not apply any modifiations to the database. You must ensure that the state of your database matches the state the data resource schema expects.
 

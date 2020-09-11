@@ -79,7 +79,7 @@ tableschema_2 = {
         },
     }
 }
-data_resource_schema = {
+data_resource_generation_payload = {
     "data_resource_schema": {
         "@id": "https://mydatatrust.brighthive.io/dr1",
         "@type": "dataResource",
@@ -761,7 +761,7 @@ def test_admin_api(admin_e2e, mocker):
     assert "/teams" in body["swagger"]["paths"]
 
     # assert generator fn gets called?
-    response = api.post("/generator", json=data_resource_schema)
+    response = api.post("/generator", json=data_resource_generation_payload)
     assert response.status_code == 204
 
     assert response.data == b""

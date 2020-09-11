@@ -28,3 +28,4 @@ docs/build
 # generated swagger file
 swagger.json
 data_resource_schema.json
+data_resource_generation_payload.json

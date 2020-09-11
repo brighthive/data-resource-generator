@@ -56,7 +56,7 @@ def empty_database():
     db.destory_db()
     yield
     try:
-        os.remove("./static/data_resource_schema.json")
+        os.remove("./static/data_resource_generation_payload.json")
     except (OSError, FileNotFoundError):
         pass
 

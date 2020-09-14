@@ -93,6 +93,9 @@ def handle_existing_data_resource_schema(api: Api):
 
     data_resource_schema = storage.get_data_resource_schema_data()
 
+    logger.info("Data")
+    logger.info(data_resource_schema)
+
     # Older versions used 'data_catalog'
     if "data_catalog" in data_resource_schema:
         data_resource_schema = data_resource_schema["data_catalog"]

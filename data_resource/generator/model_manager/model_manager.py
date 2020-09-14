@@ -7,6 +7,7 @@ from sqlalchemy.ext.automap import automap_base
 from data_resource.shared_utils.log_factory import LogFactory
 from sqlalchemy import MetaData
 
+from data_resource.crypto.aes import AES_GCM_Engine
 
 logger = LogFactory.get_console_logger("generator:model-manager")
 
@@ -41,8 +42,12 @@ def create_all_tables_from_schemas(table_schemas: list) -> "Metadata":
     """Generates the tables from frictionless table schema (without
     relations)."""
     table_names, descriptors = get_table_names_and_descriptors(table_schemas)
+    encrypted_defintions = get_encryption_definitions(table_schemas)
 
     try:
+        logger.info(table_schemas)
+        logger.info(encrypted_defintions)
+
         storage = Storage(engine=engine)
 
         # Override the reflection and capture reference to orm
@@ -54,7 +59,9 @@ def create_all_tables_from_schemas(table_schemas: list) -> "Metadata":
         original_create_all = metadata.create_all
         metadata.create_all = lambda: None
 
-        storage.create(table_names, descriptors)
+        storage.create(
+            table_names, descriptors, encrypted_definitions=encrypted_defintions
+        )
 
         metadata.create_all = original_create_all  # Restore
 
@@ -76,6 +83,35 @@ def automap_metadata(metadata) -> "Base":
     base.prepare()
 
     return base
+
+
+# util
+def get_encryption_definitions(table_schemas: list) -> (list, list):
+    """Given a table schemas, this simply create the encryption defintion for
+    the ORM."""
+    data_dict = table_schemas["dataDictionary"]
+
+    encryption_definitions = dict()
+
+    for schema in data_dict:
+        table_encryption_definitions = {}
+        table_name = schema["name"].lower()
+        print(table_name)
+        print(schema)
+        try:
+            for enSchemaKey in schema["encryptionSchema"].keys():
+                enSchema = schema["encryptionSchema"][enSchemaKey]
+                if enSchema["type"] == "AES_256_GCM":
+                    table_encryption_definitions[enSchemaKey] = {
+                        "key": enSchema["key"],
+                        "engine": AES_GCM_Engine,
+                    }
+                    encryption_definitions[table_name] = table_encryption_definitions
+        except KeyError:
+            pass
+
+    print(encryption_definitions)
+    return encryption_definitions
 
 
 # util

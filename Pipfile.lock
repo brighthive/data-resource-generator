@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "3a6054d7885bf18de5e318d0d87310e0385f72ece2785dfeb3f8068781f8d5d0"
+            "sha256": "f0a43e66581f7cbdb449689a813941358bb961c987dbdebb1c45d3ec6845c1ff"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -686,7 +686,7 @@
         "tableschema-sql": {
             "editable": true,
             "git": "https://github.com/brighthive/tableschema-sql-py.git",
-            "ref": "06f637e33e9c53e1b3214faaf67b4f7ff989df95"
+            "ref": "5019fc8193fbe73163d84b08cd633dc8a48c1019"
         },
         "tabulator": {
             "hashes": [

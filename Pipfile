@@ -11,7 +11,7 @@ pytest-mock = "*"
 sphinx = "*"
 
 [packages]
-tableschema-sql = {git = "https://github.com/brighthive/tableschema-sql-py.git", editable = true, ref = "add-encryption-type"}
+tableschema-sql = {git = "https://github.com/brighthive/tableschema-sql-py.git", editable = true, ref = "v1.3.2"}
 psycopg2-binary = "*"
 sqlalchemy = "*"
 flask-sqlalchemy = "*"

@@ -1,5 +1,4 @@
 DATA_DICTIONARY = {
-    "ignore_validation": 1,
     "@context": ["https://schema.org", {"bh": "https://schema.brighthive.io/"}],
     "@type": "bh:DataResource",
     "@id": "https://mydatatrust.brighthive.io/dr1",

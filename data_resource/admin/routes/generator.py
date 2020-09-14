@@ -18,19 +18,9 @@ class Generator(Resource):
         except KeyError:
             touch_database = True
 
-        if "ignore_validation" not in request.json:
-            try:
-                data_resource_schema = request.json["data_resource_schema"]
-            except KeyError:
-                raise ApiError(
-                    "Data Resource Schema should be placed inside root key 'data_resource_schema'."
-                )
-
         api = current_app.config["api"]
 
-        start_data_resource_generator(
-            data_resource_schema, api, touch_database=touch_database
-        )
+        start_data_resource_generator(request.json, api, touch_database=touch_database)
 
         logger.info("Data Resource(s) successfully generated.")
 

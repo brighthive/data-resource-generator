@@ -6,6 +6,8 @@ from data_resource.storage.storage_manager import StorageManager
 from data_resource.shared_utils.validator import validate_data_resource_schema
 import json
 import os
+from data_resource.shared_utils.api_exceptions import ApiError
+
 
 logger = LogFactory.get_console_logger("generator:app")
 
@@ -26,13 +28,27 @@ def save_swagger(swagger):
         _file.write(json.dumps(swagger))
 
 
-def start_data_resource_generator(
-    data_resource_schema, api, touch_database: bool = True
-):
-    if "ignore_validation" not in data_resource_schema:
+def start_data_resource_generator(generation_payload, api, touch_database: bool = True):
+    """generation_payload (dict): This is the JSON body that should be posted
+    to the generator.
+
+    It contains a key that holds the data_resource_schema and can
+    include other keys that allow things like no validation to occur.
+    """
+    # Older versions used 'data_catalog'
+    if "data_catalog" in generation_payload:
+        data_resource_schema = generation_payload["data_catalog"]
+    elif "data_resource_schema" in generation_payload:
+        data_resource_schema = generation_payload["data_resource_schema"]
+    else:
+        raise ApiError(
+            "Failed to load existing data resource schema. 'data_catalog' nor 'data_resource_schema' found at root."
+        )
+
+    if "ignore_validation" not in generation_payload:
         validate_data_resource_schema(data_resource_schema)
 
-    storage.save_data_resource_schema_data(data_resource_schema)
+    storage.save_data_resource_generation_payload_data(generation_payload)
 
     data_dict = data_resource_schema["data"]
     try:

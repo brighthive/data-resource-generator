@@ -76,7 +76,7 @@ def create_app(actually_run=True):
         db_session.remove()
 
     # Check if we need to turn on API/model already
-    handle_existing_data_resource_schema(api)
+    handle_existing_data_resource_generation_payload(api)
 
     if actually_run:
         app.run(host="0.0.0.0", port=8081, use_reloader=False, threaded=False)  # nosec
@@ -85,29 +85,18 @@ def create_app(actually_run=True):
         return app
 
 
-def handle_existing_data_resource_schema(api: Api):
-    if not storage.data_resource_schema_exists():
+def handle_existing_data_resource_generation_payload(api: Api):
+    if not storage.data_resource_generation_payload_exists():
         return
 
     logger.info("Found an existing data resource schema. Attempting to load it...")
 
-    data_resource_schema = storage.get_data_resource_schema_data()
+    data_resource_generation_payload = (
+        storage.get_data_resource_generation_payload_data()
+    )
 
-    logger.info("Data")
-    logger.info(data_resource_schema)
-
-    # Older versions used 'data_catalog'
-    if "data_catalog" in data_resource_schema:
-        data_resource_schema = data_resource_schema["data_catalog"]
-    elif "data_resource_schema" in data_resource_schema:
-        data_resource_schema = data_resource_schema["data_resource_schema"]
-
-    else:
-        logger.warning(
-            "Failed to load existing data resource schema. 'data_catalog' nor 'data_resource_schema' found at root."
-        )
-        return
-
-    start_data_resource_generator(data_resource_schema, api, touch_database=False)
+    start_data_resource_generator(
+        data_resource_generation_payload, api, touch_database=False
+    )
 
     logger.info("Loaded existing data resource schema.")

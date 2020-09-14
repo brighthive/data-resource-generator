@@ -44,8 +44,6 @@ def create_all_tables_from_schemas(table_schemas: list) -> "Metadata":
     encrypted_defintions = get_encryption_definitions(table_schemas)
 
     try:
-        logger.info(table_schemas)
-
         storage = Storage(engine=engine)
 
         # Override the reflection and capture reference to orm

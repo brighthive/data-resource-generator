@@ -1,3 +1,4 @@
+import os
 from sqlalchemy import exc
 from tableschema_sql import Storage
 from tableschema.exceptions import ValidationError
@@ -5,12 +6,10 @@ from sqlalchemy import Table, Integer, ForeignKey, Column
 from data_resource.db import engine
 from sqlalchemy.ext.automap import automap_base
 from data_resource.shared_utils.log_factory import LogFactory
+from data_resource.crypto import AES_GCM_Engine, AWS_AES_Engine
 from sqlalchemy import MetaData
 
-from data_resource.crypto.aes import AES_GCM_Engine
-
 logger = LogFactory.get_console_logger("generator:model-manager")
-
 
 # main
 def create_models(data_resource_schema: list, touch_database: bool = True) -> None:
@@ -90,27 +89,35 @@ def get_encryption_definitions(table_schemas: list) -> (list, list):
     """Given a table schemas, this simply create the encryption defintion for
     the ORM."""
     data_dict = table_schemas["dataDictionary"]
-
     encryption_definitions = dict()
 
+    # goes through schema and create encryption defintion
     for schema in data_dict:
         table_encryption_definitions = {}
         table_name = schema["name"].lower()
-        print(table_name)
-        print(schema)
+
+        # goes through table schema and sets engine and key
         try:
-            for enSchemaKey in schema["encryptionSchema"].keys():
-                enSchema = schema["encryptionSchema"][enSchemaKey]
-                if enSchema["type"] == "AES_256_GCM":
-                    table_encryption_definitions[enSchemaKey] = {
-                        "key": enSchema["key"],
+            for en_schema_key in schema["encryptionSchema"].keys():
+                en_schema = schema["encryptionSchema"][en_schema_key]
+
+                if en_schema["type"] == "AES_256_GCM":
+                    table_encryption_definitions[en_schema_key] = {
+                        "key": os.getenv(en_schema["key"], en_schema["key"]),
                         "engine": AES_GCM_Engine,
                     }
                     encryption_definitions[table_name] = table_encryption_definitions
-        except KeyError:
-            pass
 
-    print(encryption_definitions)
+                if en_schema["type"] == "AWS_AES_Engine":
+                    table_encryption_definitions[en_schema_key] = {
+                        "key": os.getenv(en_schema["key"], en_schema["key"]),
+                        "engine": AWS_AES_Engine,
+                    }
+                    encryption_definitions[table_name] = table_encryption_definitions
+
+        except KeyError:
+            pass  # if encryption schema does exist fail gracefully
+
     return encryption_definitions
 
 

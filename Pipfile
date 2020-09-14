@@ -27,6 +27,7 @@ botocore = "*"
 jsonschema = "*"
 cryptography = "*"
 sqlalchemy-utils = "*"
+aws-encryption-sdk = "*"
 
 [requires]
 python_version = "3.7"

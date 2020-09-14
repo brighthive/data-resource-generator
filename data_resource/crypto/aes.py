@@ -37,7 +37,9 @@ class AES_GCM_Engine(EncryptionDecryptionBaseEngine):
         )
         encryptor = cipher.encryptor()
         encrypted = encryptor.update(value) + encryptor.finalize()
-        # assert len(encryptor.tag) == self.TAG_SIZE_BYTES
+        if len(encryptor.tag) != self.TAG_SIZE_BYTES:
+            raise InvalidCiphertextError()
+
         encrypted = b64encode(iv + encryptor.tag + encrypted)
         return encrypted.decode("utf-8")
 

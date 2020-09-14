@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "45f28f994ad9dad0f3174c7bc463da3d6db77f2ed98888903a69e8465a812eb2"
+            "sha256": "3a6054d7885bf18de5e318d0d87310e0385f72ece2785dfeb3f8068781f8d5d0"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -30,6 +30,14 @@
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
             "version": "==20.2.0"
+        },
+        "aws-encryption-sdk": {
+            "hashes": [
+                "sha256:4f8ea7073e943d1ac82adf9bccfccdd9f817d23e3d49c782862b1814efd1155e",
+                "sha256:cd5943adbab9193907401a57542fbf8b412670a2cd115b48cdd5825592f6c223"
+            ],
+            "index": "pypi",
+            "version": "==1.4.1"
         },
         "bitarray": {
             "hashes": [
@@ -708,6 +716,12 @@
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'",
             "version": "==1.0.1"
+        },
+        "wrapt": {
+            "hashes": [
+                "sha256:b62ffa81fb85f4332a4f609cab4ac40709470da05643a082ec1eb88e6d9b97d7"
+            ],
+            "version": "==1.12.1"
         },
         "xlrd": {
             "hashes": [

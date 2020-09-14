@@ -4,5 +4,5 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 env = os.getenv("APP_ENV", "")
 
-app = application = create_app(actually_run=False)
-app = ProxyFix(app)
+app = application = create_app(actually_run=True)
+# app = ProxyFix(app)

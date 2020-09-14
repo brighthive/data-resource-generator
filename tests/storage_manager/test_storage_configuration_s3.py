@@ -47,7 +47,7 @@ def test_load_configuration_from_env_for_storage_manager():
 
     configuration = ConfigurationFactory.get_config("TEST")
     assert hasattr(configuration, "SCHEMA_STORAGE_TYPE")
-    assert hasattr(configuration, "DEFAULT_LOCAL_SCHEMA_PATH")
+    assert hasattr(configuration, "DEFAULT_LOCAL_GENERATION_PAYLOAD_PATH")
     assert hasattr(configuration, "AWS_S3_REGION")
     assert hasattr(configuration, "AWS_S3_STORAGE_BUCKET_NAME")
     assert hasattr(configuration, "AWS_S3_STORAGE_OBJECT_NAME")
@@ -91,14 +91,14 @@ def test_s3_manager_config_required_env_check():
     "data_resource.storage.aws_s3.S3Manager.aws_s3_object_exists",
     new=in_mock_s3_manager.aws_s3_object_exists_true,
 )
-def test_s3_store_manager_data_resource_schema_exists():
+def test_s3_store_manager_data_resource_payload_exists():
     """Ensuring the S3 Manager is receiving the correct parameters
     "aws_s3_object_exists" for the AWS API (boto3)"""
     configs = base_s3_test_configs()
 
     manager = StorageManager(configs)
 
-    assert manager.data_resource_schema_exists() == True
+    assert manager.data_resource_generation_payload_exists() == True
 
 
 @pytest.mark.unit
@@ -106,14 +106,14 @@ def test_s3_store_manager_data_resource_schema_exists():
     "data_resource.storage.aws_s3.S3Manager.aws_s3_get_data",
     new=in_mock_s3_manager.aws_s3_get_data,
 )
-def test_s3_store_manager_data_resource_get_schema():
+def test_s3_store_manager_data_resource_payload_get():
     """Ensuring the S3 Manager is receiving the correct parameters
     "aws_s3_get_data" for the AWS API (boto3)"""
     configs = base_s3_test_configs()
 
     manager = StorageManager(configs)
 
-    assert manager.get_data_resource_schema_data() == {}
+    assert manager.get_data_resource_generation_payload_data() == {}
 
 
 @pytest.mark.unit
@@ -125,12 +125,12 @@ def test_s3_store_manager_data_resource_get_schema():
     "data_resource.storage.aws_s3.S3Manager.aws_s3_object_exists",
     new=in_mock_s3_manager.aws_s3_object_exists_false,
 )
-def test_s3_store_manager_data_resource_get_schema():
+def test_s3_store_manager_data_resource_playload_get():
     """Ensuring the S3 Manager is receiving the correct parameters
     "aws_s3_put_data" for the AWS API (boto3)"""
     configs = base_s3_test_configs()
     manager = StorageManager(configs)
-    manager.save_data_resource_schema_data("{}")
+    manager.save_data_resource_generation_payload_data("{}")
 
     assert in_mock_s3_manager.json_data == "{}"
     assert in_mock_s3_manager.bucket == configs.AWS_S3_STORAGE_BUCKET_NAME

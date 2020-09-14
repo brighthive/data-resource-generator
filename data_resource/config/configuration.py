@@ -68,7 +68,9 @@ class Config:
 
     # Schema Store (LOCAL = LOCAL IO, S3 = AWS S3 Object)
     SCHEMA_STORAGE_TYPE = os.getenv("SCHEMA_STORAGE_TYPE", "LOCAL")
-    DEFAULT_LOCAL_SCHEMA_PATH = "./static/data_resource_schema.json"
+    DEFAULT_LOCAL_GENERATION_PAYLOAD_PATH = (
+        "./static/data_resource_generation_payload.json"
+    )
 
     # Requires SCHEMA_STORAGE_TYPE to be "S3"
     AWS_S3_REGION = os.getenv("AWS_S3_REGION", None)

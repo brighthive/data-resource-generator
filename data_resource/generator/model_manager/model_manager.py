@@ -45,7 +45,6 @@ def create_all_tables_from_schemas(table_schemas: list) -> "Metadata":
 
     try:
         logger.info(table_schemas)
-        logger.info(encrypted_defintions)
 
         storage = Storage(engine=engine)
 

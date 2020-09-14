@@ -42,7 +42,7 @@ def start_data_resource_generator(generation_payload, api, touch_database: bool 
         data_resource_schema = generation_payload["data_resource_schema"]
     else:
         raise ApiError(
-            "Failed to load existing data resource schema. 'data_catalog' nor 'data_resource_schema' found at root."
+            "Failed to load existing data resource generation payload. Neither 'data_catalog' nor 'data_resource_schema' keys were found at the root of the Data Resource Generation Payload."
         )
 
     if "ignore_validation" not in generation_payload:

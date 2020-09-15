@@ -6,7 +6,7 @@ from sqlalchemy import Table, Integer, ForeignKey, Column
 from data_resource.db import engine
 from sqlalchemy.ext.automap import automap_base
 from data_resource.shared_utils.log_factory import LogFactory
-from data_resource.crypto import AES_GCM_Engine, AWS_AES_Engine
+from tableschema_sql.crypto import AES_GCM_Engine, AWS_AES_Engine
 from sqlalchemy import MetaData
 
 logger = LogFactory.get_console_logger("generator:model-manager")

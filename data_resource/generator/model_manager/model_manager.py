@@ -116,7 +116,7 @@ def get_encryption_definitions(table_schemas: list) -> (list, list):
                 }
                 encryption_definitions[table_name] = table_encryption_definitions
         except KeyError:
-            pass  # if encryption schema does exist not fail gracefully
+            pass  # if encryption schema does not exist it will fail gracefully
 
     if "encryptionSchema" in table_schemas:
         en_schema = table_schemas["encryptionSchema"]["*"]

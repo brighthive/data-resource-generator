@@ -7,11 +7,11 @@ Overview
 Given a configuration file VIA REST the Data Resource Generator (DRG) will dynamically generate:
 
 #. Database tables with relationships
-    #. SQLAlchemy Object Relation Mappings (ORM)
-    #. Run database migrations
+    * SQLAlchemy Object Relation Mappings (ORM)
+    * Generate and run database migrations
 #. RESTful API
-    #. Running Flask application
-    #. Open API Specification 3.0
+    * Running Flask application
+    * Open API Specification 3.0
 
 The application is built with Python and primarily leverages Flask.
 

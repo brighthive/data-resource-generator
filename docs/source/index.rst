@@ -9,10 +9,12 @@ Welcome to Data Resource Generator's documentation!
    architectural_design
    in_prod_usage
    use_cases
-   references/running
-   references/routes
    references/configuration
-   references/datatypes
+   references/data_resource_schema
+   references/running
+   references/relationships
+   references/routes
+   references/types
    references/migrating
    roadmap/unsupported_features
 

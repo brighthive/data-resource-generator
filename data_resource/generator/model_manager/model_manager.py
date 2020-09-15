@@ -83,6 +83,17 @@ def automap_metadata(metadata) -> "Base":
     return base
 
 
+def get_engine_from_type(type):
+    if type == "AES_256_GCM":
+        return AES_GCM_Engine
+
+    if type == "AWS_AES_Engine":
+        return AWS_AES_Engine
+
+    # default is always base AES GCM
+    return AES_GCM_Engine
+
+
 # util
 def get_encryption_definitions(table_schemas: list) -> (list, list):
     """Given a table schemas, this simply create the encryption defintion for
@@ -99,23 +110,23 @@ def get_encryption_definitions(table_schemas: list) -> (list, list):
         try:
             for en_schema_key in schema["encryptionSchema"].keys():
                 en_schema = schema["encryptionSchema"][en_schema_key]
+                engine = get_engine_from_type(en_schema["type"])
 
-                if en_schema["type"] == "AES_256_GCM":
-                    table_encryption_definitions[en_schema_key] = {
-                        "key": os.getenv(en_schema["key"], en_schema["key"]),
-                        "engine": AES_GCM_Engine,
-                    }
-                    encryption_definitions[table_name] = table_encryption_definitions
-
-                if en_schema["type"] == "AWS_AES_Engine":
-                    table_encryption_definitions[en_schema_key] = {
-                        "key": os.getenv(en_schema["key"], en_schema["key"]),
-                        "engine": AWS_AES_Engine,
-                    }
-                    encryption_definitions[table_name] = table_encryption_definitions
-
+                table_encryption_definitions[en_schema_key] = {
+                    "key": os.getenv(en_schema["key"], en_schema["key"]),
+                    "engine": engine,
+                }
+                encryption_definitions[table_name] = table_encryption_definitions
         except KeyError:
-            pass  # if encryption schema does exist fail gracefully
+            pass  # if encryption schema does exist not fail gracefully
+
+    if "encryptionSchema" in table_schemas:
+        en_schema = table_schemas["encryptionSchema"]["*"]
+        engine = get_engine_from_type(en_schema["type"])
+        encryption_definitions["*"] = {
+            "key": os.getenv(en_schema["key"], en_schema["key"]),
+            "engine": engine,
+        }
 
     return encryption_definitions
 

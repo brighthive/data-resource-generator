@@ -58,6 +58,8 @@ Data Resource Descriptor: BrightHive specification. Includes an API definition a
 
 Data Resource Schema: BrightHive specification. JSONLD document. Please see [specification in progress](example.com) for more information.
 
+Data Resource Generation Payload: This is simply the JSON body that includes a nested Data Resource Schema that is used to generate the application. Additional properties can be included as top level keys to affect generation in a number of ways.
+
 ### Start the application
 
 There are two ways to run the application. Using docker is highly preferred.
@@ -125,7 +127,7 @@ For more information about AWS SM and how to setup on AWS console please visit: 
 
 ### Storage Manager
 
-The storage manager is responsible for the storage and retrieval of the data resource schema from different sources depending on the deployment environment.
+The storage manager is responsible for the storage and retrieval of the data resource generation payload from different sources depending on the deployment environment.
 
 - **LOCAL** (Default) - Will store the data resource api schema on the local volume of the deployment. (If you require multiple instance of the same data resource API please use a cloud storage option ex. AWS S3) `export SCHEMA_STORAGE_TYPE=LOCAL`
 - **AWS S3** - Will store the data resource api schema within a define bucket and object. `export SCHEMA_STORAGE_TYPE=S3`
@@ -153,9 +155,9 @@ In production mode all generated routes will be secured by default.
 
 #### Submit a Data Resource Schema
 
-Once you have your table schema files and swagger API you will need to convert them into a Data Resource Schema.
+Once you have your table schema files and swagger API you will need to convert them into a Data Resource Schema and nest them inside a Data Resource Generation Payload. Nest the Data Resource Schema under a top-level key with the value, `data_resource_schema`.
 
-- `POST /generator` Given a Data Resource Schema, this trigger the generation of all of the described Data Resources.
+- `POST /generator` Given a Data Resource Generation Payload (and thus a nested Data Resource Schema), this trigger the generation of all of the described Data Resources.
 
 ### Interacting with Generated Data Resources
 

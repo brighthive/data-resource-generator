@@ -1,7 +1,7 @@
 datatypes
 =========
 
-Currently this library uses `tableschema-sql-py` to convert tableschema types to database types.
+Currently this library uses `tableschema-sql-py` to convert table schema types to database types.
 
 The following was written for v1.2.0 of `tableschema-sql-py`.
 
@@ -25,7 +25,7 @@ Follow this link to see the code that does that -- https://github.com/frictionle
 - 'year': sa.Integer
 - 'yearmonth': sa.Text
 
-
 Known bug
 ---------
-date and datetimes have a resolution bug. The application seems to assume you have a resolution of 1 milisecond so any times you send will have zeros appended to it.
+
+`date` and `datetimes` have a resolution bug. The application seems to assume you have a resolution of 1 millisecond so any times you send will have zeros appended to it.

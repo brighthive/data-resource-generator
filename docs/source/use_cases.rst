@@ -5,7 +5,7 @@ The Data Resource Generator (DRG) allows you to dynamically generate a database 
 
 1. This can be used to allow non-database users to create and use databases with a RESTful API interface
 
-1. Quickly stand up database and APIs programmatically.
+1. Quickly stand up a database with RESTful API programmatically.
 
 1. By leveraging Open API Specification 3.0 (OAS3 or Swagger) you can automate the building of API clients.
 

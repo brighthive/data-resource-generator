@@ -21,7 +21,7 @@ The following are not currently supported:
 One to Many support
 ^^^^^^^^^^^^^^^^^^^
 
-You may define one to many relationships using tableschema foregin key in the Data Resource Schema document. Please see `tableschema's foreign key documentation <https://specs.frictionlessdata.io/table-schema/#foreign-keys>` for more information.
+You may define one to many relationships using tables schema foregin key in the Data Resource Schema document. Please see `tableschema's foreign key documentation <https://specs.frictionlessdata.io/table-schema/#foreign-keys>` for more information.
 
 Once defined you may access the relationship as a field on your resource.
 
@@ -110,7 +110,7 @@ Performing a PUT will replace the entire many to many association with your prov
 
 Performing a PATCH will add the provided list of primary keys to the relationship.
 
-Enabling and disabiling routes
+Enabling and disabling routes
 ------------------------------
 
 To enable a route, include the route in your swagger API document.

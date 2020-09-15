@@ -20,13 +20,17 @@ services:
       - POSTGRES_DATABASE=data_resource
       - POSTGRES_PORT=5432
       - SCHEMA_STORAGE_TYPE=LOCAL
-      - AWS_S3_REGION=
+      - AWS_S3_REGION=us-west-1
+      - AWS_S3_STORAGE_BUCKET_NAME=
+      - AWS_S3_STORAGE_OBJECT_NAME=
       - AWS_SM_ENABLED=0
       - AWS_SM_NAME=
       - AWS_SM_REGION=
       - AWS_SM_DBNAME=
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - OAUTH2_PROVIDER=BRIGHTHIVE
+      - OAUTH2_URL=
+      - AWS_ACCESS_KEY_ID=
+      - AWS_SECRET_ACCESS_KEY=
     ports:
       - 8081:8081
     restart: always

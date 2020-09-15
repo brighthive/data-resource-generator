@@ -1,3 +1,4 @@
+import os
 from sqlalchemy import exc
 from tableschema_sql import Storage
 from tableschema.exceptions import ValidationError
@@ -5,11 +6,10 @@ from sqlalchemy import Table, Integer, ForeignKey, Column
 from data_resource.db import engine
 from sqlalchemy.ext.automap import automap_base
 from data_resource.shared_utils.log_factory import LogFactory
+from tableschema_sql.crypto import AES_GCM_Engine, AWS_AES_Engine
 from sqlalchemy import MetaData
 
-
 logger = LogFactory.get_console_logger("generator:model-manager")
-
 
 # main
 def create_models(data_resource_schema: list, touch_database: bool = True) -> None:
@@ -41,6 +41,7 @@ def create_all_tables_from_schemas(table_schemas: list) -> "Metadata":
     """Generates the tables from frictionless table schema (without
     relations)."""
     table_names, descriptors = get_table_names_and_descriptors(table_schemas)
+    encrypted_defintions = get_encryption_definitions(table_schemas)
 
     try:
         storage = Storage(engine=engine)
@@ -54,7 +55,9 @@ def create_all_tables_from_schemas(table_schemas: list) -> "Metadata":
         original_create_all = metadata.create_all
         metadata.create_all = lambda: None
 
-        storage.create(table_names, descriptors)
+        storage.create(
+            table_names, descriptors, encrypted_definitions=encrypted_defintions
+        )
 
         metadata.create_all = original_create_all  # Restore
 
@@ -76,6 +79,54 @@ def automap_metadata(metadata) -> "Base":
     base.prepare()
 
     return base
+
+
+def get_engine_from_type(type):
+    if type == "AES_256_GCM":
+        return AES_GCM_Engine
+
+    if type == "AWS_AES_Engine":
+        return AWS_AES_Engine
+
+    # default is always base AES GCM
+    return AES_GCM_Engine
+
+
+# util
+def get_encryption_definitions(table_schemas: list) -> (list, list):
+    """Given a table schemas, this simply create the encryption defintion for
+    the ORM."""
+    data_dict = table_schemas["dataDictionary"]
+    encryption_definitions = dict()
+
+    # goes through schema and create encryption defintion
+    for schema in data_dict:
+        table_encryption_definitions = {}
+        table_name = schema["name"].lower()
+
+        # goes through table schema and sets engine and key
+        try:
+            for en_schema_key in schema["encryptionSchema"].keys():
+                en_schema = schema["encryptionSchema"][en_schema_key]
+                engine = get_engine_from_type(en_schema["type"])
+
+                table_encryption_definitions[en_schema_key] = {
+                    "key": os.getenv(en_schema["key"], en_schema["key"]),
+                    "engine": engine,
+                }
+                encryption_definitions[table_name] = table_encryption_definitions
+        except KeyError:
+            pass  # if encryption schema does not exist it will fail gracefully
+
+    if "encryptionSchema" in table_schemas:
+        en_schema = table_schemas["encryptionSchema"]["*"]
+        engine = get_engine_from_type(en_schema["type"])
+        encryption_definitions["*"] = {
+            "key": os.getenv(en_schema["key"], en_schema["key"]),
+            "engine": engine,
+        }
+
+    return encryption_definitions
 
 
 # util

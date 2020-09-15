@@ -9,7 +9,7 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=data_resource
   data-resource:
-    image: brighthive/data-resource-generator:1.0.0
+    image: brighthive/data-resource-generator:latest
     depends_on:
       - data-resource-database
     environment:

@@ -6,29 +6,25 @@ Overview
 
 Given a configuration file VIA REST the Data Resource Generator (DRG) will dynamically generate:
 
-1. Database tables with relationships
-
-    1. SQLAlchemy Object Relation Mappings (ORM)
-
-    1. Run database migrations
-
-1. RESTful API
-
-    1. Running Flask application
-
-    1. Open API Specification 3.0
+#. Database tables with relationships
+    #. SQLAlchemy Object Relation Mappings (ORM)
+    #. Run database migrations
+#. RESTful API
+    #. Running Flask application
+    #. Open API Specification 3.0
 
 The application is built with Python and primarily leverages Flask.
 
-We leverage two core open specifications, Tableschema and Swagger. By embedding these two core documents, a table schema and swagger definition, along with metadata you have a Data Resource Schema.
+We leverage two core open specifications, Table Schema and Swagger. By embedding these two core documents, a table schema and swagger definition, along with metadata you have a Data Resource Schema.
 
 The Data Resource Schema is sent embedded inside a Data Resource Generation Payload to the DRG generation route. This triggers the generation of Data Resources.
 
-The application will stand up as a flask API. This API has a generation route that holds a reference to the flask object.
+The application will stand up as a Flask API. This API has a generation route that holds a reference to the Flask object.
 
 Upon a Data Resource Generation Payload being sent, the application then generates:
-- relevant ORM models based on your table schema document
-- relevant REST routes based on your swagger document
+
+* relevant ORM models based on your table schema document
+* relevant REST routes based on your swagger document
 
 Application Paradigm
 --------------------
@@ -53,6 +49,6 @@ Database Table Definition Document -> SQLAlchemy ORM -> Database Tables
 Generating API Routes
 ---------------------
 
-By leveraging tooling around the swagger we dynamically produce restful flask routing.
+By leveraging tooling around the swagger we dynamically produce restful Flask routing.
 
-The generation process holds a reference to the flask application. After the application generates the ORM models it will leverage the swagger document as a RESTful route whitelist. By omitting the present of a REST route from your swagger document you can effectively disable that RESTful verb route.
+The generation process holds a reference to the Flask application. After the application generates the ORM models it will leverage the swagger document as a RESTful route whitelist. By omitting the present of a REST route from your swagger document you can effectively disable that RESTful verb route.

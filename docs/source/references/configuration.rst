@@ -15,7 +15,7 @@ These variables are mostly for connecting to the database in different environme
 Database and API configuration
 ------------------------------
 
-Data Resource Generator uses `tableschema <https://specs.frictionlessdata.io/table-schema/>` and `Open API Spec 3.0 <https://swagger.io/specification/>` as the basis for database and API configuration.
+Data Resource Generator uses `tableschema <https://specs.frictionlessdata.io/table-schema/>`_ and `Open API Spec 3.0 <https://swagger.io/specification/>`_ as the basis for database and API configuration.
 
 You will need to create a Data Resource Schema that defines your tables in table schema and your API in Open API 3.0.
 
@@ -24,7 +24,7 @@ The Data Resource Generator repository includes a JSONSchema document that defin
 Database Configuration
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Data Resource Generator uses `tableschema <https://specs.frictionlessdata.io/table-schema/>` to define its tables. It takes this information and generates the required database tables.
+Data Resource Generator uses `tableschema <https://specs.frictionlessdata.io/table-schema/>`_ to define its tables. It takes this information and generates the required database tables.
 
 Examples can be found in the Data Resource Generator repository test section.
 
@@ -35,11 +35,9 @@ A swagger file is used to configure the API. Only HTTP verbs present under route
 
 Because of this it also means that the three main routes for each resource,
 
-- GET ALL
-
-- GET ID
-
-- POST QUERY
+* GET ALL
+* GET ID
+* POST QUERY
 
 If these paths are not included in the swagger spec then they will not be added to the API routing. See `Routes -> Enabling and disabling routes` for more information.
 

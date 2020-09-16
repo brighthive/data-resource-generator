@@ -124,7 +124,7 @@ def initialize() {
     // AWS ERC Parameters / Push Rules
     env.REGISTRY_NAME = 'brighthive/data-resource-generator'
     env.REGISTRY_URI = '396527728813.dkr.ecr.us-east-2.amazonaws.com'
-    env.BRANCH_IMAGE_BUILD_PUSH = 'add-jenkins-pipeline'
+    env.BRANCH_IMAGE_BUILD_PUSH = 'master'
     env.SYSTEM_NAME = 'Jenkins'
     env.IS_JENKINS_TEST = '1'
     env.AWS_REGION = 'us-east-2'

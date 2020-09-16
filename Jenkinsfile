@@ -55,7 +55,7 @@ pipeline {
                     sh "pip install --no-cache-dir pipenv"
                     sh "pipenv install --dev"
                     sh "printenv"
-                    sh "mkdir static"
+                    sh "[ -d static ] || mkdir static"
                     sh "pipenv run pytest"
                 }
               }
@@ -106,6 +106,11 @@ pipeline {
           sh 'docker rmi $REGISTRY_NAME:latest'
           sh 'docker rmi $REGISTRY_URI/$REGISTRY_NAME:$TAGNAME'
         }
+      }
+  }
+  post {
+      always {
+          cleanWs()
       }
   }
 }

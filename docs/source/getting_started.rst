@@ -3,8 +3,8 @@ Getting Started
 
 The Data Resource Generator (DRG) is a database and API as configuration application.
 
-Terms
------
+Definitions
+-----------
 
 Data Resource
     These are things that can hold and handle data. In this case it is a database with a RESTful API

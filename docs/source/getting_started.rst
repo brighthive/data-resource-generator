@@ -12,10 +12,12 @@ Data Resource
 Data Resource Schema
     A file that defines the database and API specs.
 
-Checklist To Start
-------------------
+Steps to Standup a DRG
+----------------------
 
-#. Create a Data Resource Schema
-#. Run the Data Resource Generator
-#. Generate your data resources
-#. Profit!!!
+You can easily standup a DRG in four easy steps!
+
+#. Create a Data Resource Schema [ link to instructions for doing this ]
+#. Run the Data Resource Generator [ link to instructions for doing this ]
+#. Generate your Data Resources [ link to instructions for doing this ]
+#. Profit!

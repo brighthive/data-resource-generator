@@ -1,4 +1,4 @@
-Git addpipeline {
+pipeline {
   agent any
   options {
       // Will set the build timeout at 5 minutes and disable concurrent builds.

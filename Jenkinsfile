@@ -55,7 +55,8 @@ pipeline {
                     sh "pip install --no-cache-dir pipenv"
                     sh "pipenv install --dev"
                     sh "printenv"
-                    sh "pipenv run pytest -s"
+                    sh "mkdir static"
+                    sh "pipenv run pytest"
                 }
               }
             }

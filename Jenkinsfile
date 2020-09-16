@@ -62,6 +62,51 @@ pipeline {
             }
         }
       }
+      /*
+        If the testing stage passes, it will be proceed to building the image for the AWS ECR.
+      */
+      stage('Building Image') {
+        when {
+          expression {
+            env.GIT_BRANCH == env.BRANCH_IMAGE_BUILD_PUSH
+          }
+        }
+        steps {
+          sh 'docker build -t $REGISTRY_NAME .'
+        }
+      }
+      /*
+        Will publish the image just build on Jenkins to AWS ECR as latest and the current build number
+      */
+      stage('Publish Image') {
+        when {
+          expression {
+            env.GIT_BRANCH == env.BRANCH_IMAGE_BUILD_PUSH
+          }
+        }
+        steps {
+          sh 'aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REGISTRY_URI/$REGISTRY_NAME'
+          sh 'docker tag $REGISTRY_NAME:latest $REGISTRY_URI/$REGISTRY_NAME:latest'
+          sh 'docker push $REGISTRY_URI/$REGISTRY_NAME:latest'
+          sh 'docker tag $REGISTRY_NAME:latest $REGISTRY_URI/$REGISTRY_NAME:$TAGNAME'
+          sh 'docker push $REGISTRY_URI/$REGISTRY_NAME:$TAGNAME'
+        }
+      }
+      /*
+        Will clean up the Jenkins server of any cached builds or source. (Only the python and db images are saved so they don't have to be pulled every time)
+      */
+      stage('Clean Up') {
+        when {
+          expression {
+            env.GIT_BRANCH == env.BRANCH_IMAGE_BUILD_PUSH
+          }
+        }
+        steps {
+          sh 'docker rmi $REGISTRY_URI/$REGISTRY_NAME'
+          sh 'docker rmi $REGISTRY_NAME:latest'
+          sh 'docker rmi $REGISTRY_URI/$REGISTRY_NAME:$TAGNAME'
+        }
+      }
   }
 }
 
@@ -70,17 +115,18 @@ def initialize() {
     // Docker Defs
     env.DOCKER_DB_IMAGE_NAME = 'postgres:11.1'
     env.DOCKER_PYTHON_NAME = 'python:3.7.4-slim'
+
     // AWS ERC Parameters / Push Rules
-    env.REGISTRY_NAME = ''
-    env.REGISTRY_URI = ''
-    env.BRANCH_IMAGE_BUILD_PUSH = 'master'
-    env.BRANCH_ALLOW_DEPLOYMENT = 'master'
+    env.REGISTRY_NAME = 'brighthive/data-resource-generator'
+    env.REGISTRY_URI = '396527728813.dkr.ecr.us-east-2.amazonaws.com'
+    env.BRANCH_IMAGE_BUILD_PUSH = 'add-jenkins-pipeline'
     env.SYSTEM_NAME = 'Jenkins'
     env.IS_JENKINS_TEST = '1'
     env.AWS_REGION = 'us-east-2'
     env.MAX_ENVIRONMENTNAME_LENGTH = 32
-    env.BUILD_VERSION = '1.2.0'
+    env.BUILD_VERSION = '0.8.0'
     env.TAGNAME = env.BUILD_VERSION + '-' + env.GIT_COMMIT.substring(0,5)
+
     // DB Configs
     env.APP_ENV = 'TEST'
     env.POSTGRES_HOST = 'localhost'

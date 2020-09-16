@@ -44,7 +44,7 @@ pipeline {
                         echo "Waiting for postgres server, $((RETRIES-=1)) remaining attempts..."
                         sleep 1
                       done
-                      psql -h ${POSTGRES_HOST} -U ${POSTGRES_USER} -c "CREATE DATABASE ${POSTGRES_DB_NAME}"
+                      psql -h ${POSTGRES_HOST} -U ${POSTGRES_USER} -c "CREATE DATABASE ${POSTGRES_DATABASE}"
                     '''
                 }
                 docker.image(env.DOCKER_PYTHON_NAME).inside("-u root:root --link ${db.id}:db") {
@@ -81,10 +81,11 @@ def initialize() {
     env.BUILD_VERSION = '1.2.0'
     env.TAGNAME = env.BUILD_VERSION + '-' + env.GIT_COMMIT.substring(0,5)
     // DB Configs
+    env.APP_ENV = 'TEST'
     env.POSTGRES_HOST = 'localhost'
     env.POSTGRES_PORT = 5432
     env.RETRIES_DBPING_IN_SECONDS = 60
     env.POSTGRES_USER = 'test_user'
     env.POSTGRES_PASSWORD = 'test_password'
-    env.POSTGRES_DB_NAME = 'drg_test'
+    env.POSTGRES_DATABASE = 'data_resource_dev'
 }

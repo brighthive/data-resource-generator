@@ -122,6 +122,28 @@ class TestConfig(Config):
     )
 
 
+class JenkinsConfig(Config):
+    """Unit jenkins configuration class."""
+
+    def __init__(self):
+        super().__init__()
+
+    ENV = "TEST"
+    SKIP_AUTH_CHECK = True
+    POSTGRES_USER = os.getenv("POSTGRES_USER", "test_user")
+    POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "test_password")
+    POSTGRES_DATABASE = os.getenv("POSTGRES_DATABASE", "data_resource_dev")
+    POSTGRES_HOSTNAME = os.getenv("DB_PORT_5432_TCP_ADDR", "localhost")
+    POSTGRES_PORT = os.getenv("DB_PORT_5432_TCP_PORT", 5432)
+    SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI_FILLOUT.format(
+        POSTGRES_USER,
+        POSTGRES_PASSWORD,
+        POSTGRES_HOSTNAME,
+        POSTGRES_PORT,
+        POSTGRES_DATABASE,
+    )
+
+
 class ProductionConfig(Config):
     """Production deployment configuration class."""
 
@@ -204,7 +226,11 @@ class ConfigurationFactory:
 
         config_type = config_type.upper()
         if config_type == "TEST":
-            return TestConfig()
+            is_jenkins = bool(int(os.getenv("IS_JENKINS_TEST", "0")))
+            if is_jenkins:
+                return JenkinsConfig()
+            else:
+                return TestConfig()
         elif config_type == "LOCAL":
             return TestConfig()
         elif config_type == "PRODUCTION":

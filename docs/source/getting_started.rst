@@ -10,7 +10,7 @@ Data Resource
     An entity that stores and handles data. In the context of the BrightHive DRG, a Data Resource is a relational database with a RESTful API.
 
 Data Resource Schema
-    This is a database and API definition file.
+    A file that defines the database and API specs.
 
 Checklist To Start
 ------------------

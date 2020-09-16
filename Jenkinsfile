@@ -50,7 +50,7 @@ pipeline {
                 docker.image(env.DOCKER_PYTHON_NAME).inside("-u root:root --link ${db.id}:db") {
                     sh "python --version"
                     sh "apt-get update"
-                    sh "apt-get install -y --no-install-recommends gcc"
+                    sh "apt-get install -y --no-install-recommends gcc git"
                     sh "apt-get install python-dev --assume-yes"
                     sh "pip install --no-cache-dir pipenv"
                     sh "pipenv install --dev"

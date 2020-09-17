@@ -22,9 +22,13 @@ An elegant, opinionated framework for deploying BrightHive Data Resources (decla
 
 Simply provide the application a declarative database and API specification via API and it will automatically stand up a RESTful database and API!
 
-- Declarative Database using frictionless table schema using RESTful API
-- Dynamically generates SQLAlchemy ORM
-- Dynamically generates RESTful routing
+- Declarative database with RESTful API using frictionless table schema and swagger
+
+    - Dynamically generates SQLAlchemy ORM
+
+    - Dynamically generates RESTful routing
+
+- Column level encryption
 
 <!--
 ### Supported -- tested
@@ -45,7 +49,6 @@ Simply provide the application a declarative database and API specification via 
 ## How to use Data Resource Generator
 
 See "basic usage" in the docs.
-
 
 ## How to develop Data Resource Generator
 

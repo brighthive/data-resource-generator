@@ -1,4 +1,4 @@
-datatypes
+Datatypes
 =========
 
 Currently this library uses `tableschema-sql-py` to convert table schema types to database types.

@@ -1,7 +1,7 @@
 Getting Started
 ===============
 
-The Data Resource Generator (DRG) is a database and API as configuration application.
+The Data Resource Generator (DRG) is a database and API as configuration application. It is primarily used as a core component of BrightHive Data Trusts but has many :ref:`use-cases<use-cases>`. 
 
 Definitions
 -----------
@@ -33,7 +33,7 @@ Steps to Standup a DRG
 
 You can easily standup a DRG in four easy steps!
 
-#. Create a Data Resource Schema :ref:`basic usage<basic-usage>`
-#. Run the Data Resource Generator :ref:`basic usage<basic-usage>` and :ref:`running the application<in-prod-usage>`
-#. Generate your Data Resources :ref:`basic usage<basic-usage>`
-#. Interact with your generated Data Resources :ref:`basic usage<basic-usage>`
+#. Create a Data Resource Schema -- see :ref:`basic usage<basic-usage>`
+#. Run the Data Resource Generator -- see :ref:`basic usage<basic-usage>` and :ref:`running the application<in-prod-usage>`
+#. Generate your Data Resources -- see :ref:`basic usage<basic-usage>`
+#. Interact with your generated Data Resources -- see :ref:`basic usage<basic-usage>`

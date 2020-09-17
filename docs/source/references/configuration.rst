@@ -30,7 +30,7 @@ Database Configuration
 
 You will use `frictionless table schema <https://specs.frictionlessdata.io/table-schema/>`_. You will define your tables and relationships using table schema.
 
-Please see :ref:`Data Resource Schema<data-resource-schema>` for more information.
+Please see :ref:`Data Resource Schema reference<data-resource-schema>` for more information.
 
 API Configuration
 ^^^^^^^^^^^^^^^^^

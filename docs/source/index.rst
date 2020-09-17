@@ -6,13 +6,13 @@ Welcome to Data Resource Generator's documentation!
    :caption: Contents:
 
    getting_started
-   basic_usage
-   architectural_design
-   in_prod_usage
    use_cases
+   architectural_design
+   basic_usage
+   references/running
+   in_prod_usage
    references/configuration
    references/data_resource_schema
-   references/running
    references/relationships
    references/routes
    references/types

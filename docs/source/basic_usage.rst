@@ -29,7 +29,7 @@ Once you have your collection of table schema descriptors and swagger specificat
     :emphasize-lines: 2
 
     {
-        "data_resource_schema": {...}
+        "data_resource_schema": {}
     }
 
 The Data Resource Schema consists of your table schema descriptors and swagger specification along with additional metadata. Currently there is not a utility to help you automatically generate these so this needs to be done manually.

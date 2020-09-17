@@ -1,5 +1,49 @@
-Running
-=======
+.. _running-the-app:
+
+Successfully Running the DRG
+============================
+
+Running with Docker is the preferred method. We recommend using docker-compose locally to run the application and using more advanced docker deployment tools such as Docker Swarm or k8s, depending on your needs. Advanced deployment is outside of the scope of this documentation however. Please see `in-production usage <in-prod-usage>`_ for more information.
+
+Running Locally with Docker Compose
+-----------------------------------
+
+To run locally via Docker Compose:
+
+#. First build the docker image:
+
+.. code-block:: bash
+
+    docker build -t brighthive/data-resource-generator .
+
+#. Then run the docker-compose.yml file (which will run brighthive/data-resource-generator:latest) with:
+
+.. code-block:: bash
+
+    docker-compose up
+
+Running Locally with Python
+---------------------------
+
+This method is sometimes useful for doing development work.
+
+1. Restart the database to clear the data.
+
+.. code-block:: bash
+
+    docker-compose -f test-database-docker-compose.yml down && docker-compose -f test-database-docker-compose.yml up -d
+
+1. To run the application in production mode,
+
+.. code-block:: bash
+
+    pipenv run python wsgi.py
+
+Or to run in testing mode with flask,
+
+.. code-block:: bash
+
+    pipenv run flask run
 
 Starting the application
 ------------------------

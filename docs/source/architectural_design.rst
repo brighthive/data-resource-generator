@@ -4,18 +4,18 @@ Architectural design
 Overview
 --------
 
-Given a configuration file VIA REST the Data Resource Generator (DRG) will dynamically generate:
+Given a configuration file (Data Resource Schema) VIA a REST API the Data Resource Generator (DRG) will dynamically generate:
 
 #. Database tables with relationships
     * SQLAlchemy Object Relation Mappings (ORM)
     * Generate and run database migrations
-#. RESTful API
+#. A RESTful API
     * Running Flask application
     * Open API Specification 3.0
 
-The application is built with Python and primarily leverages Flask.
+The application is built with Python and uses Flask.
 
-We leverage two core open specifications, Table Schema and Swagger. By embedding these two core documents, a table schema and swagger definition, along with metadata you have a Data Resource Schema.
+We leverage two open data specifications, Table Schema and Swagger. These are core to the project. By embedding table schema descriptors and a swagger specification along with some metadata you have a Data Resource Schema.
 
 The Data Resource Schema is sent embedded inside a Data Resource Generation Payload to the DRG generation route. This triggers the generation of Data Resources.
 

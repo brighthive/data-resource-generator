@@ -226,11 +226,9 @@ class ConfigurationFactory:
 
         config_type = config_type.upper()
         if config_type == "TEST":
-            is_jenkins = bool(int(os.getenv("IS_JENKINS_TEST", "0")))
-            if is_jenkins:
-                return JenkinsConfig()
-            else:
-                return TestConfig()
+            return TestConfig()
+        elif config_type == "JENKINS":
+            return JenkinsConfig()
         elif config_type == "LOCAL":
             return TestConfig()
         elif config_type == "PRODUCTION":

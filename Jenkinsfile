@@ -126,14 +126,13 @@ def initialize() {
     env.REGISTRY_URI = '396527728813.dkr.ecr.us-east-2.amazonaws.com'
     env.BRANCH_IMAGE_BUILD_PUSH = 'master'
     env.SYSTEM_NAME = 'Jenkins'
-    env.IS_JENKINS_TEST = '1'
     env.AWS_REGION = 'us-east-2'
     env.MAX_ENVIRONMENTNAME_LENGTH = 32
     env.BUILD_VERSION = '0.8.0'
     env.TAGNAME = env.BUILD_VERSION + '-' + env.GIT_COMMIT.substring(0,5)
 
     // DB Configs
-    env.APP_ENV = 'TEST'
+    env.APP_ENV = 'JENKINS'
     env.POSTGRES_HOST = 'localhost'
     env.POSTGRES_PORT = 5432
     env.RETRIES_DBPING_IN_SECONDS = 60

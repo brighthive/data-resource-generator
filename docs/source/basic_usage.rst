@@ -38,6 +38,8 @@ Please see :ref:`data resource schema reference<data-resource-schema>` for more 
 
 * **POST /generator** - Given a Data Resource Generation Payload (and thus a nested Data Resource Schema), this trigger the generation of all of the described Data Resources.
 
+See `starting the application <starting-the-app>`_ for more information.
+
 Interacting with Generated Data Resources
 -----------------------------------------
 

@@ -45,22 +45,52 @@ Or to run in testing mode with flask,
 
     pipenv run flask run
 
+.. _starting-the-app:
+
 Starting the application
 ------------------------
 
 There are two ways to run the application. With an empty database or an already existing database.
+
+Generation Validation
+^^^^^^^^^^^^^^^^^^^^^
+
+Note that when the Data Resource Schema is submitted to the generation API the DRG will run validation against it and not build if the validation fails. If you wish to skip the validation process add a top level key "ignore_validation" as follows:
+
+.. code-block:: JSON
+    :caption: Data Resource Generation Payload
+    :emphasize-lines: 2
+
+    {
+        "data_resource_schema": {},
+        "ignore_validation": null
+    }
+
+.. warning::
+    The value of "ignore_validation" will not be examined. The DRG is simply looking for the existence of the top level key "ignore_validation". Putting { "ignore_validation": False } will still trigger the validation to occur.
 
 Empty database
 ^^^^^^^^^^^^^^
 
 In the case you want to generate a database, you will run the application with an empty database.
 
-Making a call to the generate route will trigger the building of ORM, API, and modify the database.
+Making a call to the generation route will trigger the building of ORM, API, and modify the database.
 
 Non-empty database
 ^^^^^^^^^^^^^^^^^^
 
-This application was not designed to be run on top of a database that already has tables in it (in other words, you can only run the generation process once). If you run the application in this mode it is expected that you have already gone through the generation process and have or intend to modify the database and/or API.
+In the event your database is not empty, the generation process has already occurred and you have made changes to the Data Resource Schema then the DRG will not generate any database migrations. The DRG will expect you to POST a Data Resource Schema that matches the content of the database. An error will occur if the DRG attempts touch the database. Therefore you will need to add a top level key to the Data Resource Generation Payload to prevent running the generated DDL.
+
+.. code-block:: JSON
+    :caption: Data Resource Generation Payload
+    :emphasize-lines: 2
+
+    {
+        "data_resource_schema": {},
+        "touch_database": false
+    }
+
+This will allow the DRG to set itself up and assuming the state of the database is as described in the Data Resource Schema then the models and APIs will be built successfully.
 
 Restarting the application
 --------------------------

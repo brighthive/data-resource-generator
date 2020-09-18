@@ -16,7 +16,7 @@ A summary of the pull request (PR) and the issue it resolves. Please include the
 ### Documentation
 
 - [ ] Did you document your changes in the README/docstrings/docs (as needed)?
-- [ ] Documentation uses proper RST!
+- [ ] Documentation uses proper RST
 - [ ] Aware of / reduced reading complexity by running docs through http://www.hemingwayapp.com/
 
 ### Security

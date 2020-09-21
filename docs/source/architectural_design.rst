@@ -1,50 +1,33 @@
+.. _drg-arch:
+
 Architectural design
 ====================
 
 Overview
 --------
 
-Given a configuration file (Data Resource Schema) VIA a REST API the Data Resource Generator (DRG) will dynamically generate:
+BrightHive built the DRG with Python and several other libraries. These include:
 
-#. Database tables with relationships
-    * SQLAlchemy Object Relation Mappings (ORM)
-    * Generate and run database migrations
-#. A RESTful API
-    * Running Flask application
-    * Open API Specification 3.0
-
-The application is built with Python and uses Flask.
-
-We leverage two open data specifications, Table Schema and Swagger. These are core to the project. By embedding table schema descriptors and a swagger specification along with some metadata you have a Data Resource Schema.
-
-The Data Resource Schema is sent embedded inside a Data Resource Generation Payload to the DRG generation route. This triggers the generation of Data Resources.
-
-The application will stand up as a Flask API. This API has a generation route that holds a reference to the Flask object.
-
-Upon a Data Resource Generation Payload being sent, the application then generates:
-
-* relevant ORM models based on your table schema document
-* relevant REST routes based on your swagger document
+Table Schema and Swagger. These open data specifications provide the backbone of a Data Resource Schema, which embeds table schema, descriptors, a swagger specification, and metadata.
+Flask. The DRG application itself is a Flask API. The API has a generation route that holds a reference to the Flask object.
 
 Application Paradigm
 --------------------
 
-"Declarative setup - imperative changes."
+*Declarative setup - imperative changes.*
 
 Upon initialization of your database and API the DRG uses a declarative method. If you wish to introduce changes to that declarative baseline, you are expected to do it imperatively.
 
-Concretely what this means is you will use a configuration file that will generate the required "stuff" to create your database and API. If you want to modify that initial configuration you will have to do so manually. The DRG, as a matter of principal, does not support migrations and modifications as such.
+What does this mean? You use a configuration file to generate the required "stuff" to create a database and API. If you want to modify the initial configuration, then you have to do so manually. The DRG, as a matter of principal, does not support migrations and modifications as such.
 
 The DRG, on startup, deterministically expects a specific state of your database tables based on the provided configuration file. Therefore, you will need to update the state of your database to match the state present in your new configuration file.
 
 Generating ORM and Tables
 -------------------------
 
-By leveraging tooling around the table schema specification we produce a SQLAlchemy ORM. This ORM is used to generate and run the proper DDL commands on the connected database to produce and save the database tables.
+The DRG produces a SQLAlchemy ORM. This ORM is used to generate and run the proper DDL commands on the connected database to produce and save the database tables.
 
-This process looks like this:
-
-Database Table Definition Document -> SQLAlchemy ORM -> Database Tables
+To elaborate, the DRG takes a configuration file that defines the structure of a database. The DRG converts this document into SQLAlchemy ORM. Then SQLAlchemy generates the Data Definition Language (DDL) commands required by the database to create the given structure. The DDL commands are issued and the required components are created in the database (tables, sequences. Dynamically created database and ORM!
 
 Generating API Routes
 ---------------------

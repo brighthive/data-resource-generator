@@ -3,10 +3,10 @@
 Successfully Running the DRG
 ============================
 
+.. _step-by-step-instr:
+
 Steps to Use the DRG
 --------------------
-
-.. _step-by-step-instr:
 
 You can easily standup a DRG in four easy steps!
 

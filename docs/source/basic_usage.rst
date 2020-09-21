@@ -1,10 +1,22 @@
 .. _basic-usage:
 
-Basic Usage
-===========
+Creating and Using a Data Resource Schema
+=========================================
 
 .. note::
     In production mode all routes will be secured by default. This means you will need to configure an OAUTH provider in the config.
+
+.. _data-resource-schema:
+
+Data Resource Schema Reference
+------------------------------
+
+.. note::
+    This reference is a stub and is intended to be expanded on.
+
+Data Resource Generator uses `tableschema <https://specs.frictionlessdata.io/table-schema/>`_ to define its tables. It takes this information and generates the required database tables.
+
+Examples can be found in the Data Resource Generator repository test section.
 
 Utilities to help create a Data Resource Schema
 -----------------------------------------------
@@ -16,6 +28,8 @@ Provided is a utility that takes tables schema definitions of tables and generat
 * **PUT /tableschema/1** - PUT your table schema descriptor to this route. When the generation runs it will use all submitted table schemas so make sure you PUT to different numbers at the end of the URI or you will overwrite your previously submitted table schema.
 * **GET /tableschema** - Displays all of the table schemas that have been PUT via the route above.
 * **GET /swagger** - Trigger the swagger generation based on all of the table schemas that have been PUT via the route above.
+
+.. _generating-data-resources:
 
 Generating Data Resources
 -------------------------
@@ -38,18 +52,6 @@ Please see :ref:`data resource schema reference<data-resource-schema>` for more 
 
 * **POST /generator** - Given a Data Resource Generation Payload (and thus a nested Data Resource Schema), this trigger the generation of all of the described Data Resources.
 
-See `starting the application <starting-the-app>`_ for more information.
+See :ref:`starting the application <starting-the-app>` for more information.
 
-Interacting with Generated Data Resources
------------------------------------------
-
-An interactive API (using Swagger UI) is generated at **/ui**.
-
-The following are the API routes that you can interact with for each of your generated resources (see the docs for more information):
-
-* **GET resource**
-* **GET resource/1**
-* **POST resource/query**
-* **POST resource**
-* **PUT resource/1**
-* **DELETE resource/1**
+See :ref:`interacting with generated Data Resources <interacting-with-generated-routes>` to learn how to interact with the Data Resources once they are generated.

@@ -1,3 +1,5 @@
+.. _migrating:
+
 Migrating a live database
 =========================
 

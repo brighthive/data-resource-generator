@@ -12,7 +12,6 @@ Welcome to Data Resource Generator's documentation!
    basic_usage
    in_prod_usage
    references/configuration
-   references/data_resource_schema
    references/relationships
    references/routes
    references/types

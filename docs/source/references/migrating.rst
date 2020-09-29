@@ -7,9 +7,7 @@ Once you have generated a set of Data Resources the database of the application 
 
 If you want to modify your database and application there is a work around.
 
-The original Data Resource API had the ability to dynamically update and modify the database as you modified the declarative descriptor files. This led to a number of problems such as putting the application and database into states where a human needs to intervene. A universal magical database migration engine was not in scope for the project.
-
-The lessons learned from that are a declarative setup and imperative changes provided for the majority of use cases.
+Please note! The DRG does not offer a universal database migration engine. Such a solution does not fit the needs or scope of BrightHive. Using a declarative setup and imperative changes accommodate the majority of potential use cases.
 
 Modifying Generated Data Resources
 -------------------------------------------------

@@ -10,9 +10,9 @@ Steps to Use the DRG
 
 You can easily standup a DRG in four easy steps!
 
+#. Run the Data Resource Generator -- see :ref:`Running the application <in-prod-usage>`
 #. Create a Data Resource Schema -- see :ref:`Creating and Using a Data Resource Schema usage <basic-usage>`
-#. Run the Data Resource Generator -- see :ref:`Creating and Using a Data Resource Schema <basic-usage>` and :ref:`running the application <in-prod-usage>`
-#. Generate your Data Resources -- see :ref:`generating Data Resources <generating-data-resources>`
+#. Generate your Data Resources -- see :ref:`Generating Data Resources <generating-data-resources>`
 #. Interact with your generated Data Resources -- see :ref:`Interacting with generated Data Resources <interacting-with-generated-routes>`
 
 Preparing the Database
@@ -59,6 +59,9 @@ In the event your database is not empty, the generation process has already occu
     }
 
 This will allow the DRG to set itself up and assuming the state of the database is as described in the Data Resource Schema then the models and APIs will be built successfully.
+
+.. note::
+    When the application loads the data resource schema from the file system it will never touch the database.
 
 Running the application
 -----------------------

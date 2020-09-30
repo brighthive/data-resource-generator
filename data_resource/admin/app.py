@@ -89,7 +89,9 @@ def handle_existing_data_resource_generation_payload(api: Api):
     if not storage.data_resource_generation_payload_exists():
         return
 
-    logger.info("Found an existing data resource schema. Attempting to load it...")
+    logger.info(
+        "Found an existing data resource generation payload. Attempting to load it..."
+    )
 
     data_resource_generation_payload = (
         storage.get_data_resource_generation_payload_data()
@@ -99,4 +101,4 @@ def handle_existing_data_resource_generation_payload(api: Api):
         data_resource_generation_payload, api, touch_database=False
     )
 
-    logger.info("Loaded existing data resource schema.")
+    logger.info("Loaded existing data resource generation payload.")

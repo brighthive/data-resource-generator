@@ -792,7 +792,7 @@ def test_drg_schema_no_key_failure(admin_e2e):
     response = api.post("/generator", json={"this is invalid": {1: 2}})
 
     assert response.json == {
-        "error": "Failed to load existing data resource schema. 'data_catalog' nor 'data_resource_schema' found at root."
+        "error": "Failed to load existing data resource generation payload. Neither 'data_catalog' nor 'data_resource_schema' keys were found at the root of the Data Resource Generation Payload."
     }
     assert response.status_code == 400
 

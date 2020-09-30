@@ -5,12 +5,18 @@ Welcome to Data Resource Generator's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   running
-   routes
-   configuration
-   datatypes
-   migrating
-   unsupported_features
+   getting_started
+   references/running
+   use_cases
+   architectural_design
+   basic_usage
+   in_prod_usage
+   references/configuration
+   references/relationships
+   references/routes
+   references/types
+   references/migrating
+   roadmap/unsupported_features
 
 
 

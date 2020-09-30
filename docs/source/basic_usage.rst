@@ -31,6 +31,53 @@ Provided is a utility that takes tables schema definitions of tables and generat
 
 .. _generating-data-resources:
 
+Column Level Encryption
+-----------------------
+
+DRG supports column level encryption (CLE) using the `sqlalchemy_utils` -> `EncryptedType`. The encryption engine is derived from the base class `EncryptionDecryptionBaseEngine`. To enable CLE please set the `protected` field within the table schema to `true`.
+
+.. code-block:: JSON
+    :caption: Data Resource Schema -- Inside table schema
+
+    {
+        "name":"password",
+        "title":"Person's Password",
+        "type":"string",
+        "description":"This is left intentionally generic.",
+        "constraints":{ },
+        "protected": true
+    }
+
+
+If the `protected` field is defined within the schema, the `encryptionSchema` field must be defined within the table schema itself or at the root level of the JSON object. If the DRG cannot find the `encryptionSchema` within the schema, it will error out during the generator process. Depending on placement within the schema, the `encryptionSchema` will allow wildcard engine/key for the whole DB, wildcard for a table, and individual engine/key for each column. The `encryptionSchema` has two required fields: `type` and `key`. The `type` is one of the supported engines below and `key` is the environment variable where the raw key or AWS ARN is defined.
+
+Supported Engines
+'''''''''''''''''
+
+- `AES_GCM_Engine`
+- `AWS_AES_Engine`
+
+Example
+'''''''
+
+The example below demonstrates an `encryptionSchema` where the table has a defined wildcard and a column specific engine/key. In this case, if there were two `protected` fields (password, SSN) then the password column would be protected with AWS KMS, and SSN would use the wildcard.
+
+.. code-block:: JSON
+    :caption: Data Resource Schema -- Inside table schema
+    
+    {
+        "encryptionSchema": {
+            "*": {
+                "key": "DB_TABLE_PEOPLE_WILDCARD",
+                "type": "AES_256_GCM"
+            },
+            "password" : {
+                "key": "DB_PEOPLE_KMS_ARN",
+                "type": "AWS_AES_Engine"
+            }
+        }
+    }
+
 Generating Data Resources
 -------------------------
 

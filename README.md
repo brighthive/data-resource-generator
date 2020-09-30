@@ -48,49 +48,7 @@ Simply provide the application a declarative database and API specification via 
 
 ## How to use Data Resource Generator
 
-See "basic usage" in the docs.
-
-### Column Level Encryption
-
-DRG supports column level encryption (CLE) using the `sqlalchemy_utils` -> `EncryptedType`. The encryption engine is derived from the base class `EncryptionDecryptionBaseEngine`. To enable CLE please set the `protected` field within the table schema to `true`.
-
-```bash
-{
-      "name":"password",
-      "title":"Person's Password",
-      "type":"string",
-      "description":"This is left intentionally generic.",
-      "constraints":{ },
-      "protected": true
-}
-```
-
-If the `protected` field is defined within the schema, the `encryptionSchema` field must be defined within the table schema itself or at the root level of the JSON object. If the DRG cannot find the `encryptionSchema` within the schema, it will error out during the generator process. Depending on placement within the schema, the `encryptionSchema` will allow wildcard engine/key for the whole DB, wildcard for a table, and individual engine/key for each column. The `encryptionSchema` has two required fields: `type` and `key`. The `type` is one of the supported engines below and `key` is the environment variable where the raw key or AWS ARN is defined.
-
-##### Supported Engines
-
-- `AES_GCM_Engine`
-- `AWS_AES_Engine`
-
-##### Example
-
-The example below demonstrates an `encryptionSchema` where the table has a defined wildcard and a column specific engine/key. In this case, if there were two `protected` fields (password, ssn) then the password column would be protected with AWS KMS, and ssn would use the wildcard.
-
-```bash
-{
-	"encryptionSchema": {
-	    "*": {
-	        "key": "DB_TABLE_PEOPLE_WILDCARD",
-	        "type": "AES_256_GCM"
-	    },
-	    "password" : {
-	        "key": "DB_PEOPLE_KMS_ARN",
-	        "type": "AWS_AES_Engine"
-	    }
-	}
-}
-```
-
+Please see the [Data Resource Generator documentation](https://data-resource-generator.readthedocs.io/en/latest/).
 
 ## How to develop Data Resource Generator
 
@@ -122,6 +80,8 @@ In the event that you want to run pre-commit hooks over the entire application u
 ```bash
 pipenv run pre-commit run --all-files
 ```
+
+To commit without running the pre-commit hooks add the `--no-verify` flag to your `git commit` command.
 
 ### Testing
 

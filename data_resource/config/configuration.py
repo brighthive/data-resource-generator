@@ -77,6 +77,7 @@ class Config:
     AWS_S3_STORAGE_BUCKET_NAME = os.getenv("AWS_S3_STORAGE_BUCKET_NAME", None)
     AWS_S3_STORAGE_OBJECT_NAME = os.getenv("AWS_S3_STORAGE_OBJECT_NAME", None)
 
+    AWS_IAM_ROLE = bool(int(os.getenv("AWS_IAM_ROLE", "0")))
     AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID", None)
     AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY", None)
 

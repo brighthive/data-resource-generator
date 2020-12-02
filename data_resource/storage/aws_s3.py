@@ -10,7 +10,7 @@ class S3Manager:
 
     def __init__(self, config):
         self.config = config
-        self.aws_iam_role = self.config.AWS_IAM_ROLE
+        self.aws_iam_role = self.config.AWS_S3_USE_IAM_ROLE
         self.aws_access_key_id = self.config.AWS_ACCESS_KEY_ID
         self.aws_secret_access_key = self.config.AWS_SECRET_ACCESS_KEY
         self.region_name = self.config.AWS_S3_REGION
@@ -32,10 +32,7 @@ class S3Manager:
     def get_s3_client(self):
         self._required_env_check()
         if self.aws_iam_role:
-            return boto3.client(
-                "s3",
-                region_name=self.region_name,
-            )
+            return boto3.client("s3", region_name=self.region_name)
         else:
             return boto3.client(
                 "s3",
@@ -47,10 +44,7 @@ class S3Manager:
     def get_s3_resource(self):
         self._required_env_check()
         if self.aws_iam_role:
-            return boto3.resource(
-                "s3",
-                region_name=self.region_name,
-            )
+            return boto3.resource("s3", region_name=self.region_name)
         else:
             return boto3.resource(
                 "s3",

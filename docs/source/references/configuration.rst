@@ -34,6 +34,17 @@ To use AWS Secret Manager (AWS SM) set environment variable `AWS_SM_ENABLED` to 
 
 For more information about AWS SM and how to setup on AWS console please visit `AWS SM Docs <https://aws.amazon.com/secrets-manager/>`_.
 
+AWS IAM Role
+''''''''''''
+
+To use AWS IAM, assume the role for S3/RDS connections requires the following environment variables to initialize correctly, in addition to having the role attached to the EC2 running the container.
+
+.. code-block:: bash
+
+    export AWS_S3_USE_IAM_ROLE="1" default. "0"
+    export AWS_DB_USE_IAM_ROLE="1" default. "0"
+    export AWS_DB_REGION_IAM_ROLE=<aws-region> ex. us-west-1
+
 Storage Manager
 '''''''''''''''
 

@@ -25,7 +25,7 @@ gunicorn = "*"
 gevent = "*"
 botocore = "*"
 jsonschema = "*"
-cryptography = "*"
+cryptography = ">=3.2"
 sqlalchemy-utils = "*"
 aws-encryption-sdk = "*"
 

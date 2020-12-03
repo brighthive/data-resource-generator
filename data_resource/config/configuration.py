@@ -4,6 +4,7 @@ import os
 from brighthive_authlib import AuthLibConfiguration, OAuth2ProviderFactory
 import json
 import boto3
+from sqlalchemy.engine.url import URL
 from botocore.exceptions import ClientError
 from data_resource.shared_utils.log_factory import LogFactory
 
@@ -56,6 +57,9 @@ class Config:
         POSTGRES_DATABASE,
     )
 
+    AWS_DB_REGION_IAM_ROLE = os.getenv("AWS_DB_REGION_IAM_ROLE", "us-east-1")
+    AWS_DB_USE_IAM_ROLE = bool(int(os.getenv("AWS_DB_USE_IAM_ROLE", "0")))
+
     # OAuth 2.0 Settings
     OAUTH2_PROVIDER = os.getenv("OAUTH2_PROVIDER", "AUTH0")
     OAUTH2_URL = os.getenv("OAUTH2_URL", "https://brighthive-test.auth0.com")
@@ -76,6 +80,7 @@ class Config:
     AWS_S3_REGION = os.getenv("AWS_S3_REGION", None)
     AWS_S3_STORAGE_BUCKET_NAME = os.getenv("AWS_S3_STORAGE_BUCKET_NAME", None)
     AWS_S3_STORAGE_OBJECT_NAME = os.getenv("AWS_S3_STORAGE_OBJECT_NAME", None)
+    AWS_S3_USE_IAM_ROLE = bool(int(os.getenv("AWS_S3_USE_IAM_ROLE", "0")))
 
     AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID", None)
     AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY", None)
@@ -196,13 +201,24 @@ class ProductionConfig(Config):
         POSTGRES_DATABASE = os.getenv("POSTGRES_DATABASE")
         POSTGRES_HOSTNAME = os.getenv("POSTGRES_HOSTNAME", "localhost")
         POSTGRES_PORT = os.getenv("POSTGRES_PORT", 5432)
-        SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI_FILLOUT.format(
-            POSTGRES_USER,
-            POSTGRES_PASSWORD,
-            POSTGRES_HOSTNAME,
-            POSTGRES_PORT,
-            POSTGRES_DATABASE,
-        )
+
+        AWS_DB_REGION_IAM_ROLE = os.getenv("AWS_DB_REGION_IAM_ROLE", "")
+        AWS_DB_USE_IAM_ROLE = bool(int(os.getenv("AWS_DB_USE_IAM_ROLE", "0")))
+
+        if AWS_DB_USE_IAM_ROLE:
+            session = boto3.session.Session()
+            client = boto3.client('rds', region_name=AWS_DB_REGION_IAM_ROLE)
+            token = client.generate_db_auth_token(DBHostname=POSTGRES_HOSTNAME, Port=str(POSTGRES_PORT), DBUsername=POSTGRES_USER, Region=AWS_DB_REGION_IAM_ROLE)
+            url = URL("postgresql+psycopg2", username=POSTGRES_USER, password=token, host=POSTGRES_HOSTNAME, port=int(POSTGRES_PORT), database=POSTGRES_DATABASE)
+            SQLALCHEMY_DATABASE_URI = url
+        else:
+            SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI_FILLOUT.format(
+                POSTGRES_USER,
+                POSTGRES_PASSWORD,
+                POSTGRES_HOSTNAME,
+                POSTGRES_PORT,
+                POSTGRES_DATABASE,
+            )
 
 
 class ConfigurationFactory:

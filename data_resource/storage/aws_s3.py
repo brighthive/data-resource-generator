@@ -10,6 +10,7 @@ class S3Manager:
 
     def __init__(self, config):
         self.config = config
+        self.aws_iam_role = self.config.AWS_S3_USE_IAM_ROLE
         self.aws_access_key_id = self.config.AWS_ACCESS_KEY_ID
         self.aws_secret_access_key = self.config.AWS_SECRET_ACCESS_KEY
         self.region_name = self.config.AWS_S3_REGION
@@ -19,7 +20,8 @@ class S3Manager:
             or self.aws_secret_access_key == None
             or self.region_name == None
         ):
-            raise RuntimeError("Invalid AWS S3 Configuration")
+            if self.aws_iam_role == False:
+                raise RuntimeError("Invalid AWS S3 Configuration")
 
     def _required_env_check(self):
         if self.config.ENV != "PRODUCTION":
@@ -29,21 +31,27 @@ class S3Manager:
 
     def get_s3_client(self):
         self._required_env_check()
-        return boto3.client(
-            "s3",
-            aws_access_key_id=self.aws_access_key_id,
-            aws_secret_access_key=self.aws_secret_access_key,
-            region_name=self.region_name,
-        )
+        if self.aws_iam_role:
+            return boto3.client("s3", region_name=self.region_name)
+        else:
+            return boto3.client(
+                "s3",
+                aws_access_key_id=self.aws_access_key_id,
+                aws_secret_access_key=self.aws_secret_access_key,
+                region_name=self.region_name,
+            )
 
     def get_s3_resource(self):
         self._required_env_check()
-        return boto3.resource(
-            "s3",
-            aws_access_key_id=self.aws_access_key_id,
-            aws_secret_access_key=self.aws_secret_access_key,
-            region_name=self.region_name,
-        )
+        if self.aws_iam_role:
+            return boto3.resource("s3", region_name=self.region_name)
+        else:
+            return boto3.resource(
+                "s3",
+                aws_access_key_id=self.aws_access_key_id,
+                aws_secret_access_key=self.aws_secret_access_key,
+                region_name=self.region_name,
+            )
 
     # will upload a file from volume to a s3 bucket
     def aws_s3_upload_file(self, file_name, bucket, object_name=None):
